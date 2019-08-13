@@ -9,6 +9,8 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
-    "lerna": "^3.16.4"
+    "lerna": "^3.16.4",
+    "prettier": "^1.18.2",
+    "ts-lint": "^4.5.1"
   }
 }
