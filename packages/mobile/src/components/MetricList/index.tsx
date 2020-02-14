@@ -5,7 +5,7 @@ import { Metric } from '../../types';
 const screenWidth = Math.round(Dimensions.get('window').width);
 const margin = 10;
 const columns = 3;
-const dim = screenWidth / columns - margin * 2;
+const dim = Math.floor((screenWidth - margin * (columns + 1)) / columns);
 interface Props {
   metrics: Metric[];
   navigateToMetric: (metric: Metric) => undefined;
@@ -33,6 +33,7 @@ const styles = StyleSheet.create({
 });
 
 export default ({ metrics, navigateToMetric }: Props) => {
+  console.warn(`width=${Dimensions.get('window').width} dim=${dim}`);
   return (
     <ScrollView contentContainerStyle={styles.list}>
       {metrics.map((metric, i) => (

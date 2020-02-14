@@ -16,6 +16,8 @@ export type AtLeastOne<T, U = { [K in keyof T]: Pick<T, K> }> = Partial<T> &
 export type Maybe<T> = T | undefined | null;
 
 export interface Exists {
+  dataPoint: (where?: DataPointWhereInput) => Promise<boolean>;
+  metric: (where?: MetricWhereInput) => Promise<boolean>;
   user: (where?: UserWhereInput) => Promise<boolean>;
 }
 
@@ -38,6 +40,44 @@ export interface Prisma {
    * Queries
    */
 
+  dataPoint: (where: DataPointWhereUniqueInput) => DataPointNullablePromise;
+  dataPoints: (args?: {
+    where?: DataPointWhereInput;
+    orderBy?: DataPointOrderByInput;
+    skip?: Int;
+    after?: String;
+    before?: String;
+    first?: Int;
+    last?: Int;
+  }) => FragmentableArray<DataPoint>;
+  dataPointsConnection: (args?: {
+    where?: DataPointWhereInput;
+    orderBy?: DataPointOrderByInput;
+    skip?: Int;
+    after?: String;
+    before?: String;
+    first?: Int;
+    last?: Int;
+  }) => DataPointConnectionPromise;
+  metric: (where: MetricWhereUniqueInput) => MetricNullablePromise;
+  metrics: (args?: {
+    where?: MetricWhereInput;
+    orderBy?: MetricOrderByInput;
+    skip?: Int;
+    after?: String;
+    before?: String;
+    first?: Int;
+    last?: Int;
+  }) => FragmentableArray<Metric>;
+  metricsConnection: (args?: {
+    where?: MetricWhereInput;
+    orderBy?: MetricOrderByInput;
+    skip?: Int;
+    after?: String;
+    before?: String;
+    first?: Int;
+    last?: Int;
+  }) => MetricConnectionPromise;
   user: (where: UserWhereUniqueInput) => UserNullablePromise;
   users: (args?: {
     where?: UserWhereInput;
@@ -63,6 +103,38 @@ export interface Prisma {
    * Mutations
    */
 
+  createDataPoint: (data: DataPointCreateInput) => DataPointPromise;
+  updateDataPoint: (args: {
+    data: DataPointUpdateInput;
+    where: DataPointWhereUniqueInput;
+  }) => DataPointPromise;
+  updateManyDataPoints: (args: {
+    data: DataPointUpdateManyMutationInput;
+    where?: DataPointWhereInput;
+  }) => BatchPayloadPromise;
+  upsertDataPoint: (args: {
+    where: DataPointWhereUniqueInput;
+    create: DataPointCreateInput;
+    update: DataPointUpdateInput;
+  }) => DataPointPromise;
+  deleteDataPoint: (where: DataPointWhereUniqueInput) => DataPointPromise;
+  deleteManyDataPoints: (where?: DataPointWhereInput) => BatchPayloadPromise;
+  createMetric: (data: MetricCreateInput) => MetricPromise;
+  updateMetric: (args: {
+    data: MetricUpdateInput;
+    where: MetricWhereUniqueInput;
+  }) => MetricPromise;
+  updateManyMetrics: (args: {
+    data: MetricUpdateManyMutationInput;
+    where?: MetricWhereInput;
+  }) => BatchPayloadPromise;
+  upsertMetric: (args: {
+    where: MetricWhereUniqueInput;
+    create: MetricCreateInput;
+    update: MetricUpdateInput;
+  }) => MetricPromise;
+  deleteMetric: (where: MetricWhereUniqueInput) => MetricPromise;
+  deleteManyMetrics: (where?: MetricWhereInput) => BatchPayloadPromise;
   createUser: (data: UserCreateInput) => UserPromise;
   updateUser: (args: {
     data: UserUpdateInput;
@@ -88,6 +160,12 @@ export interface Prisma {
 }
 
 export interface Subscription {
+  dataPoint: (
+    where?: DataPointSubscriptionWhereInput
+  ) => DataPointSubscriptionPayloadSubscription;
+  metric: (
+    where?: MetricSubscriptionWhereInput
+  ) => MetricSubscriptionPayloadSubscription;
   user: (
     where?: UserSubscriptionWhereInput
   ) => UserSubscriptionPayloadSubscription;
@@ -101,21 +179,293 @@ export interface ClientConstructor<T> {
  * Types
  */
 
+export type DataPointOrderByInput =
+  | "id_ASC"
+  | "id_DESC"
+  | "dateTime_ASC"
+  | "dateTime_DESC";
+
+export type MetricOrderByInput =
+  | "id_ASC"
+  | "id_DESC"
+  | "name_ASC"
+  | "name_DESC";
+
 export type UserOrderByInput = "id_ASC" | "id_DESC" | "name_ASC" | "name_DESC";
 
 export type MutationType = "CREATED" | "UPDATED" | "DELETED";
 
-export interface UserCreateInput {
+export interface DataPointUpdateInput {
+  dateTime?: Maybe<DateTimeInput>;
+  metric?: Maybe<MetricUpdateOneRequiredWithoutDataPointsInput>;
+}
+
+export type DataPointWhereUniqueInput = AtLeastOne<{
+  id: Maybe<ID_Input>;
+}>;
+
+export interface MetricUpsertWithoutDataPointsInput {
+  update: MetricUpdateWithoutDataPointsDataInput;
+  create: MetricCreateWithoutDataPointsInput;
+}
+
+export interface DataPointWhereInput {
+  id?: Maybe<ID_Input>;
+  id_not?: Maybe<ID_Input>;
+  id_in?: Maybe<ID_Input[] | ID_Input>;
+  id_not_in?: Maybe<ID_Input[] | ID_Input>;
+  id_lt?: Maybe<ID_Input>;
+  id_lte?: Maybe<ID_Input>;
+  id_gt?: Maybe<ID_Input>;
+  id_gte?: Maybe<ID_Input>;
+  id_contains?: Maybe<ID_Input>;
+  id_not_contains?: Maybe<ID_Input>;
+  id_starts_with?: Maybe<ID_Input>;
+  id_not_starts_with?: Maybe<ID_Input>;
+  id_ends_with?: Maybe<ID_Input>;
+  id_not_ends_with?: Maybe<ID_Input>;
+  dateTime?: Maybe<DateTimeInput>;
+  dateTime_not?: Maybe<DateTimeInput>;
+  dateTime_in?: Maybe<DateTimeInput[] | DateTimeInput>;
+  dateTime_not_in?: Maybe<DateTimeInput[] | DateTimeInput>;
+  dateTime_lt?: Maybe<DateTimeInput>;
+  dateTime_lte?: Maybe<DateTimeInput>;
+  dateTime_gt?: Maybe<DateTimeInput>;
+  dateTime_gte?: Maybe<DateTimeInput>;
+  metric?: Maybe<MetricWhereInput>;
+  AND?: Maybe<DataPointWhereInput[] | DataPointWhereInput>;
+  OR?: Maybe<DataPointWhereInput[] | DataPointWhereInput>;
+  NOT?: Maybe<DataPointWhereInput[] | DataPointWhereInput>;
+}
+
+export interface DataPointUpsertWithWhereUniqueWithoutMetricInput {
+  where: DataPointWhereUniqueInput;
+  update: DataPointUpdateWithoutMetricDataInput;
+  create: DataPointCreateWithoutMetricInput;
+}
+
+export interface MetricCreateInput {
   id?: Maybe<ID_Input>;
   name: String;
+  dataPoints?: Maybe<DataPointCreateManyWithoutMetricInput>;
+}
+
+export interface DataPointUpdateWithoutMetricDataInput {
+  dateTime?: Maybe<DateTimeInput>;
+}
+
+export interface DataPointUpdateManyMutationInput {
+  dateTime?: Maybe<DateTimeInput>;
+}
+
+export interface DataPointUpdateWithWhereUniqueWithoutMetricInput {
+  where: DataPointWhereUniqueInput;
+  data: DataPointUpdateWithoutMetricDataInput;
+}
+
+export interface MetricSubscriptionWhereInput {
+  mutation_in?: Maybe<MutationType[] | MutationType>;
+  updatedFields_contains?: Maybe<String>;
+  updatedFields_contains_every?: Maybe<String[] | String>;
+  updatedFields_contains_some?: Maybe<String[] | String>;
+  node?: Maybe<MetricWhereInput>;
+  AND?: Maybe<MetricSubscriptionWhereInput[] | MetricSubscriptionWhereInput>;
+  OR?: Maybe<MetricSubscriptionWhereInput[] | MetricSubscriptionWhereInput>;
+  NOT?: Maybe<MetricSubscriptionWhereInput[] | MetricSubscriptionWhereInput>;
+}
+
+export interface DataPointUpdateManyWithoutMetricInput {
+  create?: Maybe<
+    DataPointCreateWithoutMetricInput[] | DataPointCreateWithoutMetricInput
+  >;
+  delete?: Maybe<DataPointWhereUniqueInput[] | DataPointWhereUniqueInput>;
+  connect?: Maybe<DataPointWhereUniqueInput[] | DataPointWhereUniqueInput>;
+  set?: Maybe<DataPointWhereUniqueInput[] | DataPointWhereUniqueInput>;
+  disconnect?: Maybe<DataPointWhereUniqueInput[] | DataPointWhereUniqueInput>;
+  update?: Maybe<
+    | DataPointUpdateWithWhereUniqueWithoutMetricInput[]
+    | DataPointUpdateWithWhereUniqueWithoutMetricInput
+  >;
+  upsert?: Maybe<
+    | DataPointUpsertWithWhereUniqueWithoutMetricInput[]
+    | DataPointUpsertWithWhereUniqueWithoutMetricInput
+  >;
+  deleteMany?: Maybe<DataPointScalarWhereInput[] | DataPointScalarWhereInput>;
+  updateMany?: Maybe<
+    | DataPointUpdateManyWithWhereNestedInput[]
+    | DataPointUpdateManyWithWhereNestedInput
+  >;
+}
+
+export interface UserUpdateManyMutationInput {
+  name?: Maybe<String>;
+}
+
+export type MetricWhereUniqueInput = AtLeastOne<{
+  id: Maybe<ID_Input>;
+}>;
+
+export interface MetricUpdateManyMutationInput {
+  name?: Maybe<String>;
+}
+
+export interface DataPointCreateInput {
+  id?: Maybe<ID_Input>;
+  dateTime?: Maybe<DateTimeInput>;
+  metric: MetricCreateOneWithoutDataPointsInput;
+}
+
+export interface DataPointUpdateManyWithWhereNestedInput {
+  where: DataPointScalarWhereInput;
+  data: DataPointUpdateManyDataInput;
+}
+
+export interface MetricCreateOneWithoutDataPointsInput {
+  create?: Maybe<MetricCreateWithoutDataPointsInput>;
+  connect?: Maybe<MetricWhereUniqueInput>;
+}
+
+export interface DataPointScalarWhereInput {
+  id?: Maybe<ID_Input>;
+  id_not?: Maybe<ID_Input>;
+  id_in?: Maybe<ID_Input[] | ID_Input>;
+  id_not_in?: Maybe<ID_Input[] | ID_Input>;
+  id_lt?: Maybe<ID_Input>;
+  id_lte?: Maybe<ID_Input>;
+  id_gt?: Maybe<ID_Input>;
+  id_gte?: Maybe<ID_Input>;
+  id_contains?: Maybe<ID_Input>;
+  id_not_contains?: Maybe<ID_Input>;
+  id_starts_with?: Maybe<ID_Input>;
+  id_not_starts_with?: Maybe<ID_Input>;
+  id_ends_with?: Maybe<ID_Input>;
+  id_not_ends_with?: Maybe<ID_Input>;
+  dateTime?: Maybe<DateTimeInput>;
+  dateTime_not?: Maybe<DateTimeInput>;
+  dateTime_in?: Maybe<DateTimeInput[] | DateTimeInput>;
+  dateTime_not_in?: Maybe<DateTimeInput[] | DateTimeInput>;
+  dateTime_lt?: Maybe<DateTimeInput>;
+  dateTime_lte?: Maybe<DateTimeInput>;
+  dateTime_gt?: Maybe<DateTimeInput>;
+  dateTime_gte?: Maybe<DateTimeInput>;
+  AND?: Maybe<DataPointScalarWhereInput[] | DataPointScalarWhereInput>;
+  OR?: Maybe<DataPointScalarWhereInput[] | DataPointScalarWhereInput>;
+  NOT?: Maybe<DataPointScalarWhereInput[] | DataPointScalarWhereInput>;
+}
+
+export interface MetricCreateWithoutDataPointsInput {
+  id?: Maybe<ID_Input>;
+  name: String;
+}
+
+export interface UserSubscriptionWhereInput {
+  mutation_in?: Maybe<MutationType[] | MutationType>;
+  updatedFields_contains?: Maybe<String>;
+  updatedFields_contains_every?: Maybe<String[] | String>;
+  updatedFields_contains_some?: Maybe<String[] | String>;
+  node?: Maybe<UserWhereInput>;
+  AND?: Maybe<UserSubscriptionWhereInput[] | UserSubscriptionWhereInput>;
+  OR?: Maybe<UserSubscriptionWhereInput[] | UserSubscriptionWhereInput>;
+  NOT?: Maybe<UserSubscriptionWhereInput[] | UserSubscriptionWhereInput>;
+}
+
+export interface MetricUpdateInput {
+  name?: Maybe<String>;
+  dataPoints?: Maybe<DataPointUpdateManyWithoutMetricInput>;
 }
 
 export interface UserUpdateInput {
   name?: Maybe<String>;
 }
 
-export interface UserUpdateManyMutationInput {
+export interface MetricUpdateOneRequiredWithoutDataPointsInput {
+  create?: Maybe<MetricCreateWithoutDataPointsInput>;
+  update?: Maybe<MetricUpdateWithoutDataPointsDataInput>;
+  upsert?: Maybe<MetricUpsertWithoutDataPointsInput>;
+  connect?: Maybe<MetricWhereUniqueInput>;
+}
+
+export interface DataPointUpdateManyDataInput {
+  dateTime?: Maybe<DateTimeInput>;
+}
+
+export interface DataPointCreateManyWithoutMetricInput {
+  create?: Maybe<
+    DataPointCreateWithoutMetricInput[] | DataPointCreateWithoutMetricInput
+  >;
+  connect?: Maybe<DataPointWhereUniqueInput[] | DataPointWhereUniqueInput>;
+}
+
+export interface DataPointCreateWithoutMetricInput {
+  id?: Maybe<ID_Input>;
+  dateTime?: Maybe<DateTimeInput>;
+}
+
+export interface MetricWhereInput {
+  id?: Maybe<ID_Input>;
+  id_not?: Maybe<ID_Input>;
+  id_in?: Maybe<ID_Input[] | ID_Input>;
+  id_not_in?: Maybe<ID_Input[] | ID_Input>;
+  id_lt?: Maybe<ID_Input>;
+  id_lte?: Maybe<ID_Input>;
+  id_gt?: Maybe<ID_Input>;
+  id_gte?: Maybe<ID_Input>;
+  id_contains?: Maybe<ID_Input>;
+  id_not_contains?: Maybe<ID_Input>;
+  id_starts_with?: Maybe<ID_Input>;
+  id_not_starts_with?: Maybe<ID_Input>;
+  id_ends_with?: Maybe<ID_Input>;
+  id_not_ends_with?: Maybe<ID_Input>;
   name?: Maybe<String>;
+  name_not?: Maybe<String>;
+  name_in?: Maybe<String[] | String>;
+  name_not_in?: Maybe<String[] | String>;
+  name_lt?: Maybe<String>;
+  name_lte?: Maybe<String>;
+  name_gt?: Maybe<String>;
+  name_gte?: Maybe<String>;
+  name_contains?: Maybe<String>;
+  name_not_contains?: Maybe<String>;
+  name_starts_with?: Maybe<String>;
+  name_not_starts_with?: Maybe<String>;
+  name_ends_with?: Maybe<String>;
+  name_not_ends_with?: Maybe<String>;
+  dataPoints_every?: Maybe<DataPointWhereInput>;
+  dataPoints_some?: Maybe<DataPointWhereInput>;
+  dataPoints_none?: Maybe<DataPointWhereInput>;
+  AND?: Maybe<MetricWhereInput[] | MetricWhereInput>;
+  OR?: Maybe<MetricWhereInput[] | MetricWhereInput>;
+  NOT?: Maybe<MetricWhereInput[] | MetricWhereInput>;
+}
+
+export interface MetricUpdateWithoutDataPointsDataInput {
+  name?: Maybe<String>;
+}
+
+export type UserWhereUniqueInput = AtLeastOne<{
+  id: Maybe<ID_Input>;
+}>;
+
+export interface UserCreateInput {
+  id?: Maybe<ID_Input>;
+  name: String;
+}
+
+export interface DataPointSubscriptionWhereInput {
+  mutation_in?: Maybe<MutationType[] | MutationType>;
+  updatedFields_contains?: Maybe<String>;
+  updatedFields_contains_every?: Maybe<String[] | String>;
+  updatedFields_contains_some?: Maybe<String[] | String>;
+  node?: Maybe<DataPointWhereInput>;
+  AND?: Maybe<
+    DataPointSubscriptionWhereInput[] | DataPointSubscriptionWhereInput
+  >;
+  OR?: Maybe<
+    DataPointSubscriptionWhereInput[] | DataPointSubscriptionWhereInput
+  >;
+  NOT?: Maybe<
+    DataPointSubscriptionWhereInput[] | DataPointSubscriptionWhereInput
+  >;
 }
 
 export interface UserWhereInput {
@@ -152,55 +502,8 @@ export interface UserWhereInput {
   NOT?: Maybe<UserWhereInput[] | UserWhereInput>;
 }
 
-export interface UserSubscriptionWhereInput {
-  mutation_in?: Maybe<MutationType[] | MutationType>;
-  updatedFields_contains?: Maybe<String>;
-  updatedFields_contains_every?: Maybe<String[] | String>;
-  updatedFields_contains_some?: Maybe<String[] | String>;
-  node?: Maybe<UserWhereInput>;
-  AND?: Maybe<UserSubscriptionWhereInput[] | UserSubscriptionWhereInput>;
-  OR?: Maybe<UserSubscriptionWhereInput[] | UserSubscriptionWhereInput>;
-  NOT?: Maybe<UserSubscriptionWhereInput[] | UserSubscriptionWhereInput>;
-}
-
-export type UserWhereUniqueInput = AtLeastOne<{
-  id: Maybe<ID_Input>;
-}>;
-
 export interface NodeNode {
   id: ID_Output;
-}
-
-export interface AggregateUser {
-  count: Int;
-}
-
-export interface AggregateUserPromise
-  extends Promise<AggregateUser>,
-    Fragmentable {
-  count: () => Promise<Int>;
-}
-
-export interface AggregateUserSubscription
-  extends Promise<AsyncIterator<AggregateUser>>,
-    Fragmentable {
-  count: () => Promise<AsyncIterator<Int>>;
-}
-
-export interface BatchPayload {
-  count: Long;
-}
-
-export interface BatchPayloadPromise
-  extends Promise<BatchPayload>,
-    Fragmentable {
-  count: () => Promise<Long>;
-}
-
-export interface BatchPayloadSubscription
-  extends Promise<AsyncIterator<BatchPayload>>,
-    Fragmentable {
-  count: () => Promise<AsyncIterator<Long>>;
 }
 
 export interface UserPreviousValues {
@@ -222,6 +525,171 @@ export interface UserPreviousValuesSubscription
   name: () => Promise<AsyncIterator<String>>;
 }
 
+export interface MetricEdge {
+  node: Metric;
+  cursor: String;
+}
+
+export interface MetricEdgePromise extends Promise<MetricEdge>, Fragmentable {
+  node: <T = MetricPromise>() => T;
+  cursor: () => Promise<String>;
+}
+
+export interface MetricEdgeSubscription
+  extends Promise<AsyncIterator<MetricEdge>>,
+    Fragmentable {
+  node: <T = MetricSubscription>() => T;
+  cursor: () => Promise<AsyncIterator<String>>;
+}
+
+export interface PageInfo {
+  hasNextPage: Boolean;
+  hasPreviousPage: Boolean;
+  startCursor?: String;
+  endCursor?: String;
+}
+
+export interface PageInfoPromise extends Promise<PageInfo>, Fragmentable {
+  hasNextPage: () => Promise<Boolean>;
+  hasPreviousPage: () => Promise<Boolean>;
+  startCursor: () => Promise<String>;
+  endCursor: () => Promise<String>;
+}
+
+export interface PageInfoSubscription
+  extends Promise<AsyncIterator<PageInfo>>,
+    Fragmentable {
+  hasNextPage: () => Promise<AsyncIterator<Boolean>>;
+  hasPreviousPage: () => Promise<AsyncIterator<Boolean>>;
+  startCursor: () => Promise<AsyncIterator<String>>;
+  endCursor: () => Promise<AsyncIterator<String>>;
+}
+
+export interface MetricConnection {
+  pageInfo: PageInfo;
+  edges: MetricEdge[];
+}
+
+export interface MetricConnectionPromise
+  extends Promise<MetricConnection>,
+    Fragmentable {
+  pageInfo: <T = PageInfoPromise>() => T;
+  edges: <T = FragmentableArray<MetricEdge>>() => T;
+  aggregate: <T = AggregateMetricPromise>() => T;
+}
+
+export interface MetricConnectionSubscription
+  extends Promise<AsyncIterator<MetricConnection>>,
+    Fragmentable {
+  pageInfo: <T = PageInfoSubscription>() => T;
+  edges: <T = Promise<AsyncIterator<MetricEdgeSubscription>>>() => T;
+  aggregate: <T = AggregateMetricSubscription>() => T;
+}
+
+export interface Metric {
+  id: ID_Output;
+  name: String;
+}
+
+export interface MetricPromise extends Promise<Metric>, Fragmentable {
+  id: () => Promise<ID_Output>;
+  name: () => Promise<String>;
+  dataPoints: <T = FragmentableArray<DataPoint>>(args?: {
+    where?: DataPointWhereInput;
+    orderBy?: DataPointOrderByInput;
+    skip?: Int;
+    after?: String;
+    before?: String;
+    first?: Int;
+    last?: Int;
+  }) => T;
+}
+
+export interface MetricSubscription
+  extends Promise<AsyncIterator<Metric>>,
+    Fragmentable {
+  id: () => Promise<AsyncIterator<ID_Output>>;
+  name: () => Promise<AsyncIterator<String>>;
+  dataPoints: <T = Promise<AsyncIterator<DataPointSubscription>>>(args?: {
+    where?: DataPointWhereInput;
+    orderBy?: DataPointOrderByInput;
+    skip?: Int;
+    after?: String;
+    before?: String;
+    first?: Int;
+    last?: Int;
+  }) => T;
+}
+
+export interface MetricNullablePromise
+  extends Promise<Metric | null>,
+    Fragmentable {
+  id: () => Promise<ID_Output>;
+  name: () => Promise<String>;
+  dataPoints: <T = FragmentableArray<DataPoint>>(args?: {
+    where?: DataPointWhereInput;
+    orderBy?: DataPointOrderByInput;
+    skip?: Int;
+    after?: String;
+    before?: String;
+    first?: Int;
+    last?: Int;
+  }) => T;
+}
+
+export interface BatchPayload {
+  count: Long;
+}
+
+export interface BatchPayloadPromise
+  extends Promise<BatchPayload>,
+    Fragmentable {
+  count: () => Promise<Long>;
+}
+
+export interface BatchPayloadSubscription
+  extends Promise<AsyncIterator<BatchPayload>>,
+    Fragmentable {
+  count: () => Promise<AsyncIterator<Long>>;
+}
+
+export interface DataPointConnection {
+  pageInfo: PageInfo;
+  edges: DataPointEdge[];
+}
+
+export interface DataPointConnectionPromise
+  extends Promise<DataPointConnection>,
+    Fragmentable {
+  pageInfo: <T = PageInfoPromise>() => T;
+  edges: <T = FragmentableArray<DataPointEdge>>() => T;
+  aggregate: <T = AggregateDataPointPromise>() => T;
+}
+
+export interface DataPointConnectionSubscription
+  extends Promise<AsyncIterator<DataPointConnection>>,
+    Fragmentable {
+  pageInfo: <T = PageInfoSubscription>() => T;
+  edges: <T = Promise<AsyncIterator<DataPointEdgeSubscription>>>() => T;
+  aggregate: <T = AggregateDataPointSubscription>() => T;
+}
+
+export interface AggregateDataPoint {
+  count: Int;
+}
+
+export interface AggregateDataPointPromise
+  extends Promise<AggregateDataPoint>,
+    Fragmentable {
+  count: () => Promise<Int>;
+}
+
+export interface AggregateDataPointSubscription
+  extends Promise<AsyncIterator<AggregateDataPoint>>,
+    Fragmentable {
+  count: () => Promise<AsyncIterator<Int>>;
+}
+
 export interface UserEdge {
   node: User;
   cursor: String;
@@ -237,6 +705,156 @@ export interface UserEdgeSubscription
     Fragmentable {
   node: <T = UserSubscription>() => T;
   cursor: () => Promise<AsyncIterator<String>>;
+}
+
+export interface DataPointEdge {
+  node: DataPoint;
+  cursor: String;
+}
+
+export interface DataPointEdgePromise
+  extends Promise<DataPointEdge>,
+    Fragmentable {
+  node: <T = DataPointPromise>() => T;
+  cursor: () => Promise<String>;
+}
+
+export interface DataPointEdgeSubscription
+  extends Promise<AsyncIterator<DataPointEdge>>,
+    Fragmentable {
+  node: <T = DataPointSubscription>() => T;
+  cursor: () => Promise<AsyncIterator<String>>;
+}
+
+export interface MetricPreviousValues {
+  id: ID_Output;
+  name: String;
+}
+
+export interface MetricPreviousValuesPromise
+  extends Promise<MetricPreviousValues>,
+    Fragmentable {
+  id: () => Promise<ID_Output>;
+  name: () => Promise<String>;
+}
+
+export interface MetricPreviousValuesSubscription
+  extends Promise<AsyncIterator<MetricPreviousValues>>,
+    Fragmentable {
+  id: () => Promise<AsyncIterator<ID_Output>>;
+  name: () => Promise<AsyncIterator<String>>;
+}
+
+export interface AggregateMetric {
+  count: Int;
+}
+
+export interface AggregateMetricPromise
+  extends Promise<AggregateMetric>,
+    Fragmentable {
+  count: () => Promise<Int>;
+}
+
+export interface AggregateMetricSubscription
+  extends Promise<AsyncIterator<AggregateMetric>>,
+    Fragmentable {
+  count: () => Promise<AsyncIterator<Int>>;
+}
+
+export interface DataPointPreviousValues {
+  id: ID_Output;
+  dateTime?: DateTimeOutput;
+}
+
+export interface DataPointPreviousValuesPromise
+  extends Promise<DataPointPreviousValues>,
+    Fragmentable {
+  id: () => Promise<ID_Output>;
+  dateTime: () => Promise<DateTimeOutput>;
+}
+
+export interface DataPointPreviousValuesSubscription
+  extends Promise<AsyncIterator<DataPointPreviousValues>>,
+    Fragmentable {
+  id: () => Promise<AsyncIterator<ID_Output>>;
+  dateTime: () => Promise<AsyncIterator<DateTimeOutput>>;
+}
+
+export interface DataPointSubscriptionPayload {
+  mutation: MutationType;
+  node: DataPoint;
+  updatedFields: String[];
+  previousValues: DataPointPreviousValues;
+}
+
+export interface DataPointSubscriptionPayloadPromise
+  extends Promise<DataPointSubscriptionPayload>,
+    Fragmentable {
+  mutation: () => Promise<MutationType>;
+  node: <T = DataPointPromise>() => T;
+  updatedFields: () => Promise<String[]>;
+  previousValues: <T = DataPointPreviousValuesPromise>() => T;
+}
+
+export interface DataPointSubscriptionPayloadSubscription
+  extends Promise<AsyncIterator<DataPointSubscriptionPayload>>,
+    Fragmentable {
+  mutation: () => Promise<AsyncIterator<MutationType>>;
+  node: <T = DataPointSubscription>() => T;
+  updatedFields: () => Promise<AsyncIterator<String[]>>;
+  previousValues: <T = DataPointPreviousValuesSubscription>() => T;
+}
+
+export interface DataPoint {
+  id: ID_Output;
+  dateTime?: DateTimeOutput;
+}
+
+export interface DataPointPromise extends Promise<DataPoint>, Fragmentable {
+  id: () => Promise<ID_Output>;
+  dateTime: () => Promise<DateTimeOutput>;
+  metric: <T = MetricPromise>() => T;
+}
+
+export interface DataPointSubscription
+  extends Promise<AsyncIterator<DataPoint>>,
+    Fragmentable {
+  id: () => Promise<AsyncIterator<ID_Output>>;
+  dateTime: () => Promise<AsyncIterator<DateTimeOutput>>;
+  metric: <T = MetricSubscription>() => T;
+}
+
+export interface DataPointNullablePromise
+  extends Promise<DataPoint | null>,
+    Fragmentable {
+  id: () => Promise<ID_Output>;
+  dateTime: () => Promise<DateTimeOutput>;
+  metric: <T = MetricPromise>() => T;
+}
+
+export interface MetricSubscriptionPayload {
+  mutation: MutationType;
+  node: Metric;
+  updatedFields: String[];
+  previousValues: MetricPreviousValues;
+}
+
+export interface MetricSubscriptionPayloadPromise
+  extends Promise<MetricSubscriptionPayload>,
+    Fragmentable {
+  mutation: () => Promise<MutationType>;
+  node: <T = MetricPromise>() => T;
+  updatedFields: () => Promise<String[]>;
+  previousValues: <T = MetricPreviousValuesPromise>() => T;
+}
+
+export interface MetricSubscriptionPayloadSubscription
+  extends Promise<AsyncIterator<MetricSubscriptionPayload>>,
+    Fragmentable {
+  mutation: () => Promise<AsyncIterator<MutationType>>;
+  node: <T = MetricSubscription>() => T;
+  updatedFields: () => Promise<AsyncIterator<String[]>>;
+  previousValues: <T = MetricPreviousValuesSubscription>() => T;
 }
 
 export interface UserSubscriptionPayload {
@@ -309,27 +927,20 @@ export interface UserConnectionSubscription
   aggregate: <T = AggregateUserSubscription>() => T;
 }
 
-export interface PageInfo {
-  hasNextPage: Boolean;
-  hasPreviousPage: Boolean;
-  startCursor?: String;
-  endCursor?: String;
+export interface AggregateUser {
+  count: Int;
 }
 
-export interface PageInfoPromise extends Promise<PageInfo>, Fragmentable {
-  hasNextPage: () => Promise<Boolean>;
-  hasPreviousPage: () => Promise<Boolean>;
-  startCursor: () => Promise<String>;
-  endCursor: () => Promise<String>;
-}
-
-export interface PageInfoSubscription
-  extends Promise<AsyncIterator<PageInfo>>,
+export interface AggregateUserPromise
+  extends Promise<AggregateUser>,
     Fragmentable {
-  hasNextPage: () => Promise<AsyncIterator<Boolean>>;
-  hasPreviousPage: () => Promise<AsyncIterator<Boolean>>;
-  startCursor: () => Promise<AsyncIterator<String>>;
-  endCursor: () => Promise<AsyncIterator<String>>;
+  count: () => Promise<Int>;
+}
+
+export interface AggregateUserSubscription
+  extends Promise<AsyncIterator<AggregateUser>>,
+    Fragmentable {
+  count: () => Promise<AsyncIterator<Int>>;
 }
 
 /*
@@ -340,15 +951,25 @@ export type String = string;
 export type Long = string;
 
 /*
+The `Int` scalar type represents non-fractional signed whole numeric values. Int can represent values between -(2^31) and 2^31 - 1.
+*/
+export type Int = number;
+
+/*
 The `ID` scalar type represents a unique identifier, often used to refetch an object or as key for a cache. The ID type appears in a JSON response as a String; however, it is not intended to be human-readable. When expected as an input type, any string (such as `"4"`) or integer (such as `4`) input value will be accepted as an ID.
 */
 export type ID_Input = string | number;
 export type ID_Output = string;
 
 /*
-The `Int` scalar type represents non-fractional signed whole numeric values. Int can represent values between -(2^31) and 2^31 - 1.
+DateTime scalar input type, allowing Date
 */
-export type Int = number;
+export type DateTimeInput = Date | string;
+
+/*
+DateTime scalar output type, which is always a string
+*/
+export type DateTimeOutput = string;
 
 /*
 The `Boolean` scalar type represents `true` or `false`.
@@ -362,6 +983,14 @@ export type Boolean = boolean;
 export const models: Model[] = [
   {
     name: "User",
+    embedded: false
+  },
+  {
+    name: "Metric",
+    embedded: false
+  },
+  {
+    name: "DataPoint",
     embedded: false
   }
 ];

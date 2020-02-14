@@ -7,7 +7,7 @@
   "license": "ISC",
   "main": "src/index.ts",
   "scripts": {
-    "test": "echo \"Error: run tests from root\" && exit 1"
+    "start": "docker-compose up -d && nodemon -x ts-node src/index.ts"
   },
   "dependencies": {
     "apollo-server": "^2.8.1",
