@@ -4,13 +4,13 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "dev": "yarn --cwd packages/api dev & yarn --cwd packages/web dev"
   },
   "author": "",
   "license": "ISC",
   "devDependencies": {
     "lerna": "^3.16.4",
-    "prettier": "^1.18.2",
+    "prettier": "^2.0.4",
     "ts-lint": "^4.5.1"
   }
 }

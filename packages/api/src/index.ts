@@ -1,85 +1,48 @@
-import { ApolloServer } from 'apollo-server';
-import { Prisma } from './generated/prisma-client';
+import { ApolloServer, gql, makeExecutableSchema } from 'apollo-server-express';
+import * as express from 'express';
+import 'reflect-metadata';
+import { createConnection } from 'typeorm';
+import { UserSchema } from './users/schema';
+import { UserResolver } from './users/resolver';
+import { MetricSchema } from './metrics/schema';
+import { ContextType } from './types';
+import { MetricResolver } from './metrics/resolver';
 
-const prisma = new Prisma();
-const resolvers = {
-  User: () => prisma.users(),
-  // Metric: () => prisma.metric(),
-  Query: {
-    allMetrics: async () => {
-      const metrics = await prisma.metrics();
+const PORT = process.env.PORT || 4000;
+const app = express();
 
-      return metrics.map(async metric => {
-        const dataPoints = await prisma.dataPoints({
-          where: {
-            metric: { id: metric.id },
-          },
-        });
-        console.log(dataPoints);
-        return {
-          ...metric,
-          dataPoints: dataPoints,
-        };
+const RootSchema = gql`
+  type Query
+
+  type Mutation
+`;
+
+createConnection()
+  .then(async (connection) => {
+    console.log('DB connected');
+
+    const apolloServer = new ApolloServer({
+      schema: makeExecutableSchema({
+        typeDefs: [RootSchema, UserSchema, MetricSchema],
+        resolvers: [MetricResolver, UserResolver],
+      }),
+      context: (): ContextType => {
+        return { connection };
+      },
+      formatError: (err) => {
+        console.error(err);
+
+        return err;
+      },
+    });
+
+    apolloServer.applyMiddleware({ app });
+
+    return new Promise((resolve) => {
+      app.listen(PORT, () => {
+        console.log(`API ready at http://localhost:${PORT}`);
+        resolve();
       });
-    },
-  },
-  Mutation: {
-    createMetric: (_, { input }) => {
-      return prisma.createMetric({ name: input.name });
-    },
-    createDataPoint: async (_, { input }) => {
-      console.log(input);
-      return prisma.createDataPoint({
-        dateTime: new Date(),
-        metric: {
-          connect: {
-            id: input.metricId,
-          },
-        },
-      });
-    },
-  },
-};
-
-const typeDefs = `
-
-input MetricInput {
-  name: String!
-}
-
-input CreateDataPointInput {
-  metricId: String!
-}
-
-type Query {
-  user: User
-  allMetrics: [Metric]
-}
-
-type Mutation {
-  createMetric(input: MetricInput): Metric!
-  createDataPoint(input: CreateDataPointInput ): DataPoint!
-}
-
-type User {
-  id: ID
-}
-
-type DataPoint {
-  id: ID
-  dateTime: String
-}
-
-type Metric {
-  id: ID
-  name: String!
-  dataPoints: [DataPoint]
-}`;
-
-const server = new ApolloServer({ typeDefs, resolvers });
-
-// This `listen` method launches a web-server.  Existing apps
-// can utilize middleware options, which we'll discuss later.
-server.listen().then(({ url }) => {
-  console.log(`🚀  Server ready at ${url}`);
-});
+    });
+  })
+  .catch((error) => console.log(error));
