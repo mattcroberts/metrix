@@ -10,6 +10,11 @@ export type Scalars = {
   Float: number;
 };
 
+export type DataPoint = {
+   __typename?: 'DataPoint';
+  datetime: Scalars['String'];
+};
+
 export type Metric = {
    __typename?: 'Metric';
   id: Scalars['ID'];
@@ -19,6 +24,7 @@ export type Metric = {
 export type Mutation = {
    __typename?: 'Mutation';
   createMetric: Metric;
+  recordMetric?: Maybe<Metric>;
 };
 
 
@@ -26,10 +32,21 @@ export type MutationCreateMetricArgs = {
   name: Scalars['String'];
 };
 
+
+export type MutationRecordMetricArgs = {
+  metricId: Scalars['String'];
+};
+
 export type Query = {
    __typename?: 'Query';
   User?: Maybe<User>;
   allMetrics: Array<Maybe<Metric>>;
+  metricById?: Maybe<Metric>;
+};
+
+
+export type QueryMetricByIdArgs = {
+  id: Scalars['String'];
 };
 
 export type User = {
@@ -117,6 +134,7 @@ export type ResolversTypes = {
   String: ResolverTypeWrapper<Scalars['String']>,
   Mutation: ResolverTypeWrapper<{}>,
   Boolean: ResolverTypeWrapper<Scalars['Boolean']>,
+  DataPoint: ResolverTypeWrapper<DataPoint>,
 };
 
 /** Mapping between all available schema types and the resolvers parents */
@@ -128,6 +146,12 @@ export type ResolversParentTypes = {
   String: Scalars['String'],
   Mutation: {},
   Boolean: Scalars['Boolean'],
+  DataPoint: DataPoint,
+};
+
+export type DataPointResolvers<ContextType = any, ParentType extends ResolversParentTypes['DataPoint'] = ResolversParentTypes['DataPoint']> = {
+  datetime?: Resolver<ResolversTypes['String'], ParentType, ContextType>,
+  __isTypeOf?: isTypeOfResolverFn<ParentType>,
 };
 
 export type MetricResolvers<ContextType = any, ParentType extends ResolversParentTypes['Metric'] = ResolversParentTypes['Metric']> = {
@@ -138,11 +162,13 @@ export type MetricResolvers<ContextType = any, ParentType extends ResolversParen
 
 export type MutationResolvers<ContextType = any, ParentType extends ResolversParentTypes['Mutation'] = ResolversParentTypes['Mutation']> = {
   createMetric?: Resolver<ResolversTypes['Metric'], ParentType, ContextType, RequireFields<MutationCreateMetricArgs, 'name'>>,
+  recordMetric?: Resolver<Maybe<ResolversTypes['Metric']>, ParentType, ContextType, RequireFields<MutationRecordMetricArgs, 'metricId'>>,
 };
 
 export type QueryResolvers<ContextType = any, ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']> = {
   User?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType>,
   allMetrics?: Resolver<Array<Maybe<ResolversTypes['Metric']>>, ParentType, ContextType>,
+  metricById?: Resolver<Maybe<ResolversTypes['Metric']>, ParentType, ContextType, RequireFields<QueryMetricByIdArgs, 'id'>>,
 };
 
 export type UserResolvers<ContextType = any, ParentType extends ResolversParentTypes['User'] = ResolversParentTypes['User']> = {
@@ -151,6 +177,7 @@ export type UserResolvers<ContextType = any, ParentType extends ResolversParentT
 };
 
 export type Resolvers<ContextType = any> = {
+  DataPoint?: DataPointResolvers<ContextType>,
   Metric?: MetricResolvers<ContextType>,
   Mutation?: MutationResolvers<ContextType>,
   Query?: QueryResolvers<ContextType>,
