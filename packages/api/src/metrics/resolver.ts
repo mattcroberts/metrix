@@ -43,4 +43,11 @@ export class MetricResolver {
 
     return this.metricRepository.save(metric);
   }
+
+  @Mutation((returns) => Metric, { nullable: true })
+  async deleteMetric(@Arg('id') id: string) {
+    const metric = await this.metricRepository.find({ id });
+    this.metricRepository.remove(metric);
+    return null;
+  }
 }

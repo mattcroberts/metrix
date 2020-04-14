@@ -14,6 +14,6 @@ export class DataPoint {
   datetime: Date;
 
   @Field((type) => Metric)
-  @ManyToOne((type) => Metric, (metric) => metric.dataPoints)
+  @ManyToOne((type) => Metric, (metric) => metric.dataPoints, { onDelete: 'CASCADE' })
   metric: Metric;
 }

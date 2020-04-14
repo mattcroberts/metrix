@@ -4,7 +4,7 @@ import { gql } from 'apollo-boost';
 import { Link } from 'react-router-dom';
 
 const GET_ALL_METRICS = gql`
-  query {
+  query getAllMetrics {
     allMetrics {
       id
       name
@@ -18,9 +18,17 @@ const RECORD_METRIC = gql`
       id
       name
       dataPoints {
-          id
-          datetime
+        id
+        datetime
       }
+    }
+  }
+`;
+
+const DELETE_METRIC = gql`
+  mutation deleteMetric($id: String!) {
+    deleteMetric(id: $id) {
+      id
     }
   }
 `;
@@ -31,6 +39,7 @@ export const HomePage = () => {
   });
 
   const [recordMetric] = useMutation(RECORD_METRIC);
+  const [deleteMetric] = useMutation(DELETE_METRIC);
 
   console.log({ data });
 
@@ -56,6 +65,17 @@ export const HomePage = () => {
               }
             >
               Record
+            </button>
+
+            <button
+              onClick={() =>
+                deleteMetric({
+                  variables: { id: metric.id },
+                  refetchQueries: ['getAllMetrics'],
+                })
+              }
+            >
+              Delete
             </button>
           </li>
         ))}
