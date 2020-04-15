@@ -1,0 +1,6 @@
+query getAllMetrics {
+  allMetrics {
+    id
+    name
+  }
+}

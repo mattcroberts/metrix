@@ -1,0 +1,6 @@
+mutation CreateMetric($name: String!) {
+  createMetric(name: $name) {
+    id
+    name
+  }
+}

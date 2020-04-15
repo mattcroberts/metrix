@@ -5,19 +5,11 @@ import { gql } from 'apollo-boost';
 import { useHistory } from 'react-router-dom';
 import { Flex, Box, Button, Heading } from 'rebass/styled-components';
 import { Input, Label } from '@rebass/forms';
-
-const CREATE_METRIC = gql`
-  mutation CreateMetric($name: String!) {
-    createMetric(name: $name) {
-      id
-      name
-    }
-  }
-`;
+import { useCreateMetricMutation } from '../../../generated/graphql';
 
 export const CreateMetricPage = () => {
   const { register, handleSubmit, errors } = useForm();
-  const [createMetric] = useMutation(CREATE_METRIC);
+  const [createMetric] = useCreateMetricMutation();
   const history = useHistory();
 
   return (

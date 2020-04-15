@@ -1,0 +1,5 @@
+mutation deleteMetric($id: String!) {
+  deleteMetric(id: $id) {
+    id
+  }
+}

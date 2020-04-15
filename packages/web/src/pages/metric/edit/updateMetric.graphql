@@ -1,0 +1,6 @@
+mutation UpdateMetric($id: String!, $metricInput: MetricInput!) {
+  updateMetric(id: $id, metricInput: $metricInput) {
+    id
+    name
+  }
+}

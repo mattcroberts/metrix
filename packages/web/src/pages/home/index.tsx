@@ -1,46 +1,15 @@
 import React from 'react';
-import { useQuery, useMutation } from '@apollo/react-hooks';
-import { gql } from 'apollo-boost';
+import { Box, Button, Flex, Heading } from 'rebass/styled-components';
 import { Link } from '../../components/Link';
-import { Button, Heading, Flex, Box } from 'rebass/styled-components';
-
-const GET_ALL_METRICS = gql`
-  query getAllMetrics {
-    allMetrics {
-      id
-      name
-    }
-  }
-`;
-
-const RECORD_METRIC = gql`
-  mutation recordMetric($metricId: String!) {
-    recordMetric(metricId: $metricId) {
-      id
-      name
-      dataPoints {
-        id
-        datetime
-      }
-    }
-  }
-`;
-
-const DELETE_METRIC = gql`
-  mutation deleteMetric($id: String!) {
-    deleteMetric(id: $id) {
-      id
-    }
-  }
-`;
+import { useDeleteMetricMutation, useGetAllMetricsQuery, useRecordMetricMutation } from '../../generated/graphql';
 
 export const HomePage = () => {
-  const { loading, data } = useQuery<{ allMetrics: { id: string; name: string }[] }>(GET_ALL_METRICS, {
+  const { loading, data } = useGetAllMetricsQuery({
     fetchPolicy: 'cache-and-network',
   });
 
-  const [recordMetric] = useMutation(RECORD_METRIC);
-  const [deleteMetric] = useMutation(DELETE_METRIC);
+  const [recordMetric] = useRecordMetricMutation();
+  const [deleteMetric] = useDeleteMetricMutation();
 
   if (loading) return <>Loading...</>;
 
@@ -73,13 +42,13 @@ export const HomePage = () => {
             </Box>
             <Button
               sx={{ p: 4, mb: 2 }}
-              onClick={() =>
+              onClick={() => {
                 recordMetric({
                   variables: {
                     metricId: metric.id,
                   },
-                })
-              }
+                });
+              }}
             >
               Record
             </Button>

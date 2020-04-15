@@ -2,19 +2,10 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { useQuery } from '@apollo/react-hooks';
 import { gql } from 'apollo-boost';
+import { useGetAllMetricsQuery } from '../../generated/graphql';
 
 const MetricsListContainer = () => {
-  const { loading, data } = useQuery<{ allMetrics: { id: string; name: string }[] }>(
-    gql`
-      query {
-        allMetrics {
-          id
-          name
-        }
-      }
-    `,
-    { fetchPolicy: 'cache-and-network' }
-  );
+  const { loading, data } = useGetAllMetricsQuery({ fetchPolicy: 'cache-and-network' });
 
   console.log({ data });
 

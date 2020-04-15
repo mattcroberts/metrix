@@ -1,36 +1,16 @@
-import { useQuery, useMutation } from '@apollo/react-hooks';
-import { gql } from 'apollo-boost';
 import React from 'react';
 import { useForm } from 'react-hook-form';
 import { RouteComponentProps, useHistory } from 'react-router-dom';
-
-const UPDATE_METRIC = gql`
-  mutation UpdateMetric($id: String!, $metricInput: MetricInput!) {
-    updateMetric(id: $id, metricInput: $metricInput) {
-      id
-      name
-    }
-  }
-`;
+import { useGetMetricByIdQuery, useUpdateMetricMutation } from '../../../generated/graphql';
 
 export const MetricPage = ({
   match: {
     params: { id },
   },
 }: RouteComponentProps<{ id: string }>) => {
-  const { data, loading } = useQuery(
-    gql`
-      query Metric($id: String!) {
-        metricById(id: $id) {
-          id
-          name
-        }
-      }
-    `,
-    { variables: { id } }
-  );
+  const { data, loading } = useGetMetricByIdQuery({ variables: { id } });
 
-  const [updateMetric] = useMutation(UPDATE_METRIC);
+  const [updateMetric] = useUpdateMetricMutation();
   const { register, handleSubmit } = useForm();
   const history = useHistory();
 

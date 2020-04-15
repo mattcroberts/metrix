@@ -1,0 +1,10 @@
+ mutation recordMetric($metricId: String!) {
+    recordMetric(metricId: $metricId) {
+      id
+      name
+      dataPoints {
+        id
+        datetime
+      }
+    }
+  }
