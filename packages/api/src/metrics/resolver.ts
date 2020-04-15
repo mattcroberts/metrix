@@ -1,8 +1,15 @@
-import { Arg, Mutation, Query, Resolver } from 'type-graphql';
+import { Arg, Mutation, Query, Resolver, InputType, Field } from 'type-graphql';
 import { Repository } from 'typeorm';
 import { InjectRepository } from 'typeorm-typedi-extensions';
 import { DataPoint } from '../datapoint/DataPoint.model';
 import { Metric } from './Metric.model';
+import { ApolloError } from 'apollo-server-express';
+
+@InputType()
+class MetricInput {
+  @Field()
+  name: string;
+}
 
 @Resolver((of) => Metric)
 export class MetricResolver {
@@ -31,6 +38,15 @@ export class MetricResolver {
 
     console.log('Created Metric', result);
     return result;
+  }
+
+  @Mutation((returns) => Metric)
+  async updateMetric(@Arg('id') id: string, @Arg('metricInput') metricInput: MetricInput) {
+    const metric = await this.metricRepository.findOne({ id });
+    if (!metric) {
+      throw new ApolloError('Metric does not exist');
+    }
+    return this.metricRepository.save({ ...metric, ...metricInput });
   }
 
   @Mutation((returns) => Metric)
