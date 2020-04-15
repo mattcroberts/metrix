@@ -3,6 +3,8 @@ import { useForm } from 'react-hook-form';
 import { useMutation } from '@apollo/react-hooks';
 import { gql } from 'apollo-boost';
 import { useHistory } from 'react-router-dom';
+import { Flex, Box, Button, Heading } from 'rebass/styled-components';
+import { Input, Label } from '@rebass/forms';
 
 const CREATE_METRIC = gql`
   mutation CreateMetric($name: String!) {
@@ -20,8 +22,10 @@ export const CreateMetricPage = () => {
 
   return (
     <>
-      <h1>Create Metric</h1>
-      <form
+      <Flex
+        sx={{ borderColor: 'muted', borderWidth: 1, borderStyle: 'solid', padding: 3 }}
+        as="form"
+        flexDirection="column"
         onSubmit={handleSubmit(async ({ name }) => {
           const { errors } = await createMetric({ variables: { name } });
 
@@ -33,14 +37,18 @@ export const CreateMetricPage = () => {
           history.push('/metrics');
         })}
       >
-        <label>
-          Name
-          <input name="name" ref={register({ required: 'Required' })} />
-          <p>{errors.name && errors.name.message}</p>
-        </label>
-
-        <button type="submit">Create</button>
-      </form>
+        <Heading mt="2">Create Metric</Heading>
+        <Box margin="4" ml="0">
+          <Label>
+            Name
+            <Input marginLeft="3" maxWidth="60%" name="name" ref={register({ required: 'Required' })} />
+            <p>{errors.name && errors.name.message}</p>
+          </Label>
+        </Box>
+        <Flex justifyContent="flex-end" mr="4">
+          <Button type="submit">Create</Button>
+        </Flex>
+      </Flex>
     </>
   );
 };

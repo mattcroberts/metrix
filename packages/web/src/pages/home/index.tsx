@@ -1,7 +1,8 @@
 import React from 'react';
 import { useQuery, useMutation } from '@apollo/react-hooks';
 import { gql } from 'apollo-boost';
-import { Link } from 'react-router-dom';
+import { Link } from '../../components/Link';
+import { Button, Heading, Flex, Box } from 'rebass/styled-components';
 
 const GET_ALL_METRICS = gql`
   query getAllMetrics {
@@ -41,21 +42,37 @@ export const HomePage = () => {
   const [recordMetric] = useMutation(RECORD_METRIC);
   const [deleteMetric] = useMutation(DELETE_METRIC);
 
-  console.log({ data });
-
   if (loading) return <>Loading...</>;
 
   if (!data) return <>No data</>;
 
   return (
     <>
-      <h1>Home</h1>
-      <Link to="/metrics">Edit Metrics</Link>
-      <ul>
+      <Heading sx={{ mb: 3, mt: 3 }}>Home</Heading>
+
+      <Flex sx={{ flexWrap: 'wrap', alignContent: 'stretch' }}>
         {data.allMetrics.map((metric) => (
-          <li key={metric.id}>
-            <p>{metric.name}</p>
-            <button
+          <Flex
+            key={metric.id}
+            sx={{
+              flexDirection: 'column',
+              backgroundColor: 'muted',
+              borderRadius: 2,
+              p: 2,
+              ml: 3,
+              mr: 3,
+              mb: 3,
+              justifyContent: 'center',
+              minWidth: '30%',
+              maxWidth: '30%',
+              flexGrow: 3,
+            }}
+          >
+            <Box color="background" fontSize="2" sx={{ fontWeight: 'bold' }}>
+              {metric.name}
+            </Box>
+            <Button
+              sx={{ p: 4, mb: 2 }}
               onClick={() =>
                 recordMetric({
                   variables: {
@@ -65,21 +82,26 @@ export const HomePage = () => {
               }
             >
               Record
-            </button>
-
-            <button
-              onClick={() =>
-                deleteMetric({
-                  variables: { id: metric.id },
-                  refetchQueries: ['getAllMetrics'],
-                })
-              }
-            >
-              Delete
-            </button>
-          </li>
+            </Button>
+            <Flex justifyContent="space-evenly">
+              <Link to={`/metrics/${metric.id}/edit`} width="50%" mr="2">
+                <Button width="100%">Edit</Button>
+              </Link>
+              <Button
+                width="50%"
+                onClick={() =>
+                  deleteMetric({
+                    variables: { id: metric.id },
+                    refetchQueries: ['getAllMetrics'],
+                  })
+                }
+              >
+                Delete
+              </Button>
+            </Flex>
+          </Flex>
         ))}
-      </ul>
+      </Flex>
     </>
   );
 };
