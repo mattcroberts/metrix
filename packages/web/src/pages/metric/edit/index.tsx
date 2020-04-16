@@ -3,7 +3,7 @@ import { useForm } from 'react-hook-form';
 import { RouteComponentProps, useHistory } from 'react-router-dom';
 import { useGetMetricByIdQuery, useUpdateMetricMutation } from '../../../generated/graphql';
 
-export const MetricPage = ({
+export const EditMetricPage = ({
   match: {
     params: { id },
   },

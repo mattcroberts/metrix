@@ -1,20 +1,17 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
-import { useQuery } from '@apollo/react-hooks';
-import { gql } from 'apollo-boost';
+import * as React from 'react';
 import { useGetAllMetricsQuery } from '../../generated/graphql';
+import { Link } from '../../components/Link';
+import { Heading } from 'rebass/styled-components';
 
-const MetricsListContainer = () => {
-  const { loading, data } = useGetAllMetricsQuery({ fetchPolicy: 'cache-and-network' });
-
-  console.log({ data });
+export const AnalysesPage = () => {
+  const { data, loading } = useGetAllMetricsQuery();
 
   if (loading) return <>Loading...</>;
 
   if (!data) return <>No data</>;
   return (
     <>
-      <h1>All Metrics</h1>
+      <Heading>All Metrics</Heading>
       <Link to="/metrics/new">Create new Metric</Link>
       <ul>
         {data.allMetrics.map((metric) => (
@@ -25,8 +22,4 @@ const MetricsListContainer = () => {
       </ul>
     </>
   );
-};
-
-export const MetricListPage = () => {
-  return <MetricsListContainer />;
 };

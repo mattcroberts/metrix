@@ -73,6 +73,23 @@ export type QueryMetricByIdArgs = {
   id: Scalars['String'];
 };
 
+export type GetMetricWithDataPointsQueryVariables = {
+  metricId: Scalars['String'];
+};
+
+
+export type GetMetricWithDataPointsQuery = (
+  { __typename?: 'Query' }
+  & { metricById: (
+    { __typename?: 'Metric' }
+    & Pick<Metric, 'id' | 'name'>
+    & { dataPoints: Array<(
+      { __typename?: 'DataPoint' }
+      & Pick<DataPoint, 'id' | 'datetime'>
+    )> }
+  ) }
+);
+
 export type DeleteMetricMutationVariables = {
   id: Scalars['String'];
 };
@@ -155,6 +172,44 @@ export type UpdateMetricMutation = (
 );
 
 
+export const GetMetricWithDataPointsDocument = gql`
+    query GetMetricWithDataPoints($metricId: String!) {
+  metricById(id: $metricId) {
+    id
+    name
+    dataPoints {
+      id
+      datetime
+    }
+  }
+}
+    `;
+
+/**
+ * __useGetMetricWithDataPointsQuery__
+ *
+ * To run a query within a React component, call `useGetMetricWithDataPointsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetMetricWithDataPointsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetMetricWithDataPointsQuery({
+ *   variables: {
+ *      metricId: // value for 'metricId'
+ *   },
+ * });
+ */
+export function useGetMetricWithDataPointsQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<GetMetricWithDataPointsQuery, GetMetricWithDataPointsQueryVariables>) {
+        return ApolloReactHooks.useQuery<GetMetricWithDataPointsQuery, GetMetricWithDataPointsQueryVariables>(GetMetricWithDataPointsDocument, baseOptions);
+      }
+export function useGetMetricWithDataPointsLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<GetMetricWithDataPointsQuery, GetMetricWithDataPointsQueryVariables>) {
+          return ApolloReactHooks.useLazyQuery<GetMetricWithDataPointsQuery, GetMetricWithDataPointsQueryVariables>(GetMetricWithDataPointsDocument, baseOptions);
+        }
+export type GetMetricWithDataPointsQueryHookResult = ReturnType<typeof useGetMetricWithDataPointsQuery>;
+export type GetMetricWithDataPointsLazyQueryHookResult = ReturnType<typeof useGetMetricWithDataPointsLazyQuery>;
+export type GetMetricWithDataPointsQueryResult = ApolloReactCommon.QueryResult<GetMetricWithDataPointsQuery, GetMetricWithDataPointsQueryVariables>;
 export const DeleteMetricDocument = gql`
     mutation deleteMetric($id: String!) {
   deleteMetric(id: $id) {

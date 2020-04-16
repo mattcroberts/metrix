@@ -1,0 +1,10 @@
+query GetMetricWithDataPoints($metricId: String!) {
+  metricById(id: $metricId) {
+    id
+    name
+    dataPoints {
+      id
+      datetime
+    }
+  }
+}
