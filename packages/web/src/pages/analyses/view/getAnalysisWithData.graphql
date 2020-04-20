@@ -1,0 +1,14 @@
+query GetAnalysisWithData($id: String!) {
+  getAnalysisWithData(id: $id) {
+    id
+    name
+    metrics {
+      id
+      name
+      dataPoints {
+        id
+        datetime
+      }
+    }
+  }
+}

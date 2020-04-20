@@ -3,10 +3,22 @@
 # !!!   DO NOT MODIFY THIS FILE BY YOURSELF   !!!
 # -----------------------------------------------
 
+type Analysis {
+  id: ID!
+  name: String!
+  chartType: [ChartType!]!
+  metrics: [Metric!]!
+}
+
+enum ChartType {
+  MARKER
+  LINE
+}
+
 type DataPoint {
   id: ID!
-  datetime: DateTime!
   metric: Metric!
+  datetime: DateTime!
 }
 
 """
@@ -19,6 +31,7 @@ type Metric {
   name: String!
   datetime: DateTime!
   dataPoints: [DataPoint!]!
+  analyses: [Analysis!]!
 }
 
 input MetricInput {
@@ -30,9 +43,19 @@ type Mutation {
   updateMetric(metricInput: MetricInput!, id: String!): Metric!
   recordMetric(metricId: String!): Metric!
   deleteMetric(id: String!): Metric
+  createAnalysis(metricIds: [ID!]!, name: String!): Analysis!
 }
 
 type Query {
   allMetrics: [Metric!]!
   metricById(id: String!): Metric!
+  allAnalyses: [Analysis!]!
+  getAnalysisWithData(id: String!): Analysis!
+}
+
+type RatingDataPoint {
+  id: ID!
+  metric: Metric!
+  datetime: DateTime!
+  rating: Float!
 }

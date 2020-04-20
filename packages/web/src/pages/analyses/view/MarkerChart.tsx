@@ -1,11 +1,10 @@
 import { format } from 'date-fns';
 import * as React from 'react';
-import { RouteComponentProps } from 'react-router-dom';
-import { Box, Flex, Heading } from 'rebass/styled-components';
+import { Box } from 'rebass/styled-components';
 import { CartesianGrid, ComposedChart, ResponsiveContainer, Scatter, Symbols, Tooltip, XAxis, YAxis } from 'recharts';
-import { DataPoint, Metric, useGetMetricWithDataPointsQuery } from '../../../generated/graphql';
+import { DataPoint, Metric } from '../../../generated/graphql';
 
-const MarkerChart = ({
+export const MarkerChart = ({
   dataPoints,
   metric,
 }: {
@@ -16,7 +15,6 @@ const MarkerChart = ({
     datetime: new Date(datetime).getTime(),
     y: 1,
   }));
-
   return (
     <Box sx={{ background: 'white', m: 3 }}>
       <ResponsiveContainer aspect={7}>
@@ -39,22 +37,5 @@ const MarkerChart = ({
         </ComposedChart>
       </ResponsiveContainer>
     </Box>
-  );
-};
-
-export const MetricAnalysisPage = ({
-  match: {
-    params: { id },
-  },
-}: RouteComponentProps<{ id: string }>) => {
-  const { data, loading } = useGetMetricWithDataPointsQuery({ variables: { metricId: id } });
-
-  if (loading || !data) return <>Loading...</>;
-
-  return (
-    <Flex sx={{ my: 2, flexDirection: 'column' }}>
-      <Heading>{data.metricById.name}</Heading>
-      <MarkerChart metric={data.metricById} dataPoints={data.metricById.dataPoints} />
-    </Flex>
   );
 };

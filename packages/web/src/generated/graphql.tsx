@@ -13,11 +13,24 @@ export type Scalars = {
   DateTime: any;
 };
 
+export type Analysis = {
+   __typename?: 'Analysis';
+  id: Scalars['ID'];
+  name: Scalars['String'];
+  chartType: ChartType;
+  metrics: Array<Metric>;
+};
+
+export enum ChartType {
+  Marker = 'MARKER',
+  Line = 'LINE'
+}
+
 export type DataPoint = {
    __typename?: 'DataPoint';
   id: Scalars['ID'];
-  datetime: Scalars['DateTime'];
   metric: Metric;
+  datetime: Scalars['DateTime'];
 };
 
 
@@ -27,6 +40,7 @@ export type Metric = {
   name: Scalars['String'];
   datetime: Scalars['DateTime'];
   dataPoints: Array<DataPoint>;
+  analyses: Array<Analysis>;
 };
 
 export type MetricInput = {
@@ -39,6 +53,7 @@ export type Mutation = {
   updateMetric: Metric;
   recordMetric: Metric;
   deleteMetric?: Maybe<Metric>;
+  createAnalysis: Analysis;
 };
 
 
@@ -62,16 +77,66 @@ export type MutationDeleteMetricArgs = {
   id: Scalars['String'];
 };
 
+
+export type MutationCreateAnalysisArgs = {
+  metricIds: Array<Scalars['ID']>;
+  name: Scalars['String'];
+};
+
 export type Query = {
    __typename?: 'Query';
   allMetrics: Array<Metric>;
   metricById: Metric;
+  allAnalyses: Array<Analysis>;
+  getAnalysisWithData: Analysis;
 };
 
 
 export type QueryMetricByIdArgs = {
   id: Scalars['String'];
 };
+
+
+export type QueryGetAnalysisWithDataArgs = {
+  id: Scalars['String'];
+};
+
+export type RatingDataPoint = {
+   __typename?: 'RatingDataPoint';
+  id: Scalars['ID'];
+  metric: Metric;
+  datetime: Scalars['DateTime'];
+  rating: Scalars['Float'];
+};
+
+export type CreateAnalysisMutationVariables = {
+  name: Scalars['String'];
+  metricIds: Array<Scalars['ID']>;
+};
+
+
+export type CreateAnalysisMutation = (
+  { __typename?: 'Mutation' }
+  & { createAnalysis: (
+    { __typename?: 'Analysis' }
+    & Pick<Analysis, 'id' | 'name'>
+    & { metrics: Array<(
+      { __typename?: 'Metric' }
+      & Pick<Metric, 'id'>
+    )> }
+  ) }
+);
+
+export type GetAllAnalysesQueryVariables = {};
+
+
+export type GetAllAnalysesQuery = (
+  { __typename?: 'Query' }
+  & { allAnalyses: Array<(
+    { __typename?: 'Analysis' }
+    & Pick<Analysis, 'id' | 'name'>
+  )> }
+);
 
 export type GetMetricWithDataPointsQueryVariables = {
   metricId: Scalars['String'];
@@ -86,6 +151,27 @@ export type GetMetricWithDataPointsQuery = (
     & { dataPoints: Array<(
       { __typename?: 'DataPoint' }
       & Pick<DataPoint, 'id' | 'datetime'>
+    )> }
+  ) }
+);
+
+export type GetAnalysisWithDataQueryVariables = {
+  id: Scalars['String'];
+};
+
+
+export type GetAnalysisWithDataQuery = (
+  { __typename?: 'Query' }
+  & { getAnalysisWithData: (
+    { __typename?: 'Analysis' }
+    & Pick<Analysis, 'id' | 'name'>
+    & { metrics: Array<(
+      { __typename?: 'Metric' }
+      & Pick<Metric, 'id' | 'name'>
+      & { dataPoints: Array<(
+        { __typename?: 'DataPoint' }
+        & Pick<DataPoint, 'id' | 'datetime'>
+      )> }
     )> }
   ) }
 );
@@ -172,6 +258,76 @@ export type UpdateMetricMutation = (
 );
 
 
+export const CreateAnalysisDocument = gql`
+    mutation CreateAnalysis($name: String!, $metricIds: [ID!]!) {
+  createAnalysis(name: $name, metricIds: $metricIds) {
+    id
+    name
+    metrics {
+      id
+    }
+  }
+}
+    `;
+export type CreateAnalysisMutationFn = ApolloReactCommon.MutationFunction<CreateAnalysisMutation, CreateAnalysisMutationVariables>;
+
+/**
+ * __useCreateAnalysisMutation__
+ *
+ * To run a mutation, you first call `useCreateAnalysisMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateAnalysisMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createAnalysisMutation, { data, loading, error }] = useCreateAnalysisMutation({
+ *   variables: {
+ *      name: // value for 'name'
+ *      metricIds: // value for 'metricIds'
+ *   },
+ * });
+ */
+export function useCreateAnalysisMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<CreateAnalysisMutation, CreateAnalysisMutationVariables>) {
+        return ApolloReactHooks.useMutation<CreateAnalysisMutation, CreateAnalysisMutationVariables>(CreateAnalysisDocument, baseOptions);
+      }
+export type CreateAnalysisMutationHookResult = ReturnType<typeof useCreateAnalysisMutation>;
+export type CreateAnalysisMutationResult = ApolloReactCommon.MutationResult<CreateAnalysisMutation>;
+export type CreateAnalysisMutationOptions = ApolloReactCommon.BaseMutationOptions<CreateAnalysisMutation, CreateAnalysisMutationVariables>;
+export const GetAllAnalysesDocument = gql`
+    query GetAllAnalyses {
+  allAnalyses {
+    id
+    name
+  }
+}
+    `;
+
+/**
+ * __useGetAllAnalysesQuery__
+ *
+ * To run a query within a React component, call `useGetAllAnalysesQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetAllAnalysesQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetAllAnalysesQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useGetAllAnalysesQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<GetAllAnalysesQuery, GetAllAnalysesQueryVariables>) {
+        return ApolloReactHooks.useQuery<GetAllAnalysesQuery, GetAllAnalysesQueryVariables>(GetAllAnalysesDocument, baseOptions);
+      }
+export function useGetAllAnalysesLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<GetAllAnalysesQuery, GetAllAnalysesQueryVariables>) {
+          return ApolloReactHooks.useLazyQuery<GetAllAnalysesQuery, GetAllAnalysesQueryVariables>(GetAllAnalysesDocument, baseOptions);
+        }
+export type GetAllAnalysesQueryHookResult = ReturnType<typeof useGetAllAnalysesQuery>;
+export type GetAllAnalysesLazyQueryHookResult = ReturnType<typeof useGetAllAnalysesLazyQuery>;
+export type GetAllAnalysesQueryResult = ApolloReactCommon.QueryResult<GetAllAnalysesQuery, GetAllAnalysesQueryVariables>;
 export const GetMetricWithDataPointsDocument = gql`
     query GetMetricWithDataPoints($metricId: String!) {
   metricById(id: $metricId) {
@@ -210,6 +366,48 @@ export function useGetMetricWithDataPointsLazyQuery(baseOptions?: ApolloReactHoo
 export type GetMetricWithDataPointsQueryHookResult = ReturnType<typeof useGetMetricWithDataPointsQuery>;
 export type GetMetricWithDataPointsLazyQueryHookResult = ReturnType<typeof useGetMetricWithDataPointsLazyQuery>;
 export type GetMetricWithDataPointsQueryResult = ApolloReactCommon.QueryResult<GetMetricWithDataPointsQuery, GetMetricWithDataPointsQueryVariables>;
+export const GetAnalysisWithDataDocument = gql`
+    query GetAnalysisWithData($id: String!) {
+  getAnalysisWithData(id: $id) {
+    id
+    name
+    metrics {
+      id
+      name
+      dataPoints {
+        id
+        datetime
+      }
+    }
+  }
+}
+    `;
+
+/**
+ * __useGetAnalysisWithDataQuery__
+ *
+ * To run a query within a React component, call `useGetAnalysisWithDataQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetAnalysisWithDataQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetAnalysisWithDataQuery({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useGetAnalysisWithDataQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<GetAnalysisWithDataQuery, GetAnalysisWithDataQueryVariables>) {
+        return ApolloReactHooks.useQuery<GetAnalysisWithDataQuery, GetAnalysisWithDataQueryVariables>(GetAnalysisWithDataDocument, baseOptions);
+      }
+export function useGetAnalysisWithDataLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<GetAnalysisWithDataQuery, GetAnalysisWithDataQueryVariables>) {
+          return ApolloReactHooks.useLazyQuery<GetAnalysisWithDataQuery, GetAnalysisWithDataQueryVariables>(GetAnalysisWithDataDocument, baseOptions);
+        }
+export type GetAnalysisWithDataQueryHookResult = ReturnType<typeof useGetAnalysisWithDataQuery>;
+export type GetAnalysisWithDataLazyQueryHookResult = ReturnType<typeof useGetAnalysisWithDataLazyQuery>;
+export type GetAnalysisWithDataQueryResult = ApolloReactCommon.QueryResult<GetAnalysisWithDataQuery, GetAnalysisWithDataQueryVariables>;
 export const DeleteMetricDocument = gql`
     mutation deleteMetric($id: String!) {
   deleteMetric(id: $id) {

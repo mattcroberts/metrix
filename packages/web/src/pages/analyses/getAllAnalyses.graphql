@@ -1,0 +1,6 @@
+query GetAllAnalyses {
+  allAnalyses {
+    id
+    name
+  }
+}

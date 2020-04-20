@@ -1,10 +1,8 @@
+import { Input, Label } from '@rebass/forms';
 import React from 'react';
 import { useForm } from 'react-hook-form';
-import { useMutation } from '@apollo/react-hooks';
-import { gql } from 'apollo-boost';
 import { useHistory } from 'react-router-dom';
-import { Flex, Box, Button, Heading } from 'rebass/styled-components';
-import { Input, Label } from '@rebass/forms';
+import { Box, Button, Flex, Heading } from 'rebass/styled-components';
 import { useCreateMetricMutation } from '../../../generated/graphql';
 
 export const CreateMetricPage = () => {

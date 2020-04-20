@@ -1,6 +1,7 @@
-import { Entity, PrimaryGeneratedColumn, Column, Generated, OneToMany } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, Generated, OneToMany, ManyToMany, JoinTable } from 'typeorm';
 import { DataPoint } from '../datapoint/DataPoint.model';
 import { ObjectType, Field, ID } from 'type-graphql';
+import { Analysis } from '../analysis/Analysis.model';
 
 @Entity()
 @ObjectType()
@@ -18,6 +19,14 @@ export class Metric {
   datetime: Date;
 
   @Field((type) => [DataPoint])
-  @OneToMany((type) => DataPoint, (dataPoint: DataPoint) => dataPoint.metric, { eager: true })
+  @OneToMany((type) => DataPoint, (dataPoint: DataPoint) => dataPoint.metric, {
+    eager: true,
+    cascade: true,
+  })
   dataPoints: DataPoint[];
+
+  @Field((type) => [Analysis])
+  @JoinTable()
+  @ManyToMany((type) => Analysis)
+  analyses: Analysis[];
 }

@@ -9,11 +9,19 @@ export class DataPoint {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @Field()
-  @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
-  datetime: Date;
-
   @Field((type) => Metric)
   @ManyToOne((type) => Metric, (metric) => metric.dataPoints, { onDelete: 'CASCADE' })
   metric: Metric;
+
+  @Field()
+  @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
+  datetime: Date;
+}
+
+@ObjectType()
+@Entity()
+export class RatingDataPoint extends DataPoint {
+  @Field()
+  @Column()
+  rating: number;
 }

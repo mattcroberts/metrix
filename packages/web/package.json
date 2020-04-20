@@ -41,6 +41,7 @@
     "@types/rebass": "^4.0.5",
     "@types/rebass__forms": "^4.0.1",
     "apollo-boost": "^0.4.7",
+    "date-fns": "^2.12.0",
     "graphql": "^15.0.0",
     "lodash": "^4.17.15",
     "react": "^16.13.1",
@@ -49,6 +50,7 @@
     "react-router-dom": "^5.1.2",
     "react-scripts": "3.4.1",
     "rebass": "^4.0.7",
+    "recharts": "^1.8.5",
     "styled-components": "^5.1.0",
     "typescript": "~3.7.2"
   },
@@ -56,6 +58,7 @@
     "@graphql-codegen/cli": "^1.13.2",
     "@graphql-codegen/typescript": "1.13.2",
     "@graphql-codegen/typescript-operations": "1.13.2",
-    "@graphql-codegen/typescript-react-apollo": "1.13.2"
+    "@graphql-codegen/typescript-react-apollo": "1.13.2",
+    "@types/recharts": "^1.8.9"
   }
 }

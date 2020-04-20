@@ -1,0 +1,9 @@
+mutation CreateAnalysis($name: String!, $metricIds: [ID!]!) {
+  createAnalysis(name: $name, metricIds: $metricIds) {
+    id
+    name
+    metrics {
+      id
+    }
+  }
+}

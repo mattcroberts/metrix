@@ -7,6 +7,7 @@ import * as TypeORM from 'typeorm';
 import { createConnection } from 'typeorm';
 import { MetricResolver } from './metrics/resolver';
 import { ContextType } from './types';
+import { AnalysisResolver } from './analysis/resolver';
 
 TypeORM.useContainer(Container);
 const PORT = process.env.PORT || 4000;
@@ -17,7 +18,7 @@ createConnection()
     console.log('DB connected');
 
     const schema = await TypeGraphQL.buildSchema({
-      resolvers: [MetricResolver],
+      resolvers: [MetricResolver, AnalysisResolver],
       container: Container,
       emitSchemaFile: true,
     });
