@@ -1,8 +1,9 @@
-import { Resolver, Mutation, Arg, InputType, Field } from 'type-graphql';
-import { DataPoint } from './DataPoint.model';
-import { InjectRepository } from 'typeorm-typedi-extensions';
-import { Metric } from '../metrics/Metric.model';
-import { Repository } from 'typeorm';
+import { Resolver, Mutation, Arg, InputType, Field, createUnionType } from 'type-graphql';
+import { DataPoint, IDataPoint } from './DataPoint.model';
+import { InjectRepository, InjectManager } from 'typeorm-typedi-extensions';
+import { Metric, DataPointUnion } from '../metrics/Metric.model';
+import { Repository, EntityManager } from 'typeorm';
+import { RatingDataPoint } from './RatingDataPoint.model';
 
 @InputType()
 class DataPointInput {
@@ -10,7 +11,7 @@ class DataPointInput {
   rating: number;
 }
 
-@Resolver((of) => DataPoint)
+@Resolver()
 export class DataPointResolver {
   @InjectRepository(Metric)
   private metricRepository: Repository<Metric>;
@@ -18,12 +19,16 @@ export class DataPointResolver {
   @InjectRepository(DataPoint)
   private dataPointRepository: Repository<DataPoint>;
 
+  @InjectManager()
+  private manager: EntityManager;
+
   @Mutation((returns) => Metric)
   async recordDataPoint(@Arg('metricId') metricId: string, @Arg('data', { nullable: true }) data: DataPointInput) {
     const metric = await this.metricRepository.findOne({ id: metricId });
-    const dataPoint = new DataPoint();
 
-    await this.dataPointRepository.save(dataPoint);
+    const repo = this.manager.getRepository(metric.type);
+
+    const dataPoint = await repo.save<any>((await repo.create(data)) as any);
     metric.dataPoints.push(dataPoint);
 
     return this.metricRepository.save(metric);

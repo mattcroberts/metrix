@@ -6,8 +6,13 @@ query GetAnalysisWithData($id: String!) {
       id
       name
       dataPoints {
-        id
-        datetime
+        ... on IDataPoint {
+          id
+          datetime
+        }
+        ... on RatingDataPoint {
+          rating
+        }
       }
     }
   }

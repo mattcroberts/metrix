@@ -11,3 +11,6 @@ generates:
       withComponent: false
       withHOC: false
       withHooks: true
+  src/generated/fragmentTypes.json:
+    plugins:
+      - fragment-matcher

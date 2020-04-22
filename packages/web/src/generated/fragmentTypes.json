@@ -1,0 +1,30 @@
+{
+  "__schema": {
+    "types": [
+      {
+        "kind": "UNION",
+        "name": "DataPointUnion",
+        "possibleTypes": [
+          {
+            "name": "DataPoint"
+          },
+          {
+            "name": "RatingDataPoint"
+          }
+        ]
+      },
+      {
+        "kind": "INTERFACE",
+        "name": "IDataPoint",
+        "possibleTypes": [
+          {
+            "name": "DataPoint"
+          },
+          {
+            "name": "RatingDataPoint"
+          }
+        ]
+      }
+    ]
+  }
+}

@@ -15,7 +15,7 @@ enum ChartType {
   LINE
 }
 
-type DataPoint {
+type DataPoint implements IDataPoint {
   id: ID!
   metric: Metric!
   datetime: DateTime!
@@ -25,16 +25,24 @@ input DataPointInput {
   rating: Float
 }
 
+union DataPointUnion = DataPoint | RatingDataPoint
+
 """
 The javascript `Date` as string. Type represents date and time as the ISO Date string.
 """
 scalar DateTime
 
+interface IDataPoint {
+  id: ID!
+  metric: Metric!
+  datetime: DateTime!
+}
+
 type Metric {
   id: ID!
   name: String!
   datetime: DateTime!
-  dataPoints: [DataPoint!]!
+  dataPoints: [DataPointUnion!]!
   type: MetricType!
   analyses: [Analysis!]!
 }
@@ -63,7 +71,7 @@ type Query {
   metricById(id: String!): Metric!
 }
 
-type RatingDataPoint {
+type RatingDataPoint implements IDataPoint {
   id: ID!
   metric: Metric!
   datetime: DateTime!

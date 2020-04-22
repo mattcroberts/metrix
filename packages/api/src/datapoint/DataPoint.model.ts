@@ -1,12 +1,13 @@
-import { Entity, PrimaryGeneratedColumn, Column, Generated, ManyToOne } from 'typeorm';
+import { Field, ID, InterfaceType, ObjectType } from 'type-graphql';
+import { ChildEntity, Column, Entity, ManyToOne, PrimaryGeneratedColumn, TableInheritance } from 'typeorm';
 import { Metric } from '../metrics/Metric.model';
-import { ObjectType, Field, ID } from 'type-graphql';
 
-@ObjectType()
-@Entity()
-export class DataPoint {
-  @Field((type) => ID)
+@InterfaceType({ resolveType: (value) => value.constructor.name })
+@Entity({ name: 'DataPoint' })
+@TableInheritance({ column: { type: 'varchar', name: 'type' } })
+export abstract class IDataPoint {
   @PrimaryGeneratedColumn('uuid')
+  @Field((type) => ID)
   id: string;
 
   @Field((type) => Metric)
@@ -18,10 +19,6 @@ export class DataPoint {
   datetime: Date;
 }
 
-@ObjectType()
-@Entity()
-export class RatingDataPoint extends DataPoint {
-  @Field()
-  @Column()
-  rating: number;
-}
+@ChildEntity()
+@ObjectType({ implements: IDataPoint })
+export class DataPoint extends IDataPoint {}

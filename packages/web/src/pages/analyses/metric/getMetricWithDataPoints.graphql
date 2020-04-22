@@ -3,8 +3,10 @@ query GetMetricWithDataPoints($metricId: String!) {
     id
     name
     dataPoints {
-      id
-      datetime
+      ... on IDataPoint {
+        id
+        datetime
+      }
     }
   }
 }

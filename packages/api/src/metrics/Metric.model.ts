@@ -1,7 +1,8 @@
-import { Field, ID, ObjectType, registerEnumType } from 'type-graphql';
+import { createUnionType, Field, ID, ObjectType, registerEnumType } from 'type-graphql';
 import { Column, Entity, JoinTable, ManyToMany, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 import { Analysis } from '../analysis/Analysis.model';
-import { DataPoint } from '../datapoint/DataPoint.model';
+import { DataPoint, IDataPoint } from '../datapoint/DataPoint.model';
+import { RatingDataPoint } from '../datapoint/RatingDataPoint.model';
 
 export enum MetricType {
   DataPoint = 'DataPoint',
@@ -9,6 +10,18 @@ export enum MetricType {
 }
 
 registerEnumType(MetricType, { name: 'MetricType' });
+
+export const DataPointUnion = createUnionType({
+  name: 'DataPointUnion',
+  types: () => [DataPoint, RatingDataPoint],
+  resolveType: (value, context, info) => {
+    if ('rating' in value) {
+      return 'RatingDataPoint';
+    }
+
+    return 'DataPoint';
+  },
+});
 
 @Entity()
 @ObjectType()
@@ -25,12 +38,12 @@ export class Metric {
   @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
   datetime: Date;
 
-  @Field((type) => [DataPoint])
-  @OneToMany((type) => DataPoint, (dataPoint: DataPoint) => dataPoint.metric, {
+  @Field((type) => [DataPointUnion])
+  @OneToMany((type) => IDataPoint, (dataPoint: DataPoint | RatingDataPoint) => dataPoint.metric, {
     eager: true,
     cascade: true,
   })
-  dataPoints: DataPoint[];
+  dataPoints: DataPoint[] | RatingDataPoint[];
 
   @Field((type) => MetricType)
   @Column({ type: 'enum', enum: MetricType, default: MetricType.DataPoint })

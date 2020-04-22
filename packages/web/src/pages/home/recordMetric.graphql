@@ -3,8 +3,10 @@ mutation recordDataPoint($metricId: String!, $data: DataPointInput!) {
     id
     name
     dataPoints {
-      id
-      datetime
+      ... on IDataPoint {
+        id
+        datetime
+      }
     }
   }
 }

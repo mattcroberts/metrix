@@ -26,7 +26,7 @@ export enum ChartType {
   Line = 'LINE'
 }
 
-export type DataPoint = {
+export type DataPoint = IDataPoint & {
    __typename?: 'DataPoint';
   id: Scalars['ID'];
   metric: Metric;
@@ -37,13 +37,21 @@ export type DataPointInput = {
   rating?: Maybe<Scalars['Float']>;
 };
 
+export type DataPointUnion = DataPoint | RatingDataPoint;
+
+
+export type IDataPoint = {
+  id: Scalars['ID'];
+  metric: Metric;
+  datetime: Scalars['DateTime'];
+};
 
 export type Metric = {
    __typename?: 'Metric';
   id: Scalars['ID'];
   name: Scalars['String'];
   datetime: Scalars['DateTime'];
-  dataPoints: Array<DataPoint>;
+  dataPoints: Array<DataPointUnion>;
   type: MetricType;
   analyses: Array<Analysis>;
 };
@@ -113,7 +121,7 @@ export type QueryMetricByIdArgs = {
   id: Scalars['String'];
 };
 
-export type RatingDataPoint = {
+export type RatingDataPoint = IDataPoint & {
    __typename?: 'RatingDataPoint';
   id: Scalars['ID'];
   metric: Metric;
@@ -163,6 +171,9 @@ export type GetMetricWithDataPointsQuery = (
     & { dataPoints: Array<(
       { __typename?: 'DataPoint' }
       & Pick<DataPoint, 'id' | 'datetime'>
+    ) | (
+      { __typename?: 'RatingDataPoint' }
+      & Pick<RatingDataPoint, 'id' | 'datetime'>
     )> }
   ) }
 );
@@ -183,6 +194,9 @@ export type GetAnalysisWithDataQuery = (
       & { dataPoints: Array<(
         { __typename?: 'DataPoint' }
         & Pick<DataPoint, 'id' | 'datetime'>
+      ) | (
+        { __typename?: 'RatingDataPoint' }
+        & Pick<RatingDataPoint, 'id' | 'datetime' | 'rating'>
       )> }
     )> }
   ) }
@@ -226,6 +240,9 @@ export type RecordDataPointMutation = (
     & { dataPoints: Array<(
       { __typename?: 'DataPoint' }
       & Pick<DataPoint, 'id' | 'datetime'>
+    ) | (
+      { __typename?: 'RatingDataPoint' }
+      & Pick<RatingDataPoint, 'id' | 'datetime'>
     )> }
   ) }
 );
@@ -348,8 +365,10 @@ export const GetMetricWithDataPointsDocument = gql`
     id
     name
     dataPoints {
-      id
-      datetime
+      ... on IDataPoint {
+        id
+        datetime
+      }
     }
   }
 }
@@ -389,8 +408,13 @@ export const GetAnalysisWithDataDocument = gql`
       id
       name
       dataPoints {
-        id
-        datetime
+        ... on IDataPoint {
+          id
+          datetime
+        }
+        ... on RatingDataPoint {
+          rating
+        }
       }
     }
   }
@@ -494,8 +518,10 @@ export const RecordDataPointDocument = gql`
     id
     name
     dataPoints {
-      id
-      datetime
+      ... on IDataPoint {
+        id
+        datetime
+      }
     }
   }
 }

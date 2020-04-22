@@ -2,8 +2,9 @@ import { ApolloError } from 'apollo-server-express';
 import { Arg, Field, InputType, Mutation, Query, Resolver } from 'type-graphql';
 import { Repository } from 'typeorm';
 import { InjectRepository } from 'typeorm-typedi-extensions';
-import { DataPoint } from '../datapoint/DataPoint.model';
+
 import { Metric, MetricType } from './Metric.model';
+import { DataPoint } from '../datapoint/DataPoint.model';
 
 @InputType()
 class MetricInput {

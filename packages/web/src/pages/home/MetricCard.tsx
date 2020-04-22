@@ -7,7 +7,7 @@ import { RecordActivity } from './RecordActivity';
 export const Forms: { [key in MetricType]: FC<{ save: ({ rating }: { rating: number }) => void }> } = {
   DataPoint: () => <>'Datapoint'</>,
   RatingDataPoint: ({ save }) => (
-    <form>
+    <Box>
       Rating
       <Box>
         {new Array(10).fill(0).map((rating, i) => (
@@ -16,7 +16,7 @@ export const Forms: { [key in MetricType]: FC<{ save: ({ rating }: { rating: num
           </button>
         ))}
       </Box>
-    </form>
+    </Box>
   ),
 };
 
