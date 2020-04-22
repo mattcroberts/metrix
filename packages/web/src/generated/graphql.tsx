@@ -17,7 +17,7 @@ export type Analysis = {
    __typename?: 'Analysis';
   id: Scalars['ID'];
   name: Scalars['String'];
-  chartType: ChartType;
+  chartType: Array<ChartType>;
   metrics: Array<Metric>;
 };
 
@@ -33,6 +33,10 @@ export type DataPoint = {
   datetime: Scalars['DateTime'];
 };
 
+export type DataPointInput = {
+  rating?: Maybe<Scalars['Float']>;
+};
+
 
 export type Metric = {
    __typename?: 'Metric';
@@ -40,6 +44,7 @@ export type Metric = {
   name: Scalars['String'];
   datetime: Scalars['DateTime'];
   dataPoints: Array<DataPoint>;
+  type: MetricType;
   analyses: Array<Analysis>;
 };
 
@@ -47,17 +52,35 @@ export type MetricInput = {
   name: Scalars['String'];
 };
 
+export enum MetricType {
+  DataPoint = 'DataPoint',
+  RatingDataPoint = 'RatingDataPoint'
+}
+
 export type Mutation = {
    __typename?: 'Mutation';
+  createAnalysis: Analysis;
+  recordDataPoint: Metric;
   createMetric: Metric;
   updateMetric: Metric;
-  recordMetric: Metric;
   deleteMetric?: Maybe<Metric>;
-  createAnalysis: Analysis;
+};
+
+
+export type MutationCreateAnalysisArgs = {
+  metricIds: Array<Scalars['ID']>;
+  name: Scalars['String'];
+};
+
+
+export type MutationRecordDataPointArgs = {
+  data?: Maybe<DataPointInput>;
+  metricId: Scalars['String'];
 };
 
 
 export type MutationCreateMetricArgs = {
+  type?: Maybe<Scalars['String']>;
   name: Scalars['String'];
 };
 
@@ -68,36 +91,25 @@ export type MutationUpdateMetricArgs = {
 };
 
 
-export type MutationRecordMetricArgs = {
-  metricId: Scalars['String'];
-};
-
-
 export type MutationDeleteMetricArgs = {
   id: Scalars['String'];
 };
 
-
-export type MutationCreateAnalysisArgs = {
-  metricIds: Array<Scalars['ID']>;
-  name: Scalars['String'];
-};
-
 export type Query = {
    __typename?: 'Query';
-  allMetrics: Array<Metric>;
-  metricById: Metric;
   allAnalyses: Array<Analysis>;
   getAnalysisWithData: Analysis;
-};
-
-
-export type QueryMetricByIdArgs = {
-  id: Scalars['String'];
+  allMetrics: Array<Metric>;
+  metricById: Metric;
 };
 
 
 export type QueryGetAnalysisWithDataArgs = {
+  id: Scalars['String'];
+};
+
+
+export type QueryMetricByIdArgs = {
   id: Scalars['String'];
 };
 
@@ -196,18 +208,19 @@ export type GetAllMetricsQuery = (
   { __typename?: 'Query' }
   & { allMetrics: Array<(
     { __typename?: 'Metric' }
-    & Pick<Metric, 'id' | 'name'>
+    & Pick<Metric, 'id' | 'name' | 'type'>
   )> }
 );
 
-export type RecordMetricMutationVariables = {
+export type RecordDataPointMutationVariables = {
   metricId: Scalars['String'];
+  data: DataPointInput;
 };
 
 
-export type RecordMetricMutation = (
+export type RecordDataPointMutation = (
   { __typename?: 'Mutation' }
-  & { recordMetric: (
+  & { recordDataPoint: (
     { __typename?: 'Metric' }
     & Pick<Metric, 'id' | 'name'>
     & { dataPoints: Array<(
@@ -219,6 +232,7 @@ export type RecordMetricMutation = (
 
 export type CreateMetricMutationVariables = {
   name: Scalars['String'];
+  type?: Maybe<Scalars['String']>;
 };
 
 
@@ -226,7 +240,7 @@ export type CreateMetricMutation = (
   { __typename?: 'Mutation' }
   & { createMetric: (
     { __typename?: 'Metric' }
-    & Pick<Metric, 'id' | 'name'>
+    & Pick<Metric, 'id' | 'name' | 'type'>
   ) }
 );
 
@@ -445,6 +459,7 @@ export const GetAllMetricsDocument = gql`
   allMetrics {
     id
     name
+    type
   }
 }
     `;
@@ -473,9 +488,9 @@ export function useGetAllMetricsLazyQuery(baseOptions?: ApolloReactHooks.LazyQue
 export type GetAllMetricsQueryHookResult = ReturnType<typeof useGetAllMetricsQuery>;
 export type GetAllMetricsLazyQueryHookResult = ReturnType<typeof useGetAllMetricsLazyQuery>;
 export type GetAllMetricsQueryResult = ApolloReactCommon.QueryResult<GetAllMetricsQuery, GetAllMetricsQueryVariables>;
-export const RecordMetricDocument = gql`
-    mutation recordMetric($metricId: String!) {
-  recordMetric(metricId: $metricId) {
+export const RecordDataPointDocument = gql`
+    mutation recordDataPoint($metricId: String!, $data: DataPointInput!) {
+  recordDataPoint(metricId: $metricId, data: $data) {
     id
     name
     dataPoints {
@@ -485,36 +500,38 @@ export const RecordMetricDocument = gql`
   }
 }
     `;
-export type RecordMetricMutationFn = ApolloReactCommon.MutationFunction<RecordMetricMutation, RecordMetricMutationVariables>;
+export type RecordDataPointMutationFn = ApolloReactCommon.MutationFunction<RecordDataPointMutation, RecordDataPointMutationVariables>;
 
 /**
- * __useRecordMetricMutation__
+ * __useRecordDataPointMutation__
  *
- * To run a mutation, you first call `useRecordMetricMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useRecordMetricMutation` returns a tuple that includes:
+ * To run a mutation, you first call `useRecordDataPointMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useRecordDataPointMutation` returns a tuple that includes:
  * - A mutate function that you can call at any time to execute the mutation
  * - An object with fields that represent the current status of the mutation's execution
  *
  * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
  *
  * @example
- * const [recordMetricMutation, { data, loading, error }] = useRecordMetricMutation({
+ * const [recordDataPointMutation, { data, loading, error }] = useRecordDataPointMutation({
  *   variables: {
  *      metricId: // value for 'metricId'
+ *      data: // value for 'data'
  *   },
  * });
  */
-export function useRecordMetricMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<RecordMetricMutation, RecordMetricMutationVariables>) {
-        return ApolloReactHooks.useMutation<RecordMetricMutation, RecordMetricMutationVariables>(RecordMetricDocument, baseOptions);
+export function useRecordDataPointMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<RecordDataPointMutation, RecordDataPointMutationVariables>) {
+        return ApolloReactHooks.useMutation<RecordDataPointMutation, RecordDataPointMutationVariables>(RecordDataPointDocument, baseOptions);
       }
-export type RecordMetricMutationHookResult = ReturnType<typeof useRecordMetricMutation>;
-export type RecordMetricMutationResult = ApolloReactCommon.MutationResult<RecordMetricMutation>;
-export type RecordMetricMutationOptions = ApolloReactCommon.BaseMutationOptions<RecordMetricMutation, RecordMetricMutationVariables>;
+export type RecordDataPointMutationHookResult = ReturnType<typeof useRecordDataPointMutation>;
+export type RecordDataPointMutationResult = ApolloReactCommon.MutationResult<RecordDataPointMutation>;
+export type RecordDataPointMutationOptions = ApolloReactCommon.BaseMutationOptions<RecordDataPointMutation, RecordDataPointMutationVariables>;
 export const CreateMetricDocument = gql`
-    mutation CreateMetric($name: String!) {
-  createMetric(name: $name) {
+    mutation CreateMetric($name: String!, $type: String) {
+  createMetric(name: $name, type: $type) {
     id
     name
+    type
   }
 }
     `;
@@ -534,6 +551,7 @@ export type CreateMetricMutationFn = ApolloReactCommon.MutationFunction<CreateMe
  * const [createMetricMutation, { data, loading, error }] = useCreateMetricMutation({
  *   variables: {
  *      name: // value for 'name'
+ *      type: // value for 'type'
  *   },
  * });
  */

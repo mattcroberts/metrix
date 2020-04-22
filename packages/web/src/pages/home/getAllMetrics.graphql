@@ -2,5 +2,6 @@ query getAllMetrics {
   allMetrics {
     id
     name
+    type
   }
 }

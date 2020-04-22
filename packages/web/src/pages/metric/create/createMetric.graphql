@@ -1,6 +1,7 @@
-mutation CreateMetric($name: String!) {
-  createMetric(name: $name) {
+mutation CreateMetric($name: String!, $type: String) {
+  createMetric(name: $name, type: $type) {
     id
     name
+    type
   }
 }

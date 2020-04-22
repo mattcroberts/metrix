@@ -1,7 +1,14 @@
-import { Entity, PrimaryGeneratedColumn, Column, Generated, OneToMany, ManyToMany, JoinTable } from 'typeorm';
-import { DataPoint } from '../datapoint/DataPoint.model';
-import { ObjectType, Field, ID } from 'type-graphql';
+import { Field, ID, ObjectType, registerEnumType } from 'type-graphql';
+import { Column, Entity, JoinTable, ManyToMany, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 import { Analysis } from '../analysis/Analysis.model';
+import { DataPoint } from '../datapoint/DataPoint.model';
+
+export enum MetricType {
+  DataPoint = 'DataPoint',
+  RatingDataPoint = 'RatingDataPoint',
+}
+
+registerEnumType(MetricType, { name: 'MetricType' });
 
 @Entity()
 @ObjectType()
@@ -24,6 +31,10 @@ export class Metric {
     cascade: true,
   })
   dataPoints: DataPoint[];
+
+  @Field((type) => MetricType)
+  @Column({ type: 'enum', enum: MetricType, default: MetricType.DataPoint })
+  type: MetricType;
 
   @Field((type) => [Analysis])
   @JoinTable()

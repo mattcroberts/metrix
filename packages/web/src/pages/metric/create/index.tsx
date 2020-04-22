@@ -1,8 +1,9 @@
-import { Input, Label } from '@rebass/forms';
+import { Input, Label, Select } from '@rebass/forms';
 import React from 'react';
 import { useForm } from 'react-hook-form';
 import { useHistory } from 'react-router-dom';
-import { Box, Button, Flex, Heading } from 'rebass/styled-components';
+import { Button, Flex, Heading } from 'rebass/styled-components';
+import { Field } from '../../../components/Field';
 import { useCreateMetricMutation } from '../../../generated/graphql';
 
 export const CreateMetricPage = () => {
@@ -16,8 +17,8 @@ export const CreateMetricPage = () => {
         sx={{ borderColor: 'muted', borderWidth: 1, borderStyle: 'solid', padding: 3 }}
         as="form"
         flexDirection="column"
-        onSubmit={handleSubmit(async ({ name }) => {
-          const { errors } = await createMetric({ variables: { name } });
+        onSubmit={handleSubmit(async ({ name, type }) => {
+          const { errors } = await createMetric({ variables: { name, type } });
 
           if (errors) {
             console.error(errors);
@@ -28,13 +29,21 @@ export const CreateMetricPage = () => {
         })}
       >
         <Heading mt="2">Create Metric</Heading>
-        <Box margin="4" ml="0">
-          <Label>
-            Name
-            <Input marginLeft="3" maxWidth="60%" name="name" ref={register({ required: 'Required' })} />
-            <p>{errors.name && errors.name.message}</p>
-          </Label>
-        </Box>
+        <Flex sx={{ alignItems: 'flex-start' }}>
+          <Field>
+            <Label sx={{ mb: 1 }}>Name</Label>
+            <Input name="name" ref={register({ required: 'Required' })} />
+            {errors.name && <p>errors.name.message</p>}
+          </Field>
+          <Field>
+            <Label sx={{ mb: 1 }}>Type</Label>
+            <Select name="type" ref={register({ required: 'Required' })}>
+              <option value="DataPoint">Marker</option>
+              <option value="RatingDataPoint">Rating</option>
+            </Select>
+            {errors.type && <p>errors.type.message</p>}
+          </Field>
+        </Flex>
         <Flex justifyContent="flex-end" mr="4">
           <Button type="submit">Create</Button>
         </Flex>

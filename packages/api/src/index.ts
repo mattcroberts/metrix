@@ -1,13 +1,14 @@
-import { ApolloServer, gql } from 'apollo-server-express';
+import { ApolloServer } from 'apollo-server-express';
 import * as express from 'express';
 import 'reflect-metadata';
 import * as TypeGraphQL from 'type-graphql';
 import { Container } from 'typedi';
 import * as TypeORM from 'typeorm';
 import { createConnection } from 'typeorm';
+import { AnalysisResolver } from './analysis/resolver';
+import { DataPointResolver } from './datapoint/resolver';
 import { MetricResolver } from './metrics/resolver';
 import { ContextType } from './types';
-import { AnalysisResolver } from './analysis/resolver';
 
 TypeORM.useContainer(Container);
 const PORT = process.env.PORT || 4000;
@@ -18,7 +19,7 @@ createConnection()
     console.log('DB connected');
 
     const schema = await TypeGraphQL.buildSchema({
-      resolvers: [MetricResolver, AnalysisResolver],
+      resolvers: [MetricResolver, AnalysisResolver, DataPointResolver],
       container: Container,
       emitSchemaFile: true,
     });
