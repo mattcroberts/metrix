@@ -11,37 +11,42 @@ export const RecordActivity: FC<{
   const Form = Forms[metric.type];
   return (
     <>
-      <Button
-        sx={{ p: 4, mb: 2 }}
-        onClick={async () => {
-          setOpen(true);
-          if (metric.type === MetricType.DataPoint) {
-            await recordDataPoint({
-              variables: {
-                metricId: metric.id,
-                data: {},
-              },
-            });
-            setOpen(false);
-          }
-        }}
-      >
-        Record
-      </Button>
-      <Box sx={{ backgroundColor: 'primary', display: isOpen ? 'block' : 'none' }}>
-        <Form
-          save={({ rating }) =>
-            recordDataPoint({
-              variables: {
-                metricId: metric.id,
-                data: {
-                  rating,
+      {isOpen ? (
+        <Box sx={{ backgroundColor: 'primary', minHeight: '82px', mb: 2, p: 4 }}>
+          <Form
+            save={async ({ rating }) => {
+              await recordDataPoint({
+                variables: {
+                  metricId: metric.id,
+                  data: {
+                    rating,
+                  },
                 },
-              },
-            })
-          }
-        />
-      </Box>
+              });
+
+              setOpen(false);
+            }}
+          />
+        </Box>
+      ) : (
+        <Button
+          sx={{ p: 4, width: '100%', mb: 2 }}
+          onClick={async () => {
+            setOpen(true);
+            if (metric.type === MetricType.DataPoint) {
+              await recordDataPoint({
+                variables: {
+                  metricId: metric.id,
+                  data: {},
+                },
+              });
+              setOpen(false);
+            }
+          }}
+        >
+          Record
+        </Button>
+      )}
     </>
   );
 };

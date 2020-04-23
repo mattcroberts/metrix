@@ -16,7 +16,7 @@ export const HomePage = () => {
     <>
       <Heading sx={{ mb: 3, mt: 3 }}>Home</Heading>
 
-      <Flex sx={{ flexWrap: 'wrap', alignContent: 'stretch' }}>
+      <Flex mx={-2} sx={{ flexWrap: 'wrap' }}>
         {data.allMetrics.map((metric) => (
           <MetricCard key={metric.id} metric={metric} />
         ))}

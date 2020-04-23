@@ -5,6 +5,7 @@ query GetAnalysisWithData($id: String!) {
     metrics {
       id
       name
+      type
       dataPoints {
         ... on IDataPoint {
           id

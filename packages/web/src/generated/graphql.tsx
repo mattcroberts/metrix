@@ -190,7 +190,7 @@ export type GetAnalysisWithDataQuery = (
     & Pick<Analysis, 'id' | 'name'>
     & { metrics: Array<(
       { __typename?: 'Metric' }
-      & Pick<Metric, 'id' | 'name'>
+      & Pick<Metric, 'id' | 'name' | 'type'>
       & { dataPoints: Array<(
         { __typename?: 'DataPoint' }
         & Pick<DataPoint, 'id' | 'datetime'>
@@ -407,6 +407,7 @@ export const GetAnalysisWithDataDocument = gql`
     metrics {
       id
       name
+      type
       dataPoints {
         ... on IDataPoint {
           id

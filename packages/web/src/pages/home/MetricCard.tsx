@@ -32,11 +32,9 @@ export const MetricCard: FC<{
         backgroundColor: 'muted',
         // borderRadius: 2,
         // p: 2,
-        // ml: 3,
-        // mr: 3,
-        // mb: 3,
+        m: 2,
         // justifyContent: 'center',
-        minWidth: '30%',
+        minWidth: '31.5%',
       }}
     >
       <Box color="background" fontSize="2" sx={{ fontWeight: 'bold' }}>
