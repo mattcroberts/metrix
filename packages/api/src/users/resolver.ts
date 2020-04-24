@@ -1,3 +1,4 @@
-export const UserResolver = {
-  User: () => null,
-};
+import { Resolver } from 'type-graphql';
+
+@Resolver()
+export class UserResolver {}
