@@ -8,6 +8,7 @@ import {
   OneToMany,
   OneToOne,
   PrimaryGeneratedColumn,
+  ManyToOne,
 } from 'typeorm';
 import { Analysis } from '../analysis/Analysis.model';
 import { DataPoint, IDataPoint } from '../datapoint/DataPoint.model';
@@ -64,7 +65,7 @@ export class Metric {
   @ManyToMany((type) => Analysis)
   analyses: Analysis[];
 
-  @OneToOne((type) => User)
+  @ManyToOne((type) => User)
   @JoinColumn()
   user: User;
 }

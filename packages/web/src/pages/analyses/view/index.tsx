@@ -6,6 +6,8 @@ import { CartesianGrid, ComposedChart, Line, ResponsiveContainer, Scatter, Symbo
 import { colors } from '../../../colors';
 import { MetricType, useGetAnalysisWithDataQuery, RatingDataPoint } from '../../../generated/graphql';
 
+const MARGIN = 20;
+
 export const AnalysisPage = ({
   match: {
     params: { id },
@@ -25,7 +27,7 @@ export const AnalysisPage = ({
 
       <Box sx={{ background: 'white', m: 3 }}>
         <ResponsiveContainer aspect={4}>
-          <ComposedChart>
+          <ComposedChart margin={{ top: MARGIN, right: MARGIN, bottom: MARGIN, left: MARGIN }}>
             <CartesianGrid horizontal={false} />
 
             <XAxis

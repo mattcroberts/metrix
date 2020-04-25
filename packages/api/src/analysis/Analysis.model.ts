@@ -1,5 +1,5 @@
 import { Field, ID, ObjectType, registerEnumType } from 'type-graphql';
-import { Column, Entity, JoinColumn, JoinTable, ManyToMany, OneToOne, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, JoinColumn, JoinTable, ManyToMany, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 import { Metric } from '../metrics/Metric.model';
 import { User } from '../users/User.model';
 
@@ -30,7 +30,7 @@ export class Analysis {
   @JoinTable()
   metrics: Metric[];
 
-  @OneToOne((type) => User)
+  @ManyToOne((type) => User)
   @JoinColumn()
   user: User;
 }
