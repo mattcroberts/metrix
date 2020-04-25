@@ -1,6 +1,7 @@
-import { Entity, OneToMany, PrimaryGeneratedColumn, JoinTable, ManyToMany, Column } from 'typeorm';
-import { ObjectType, Field, ID, registerEnumType } from 'type-graphql';
+import { Field, ID, ObjectType, registerEnumType } from 'type-graphql';
+import { Column, Entity, JoinColumn, JoinTable, ManyToMany, OneToOne, PrimaryGeneratedColumn } from 'typeorm';
 import { Metric } from '../metrics/Metric.model';
+import { User } from '../users/User.model';
 
 export enum ChartType {
   MARKER = 'MARKER',
@@ -28,4 +29,8 @@ export class Analysis {
   @ManyToMany((type) => Metric)
   @JoinTable()
   metrics: Metric[];
+
+  @OneToOne((type) => User)
+  @JoinColumn()
+  user: User;
 }

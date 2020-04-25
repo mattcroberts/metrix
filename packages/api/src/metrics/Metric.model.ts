@@ -1,8 +1,18 @@
 import { createUnionType, Field, ID, ObjectType, registerEnumType } from 'type-graphql';
-import { Column, Entity, JoinTable, ManyToMany, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Column,
+  Entity,
+  JoinColumn,
+  JoinTable,
+  ManyToMany,
+  OneToMany,
+  OneToOne,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 import { Analysis } from '../analysis/Analysis.model';
 import { DataPoint, IDataPoint } from '../datapoint/DataPoint.model';
 import { RatingDataPoint } from '../datapoint/RatingDataPoint.model';
+import { User } from '../users/User.model';
 
 export enum MetricType {
   DataPoint = 'DataPoint',
@@ -53,4 +63,8 @@ export class Metric {
   @JoinTable()
   @ManyToMany((type) => Analysis)
   analyses: Analysis[];
+
+  @OneToOne((type) => User)
+  @JoinColumn()
+  user: User;
 }
