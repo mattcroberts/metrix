@@ -40,7 +40,7 @@ const client = new ApolloClient({
   uri: '/graphql',
 });
 const GlobalStyle = createGlobalStyle({
-  body: { background: theme.colors.background, color: theme.colors.text },
+  body: { background: theme.colors.pageBackground, color: theme.colors.text },
   button: { cursor: 'pointer' },
 });
 
@@ -59,7 +59,7 @@ function App() {
                   <ProtectedRoute path="/metrics/new" component={CreateMetricPage} />
                   <ProtectedRoute path="/metrics/:id/edit" component={EditMetricPage} />
                   <ProtectedRoute path="/metrics/:id" component={MetricAnalysisPage} />
-                  <ProtectedRoute path="/analyses/create" component={CreateAnalysisPage} />
+                  <ProtectedRoute path="/analyses/new" component={CreateAnalysisPage} />
                   <ProtectedRoute path="/analyses/:id" component={AnalysisPage} />
                   <ProtectedRoute path="/analyses" component={AnalysesListPage} />
                   <ProtectedRoute path="/" component={HomePage} />

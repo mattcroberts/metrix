@@ -2,6 +2,7 @@ import { merge } from 'lodash';
 
 export const theme = merge(require('@rebass/preset').default, {
   colors: {
+    pageBackground: '#525759',
     background: '#383d3f',
     gray: '#dddddf',
     highlight: 'red',
@@ -11,3 +12,4 @@ export const theme = merge(require('@rebass/preset').default, {
     text: '#e5d4ed',
   },
 });
+console.log({ theme });

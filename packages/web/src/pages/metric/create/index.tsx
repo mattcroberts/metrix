@@ -5,6 +5,7 @@ import { useHistory } from 'react-router-dom';
 import { Button, Flex, Heading } from 'rebass/styled-components';
 import { Field } from '../../../components/Field';
 import { useCreateMetricMutation } from '../../../generated/graphql';
+import { Page } from '../../../components/Page';
 
 export const CreateMetricPage = () => {
   const { register, handleSubmit, errors } = useForm();
@@ -12,11 +13,9 @@ export const CreateMetricPage = () => {
   const history = useHistory();
 
   return (
-    <>
-      <Flex
-        sx={{ borderColor: 'muted', borderWidth: 1, borderStyle: 'solid', padding: 3 }}
-        as="form"
-        flexDirection="column"
+    <Page>
+      <Heading mt="2">Create Metric</Heading>
+      <form
         onSubmit={handleSubmit(async ({ name, type }) => {
           const { errors } = await createMetric({ variables: { name, type } });
 
@@ -28,7 +27,6 @@ export const CreateMetricPage = () => {
           history.push('/metrics');
         })}
       >
-        <Heading mt="2">Create Metric</Heading>
         <Flex sx={{ alignItems: 'flex-start' }}>
           <Field>
             <Label sx={{ mb: 1 }}>Name</Label>
@@ -44,10 +42,10 @@ export const CreateMetricPage = () => {
             {errors.type && <p>errors.type.message</p>}
           </Field>
         </Flex>
-        <Flex justifyContent="flex-end" mr="4">
+        <Flex justifyContent="flex-end">
           <Button type="submit">Create</Button>
         </Flex>
-      </Flex>
-    </>
+      </form>
+    </Page>
   );
 };
