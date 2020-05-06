@@ -1,0 +1,34 @@
+version: '3'
+services:
+  web:
+    image: docker.pkg.github.com/mattcroberts/metrix/metrix-web:${METRIX_TAG}
+    ports:
+      - "80:8888"
+    restart: always
+  api:
+    image: docker.pkg.github.com/mattcroberts/metrix/metrix-api:${METRIX_TAG}
+    restart: always
+    environment:
+      - TYPEORM_HOST=postgres
+      - TYPEORM_DATABASE=metrix
+      - TYPEORM_USERNAME=${METRIX_POSTGRES_USERNAME}
+      - TYPEORM_PASSWORD=${METRIX_POSTGRES_PASSWORD}
+      - TYPEORM_SYNCHRONIZE=false
+      - TYPEORM_ENTITIES_DIR=/home/nodejs/app/models/**/*.js
+      - TYPEORM_MIGRATIONS_DIR=/home/nodejs/app/migrations/**/*.js
+      - TYPEORM_SUBSCRIBERS_DIR=/home/nodejs/app/subscribers/**/*.js
+    depends_on:
+      - postgres
+    ports:
+      - "4000:8889"
+  postgres:
+    image: postgres
+    restart: always
+    environment:
+      POSTGRES_USER: ${METRIX_POSTGRES_USERNAME}
+      POSTGRES_PASSWORD: ${METRIX_POSTGRES_PASSWORD}
+      POSTGRES_DB: metrix
+    volumes:
+      - postgres:/var/lib/postgresql/data
+volumes:
+  postgres:
