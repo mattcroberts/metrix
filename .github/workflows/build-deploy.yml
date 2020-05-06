@@ -49,11 +49,18 @@ jobs:
         run: |
           cat > env.sh <<- EOM
             export METRIX_TAG=$(git rev-parse --short "$GITHUB_SHA")
+            export METRIX_POSTGRES_USERNAME=${{ secrets.METRIX_POSTGRES_USERNAME }}
+            export METRIX_POSTGRES_PASSWORD=${{ secrets.METRIX_POSTGRES_PASSWORD }}
+            export METRIX_POSTGRES_DB_NAME=${{ secrets.METRIX_POSTGRES_DB_NAME }}
+            export METRIX_JWT_SECRET=${{ secrets.METRIX_JWT_SECRET }}
+            export METRIX_GOOGLE_CLIENT_ID=${{ secrets.METRIX_GOOGLE_CLIENT_ID }}
+            export METRIX_GOOGLE_CLIENT_SECRET=${{ secrets.METRIX_GOOGLE_CLIENT_SECRET }}
+            export METRIX_UI_HOST=https://irix.dev/metrix
           EOM
       - name: SCP Files
         uses: appleboy/scp-action@master
         with:
-          host: "irix.dev"
+          host: ${{ secrets.DO_HOST }}
           username: ${{ secrets.DO_USERNAME }}
           port: ${{ secrets.SSH_PORT }}
           key: ${{ secrets.DO_KEY }}
