@@ -3,8 +3,6 @@ name: Build + Deploy
 on:
   push:
     branches: [master]
-  pull_request:
-    branches: [master]
 
 jobs:
   build-web:
@@ -46,15 +44,16 @@ jobs:
     needs: ['build-web', 'build-api']
 
     steps:
+      - uses: actions/checkout@v2
       - name: Create env
         run: |
           cat > env.sh <<- EOM
             export METRIX_TAG=$(git rev-parse --short "$GITHUB_SHA")
           EOM
       - name: SCP Files
-        uses: appleboy/scp-action@v0.0.1
+        uses: appleboy/scp-action@master
         with:
-          host: ${{ secrets.DO_HOST }}
+          host: "irix.dev"
           username: ${{ secrets.DO_USERNAME }}
           port: ${{ secrets.SSH_PORT }}
           key: ${{ secrets.DO_KEY }}
