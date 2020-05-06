@@ -7,9 +7,11 @@
   "license": "ISC",
   "main": "src/index.ts",
   "scripts": {
+    "clean": "rm -rf build",
+    "build": "tsc",
     "predev": "docker-compose up -d",
     "dev": "nodemon -x ts-node src/index.ts",
-    "start": "ts-node src/index.ts",
+    "start": "node build/index.js",
     "typeorm": "ts-node ./node_modules/typeorm/cli.js"
   },
   "dependencies": {
@@ -43,6 +45,6 @@
     "nodemon": "^2.0.2",
     "prettier": "^2.0.4",
     "ts-node": "3.3.0",
-    "typescript": "3.3.3333"
+    "typescript": "^3.8.3"
   }
 }

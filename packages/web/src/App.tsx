@@ -37,7 +37,7 @@ const client = new ApolloClient({
     });
   },
   cache,
-  uri: '/graphql',
+  uri: './graphql',
 });
 const GlobalStyle = createGlobalStyle({
   body: { background: theme.colors.pageBackground, color: theme.colors.text },
