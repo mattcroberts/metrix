@@ -9,7 +9,7 @@ services:
     image: docker.pkg.github.com/mattcroberts/metrix/metrix-api:${METRIX_TAG}
     restart: always
     environment:
-      - TYPEORM_HOST=postgres
+      - TYPEORM_HOST=metrix_postgres
       - TYPEORM_DATABASE=${METRIX_POSTGRES_DB_NAME}
       - TYPEORM_USERNAME=${METRIX_POSTGRES_USERNAME}
       - TYPEORM_PASSWORD=${METRIX_POSTGRES_PASSWORD}
