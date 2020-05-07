@@ -50,7 +50,7 @@ function App() {
       <GlobalStyle />
       <AuthContextProvider>
         <ApolloProvider client={client}>
-          <BrowserRouter>
+          <BrowserRouter basename="/metrix">
             <Flex justifyContent="center">
               <Box maxWidth={1024} flex="1">
                 <Nav />
