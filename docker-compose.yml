@@ -14,9 +14,9 @@ services:
       - TYPEORM_USERNAME=${METRIX_POSTGRES_USERNAME}
       - TYPEORM_PASSWORD=${METRIX_POSTGRES_PASSWORD}
       - TYPEORM_SYNCHRONIZE=false
-      - TYPEORM_ENTITIES_DIR=/home/nodejs/app/models/**/*.js
-      - TYPEORM_MIGRATIONS_DIR=/home/nodejs/app/migrations/**/*.js
-      - TYPEORM_SUBSCRIBERS_DIR=/home/nodejs/app/subscribers/**/*.js
+      - TYPEORM_ENTITIES_DIR=/home/nodejs/src/src/**/*.model.js
+      - TYPEORM_MIGRATIONS_DIR=/home/nodejs/src/migrations/**/*.js
+      - TYPEORM_SUBSCRIBERS_DIR=/home/nodejs/src/subscribers/**/*.js
       - JWT_SECRET=${METRIX_JWT_SECRET}
       - GOOGLE_CLIENT_ID=${METRIX_GOOGLE_CLIENT_ID}
       - GOOGLE_CLIENT_SECRET=${METRIX_GOOGLE_CLIENT_SECRET}
