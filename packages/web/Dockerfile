@@ -1,5 +1,7 @@
 FROM node:12-slim
 
+ENV PUBLIC_URL /metrix
+
 WORKDIR /home/nodejs/app
 RUN chown node:node .
 USER node
