@@ -37,7 +37,7 @@ const client = new ApolloClient({
     });
   },
   cache,
-  uri: './graphql',
+  uri: process.env.NODE_ENV === 'production' ? './graphql' : '/graphql',
 });
 const GlobalStyle = createGlobalStyle({
   body: { background: theme.colors.pageBackground, color: theme.colors.text },
@@ -50,7 +50,7 @@ function App() {
       <GlobalStyle />
       <AuthContextProvider>
         <ApolloProvider client={client}>
-          <BrowserRouter basename="/metrix">
+          <BrowserRouter basename={process.env.BASENAME}>
             <Flex justifyContent="center">
               <Box maxWidth={1024} flex="1">
                 <Nav />

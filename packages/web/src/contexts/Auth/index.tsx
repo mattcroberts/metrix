@@ -1,5 +1,5 @@
-import React, { createContext, FC, useState } from 'react';
 import Cookie from 'js-cookie';
+import React, { createContext, FC } from 'react';
 
 export const AuthContext = createContext<{ isAuthenticated: boolean }>({
   isAuthenticated: false,

@@ -1,11 +1,11 @@
 import { Input, Label, Select } from '@rebass/forms';
 import * as React from 'react';
 import { useForm } from 'react-hook-form';
-import { Box, Button, Flex, Heading } from 'rebass/styled-components';
-import { useCreateAnalysisMutation, useGetAllMetricsQuery } from '../../../generated/graphql';
 import { useHistory } from 'react-router-dom';
+import { Button, Flex, Heading } from 'rebass/styled-components';
 import { Field } from '../../../components/Field';
 import { Page } from '../../../components/Page';
+import { useCreateAnalysisMutation, useGetAllMetricsQuery } from '../../../generated/graphql';
 
 export const CreateAnalysisPage = () => {
   const { data: metrics, loading: metricsLloading } = useGetAllMetricsQuery();

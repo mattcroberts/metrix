@@ -1,7 +1,6 @@
 import * as React from 'react';
-import { Box, Flex, Button } from 'rebass/styled-components';
+import { Box, Button, Flex } from 'rebass/styled-components';
 import { Link } from '../Link';
-import { relative } from 'path';
 
 const NavElement = ({ to, text }: { to: string; text: string }) => (
   <Link
