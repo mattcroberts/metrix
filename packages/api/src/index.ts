@@ -18,6 +18,7 @@ import { MetricResolver } from './metrics/resolver';
 import { ContextType } from './types';
 import { UserResolver } from './users/resolver';
 import { User } from './users/User.model';
+import { connectWithRetry } from './db';
 
 TypeORM.useContainer(Container);
 const PORT = config.port;
@@ -52,7 +53,7 @@ app.get(
 
 app.use(cors());
 
-createConnection()
+connectWithRetry()
   .then(async (connection) => {
     console.log('DB connected');
 
