@@ -10,15 +10,19 @@ import 'reflect-metadata';
 import * as TypeGraphQL from 'type-graphql';
 import { Container } from 'typedi';
 import * as TypeORM from 'typeorm';
-import { createConnection } from 'typeorm';
 import { AnalysisResolver } from './analysis/resolver';
 import { config } from './config';
 import { DataPointResolver } from './datapoint/resolver';
+import { connectWithRetry } from './db';
 import { MetricResolver } from './metrics/resolver';
 import { ContextType } from './types';
 import { UserResolver } from './users/resolver';
 import { User } from './users/User.model';
-import { connectWithRetry } from './db';
+
+process.on('unhandledRejection', (reason) => {
+  console.error('Unhandled Rejection');
+  console.error(reason);
+});
 
 TypeORM.useContainer(Container);
 const PORT = config.port;

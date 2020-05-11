@@ -3,7 +3,7 @@ services:
   metrix_web:
     image: docker.pkg.github.com/mattcroberts/metrix/metrix-web:${METRIX_TAG}
     ports:
-      - "8888:80"
+      - '8888:80'
     restart: always
   metrix_api:
     image: docker.pkg.github.com/mattcroberts/metrix/metrix-api:${METRIX_TAG}
@@ -15,7 +15,7 @@ services:
       - TYPEORM_USERNAME=${METRIX_POSTGRES_USERNAME}
       - TYPEORM_PASSWORD=${METRIX_POSTGRES_PASSWORD}
       - TYPEORM_SYNCHRONIZE=false
-      - TYPEORM_ENTITIES_DIR=/home/nodejs/app/build/**/*.model.js
+      - TYPEORM_ENTITIES=/home/nodejs/app/build/**/*.model.js
       - TYPEORM_MIGRATIONS=/home/nodejs/app/build/migration/*.js
       - JWT_SECRET=${METRIX_JWT_SECRET}
       - GOOGLE_CLIENT_ID=${METRIX_GOOGLE_CLIENT_ID}
@@ -25,7 +25,7 @@ services:
     depends_on:
       - metrix_postgres
     ports:
-      - "8889:4000"
+      - '8889:4000'
   metrix_postgres:
     image: postgres
     restart: always

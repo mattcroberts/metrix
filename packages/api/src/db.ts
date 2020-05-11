@@ -1,22 +1,12 @@
 import { getConnectionOptions, Connection, createConnection } from 'typeorm';
 
 export const connectWithRetry = async (retries = 5, timeout = 500): Promise<Connection> => {
-  const connectionOptions: any = Object.assign(
-    await getConnectionOptions(),
-    {
-      host: process.env.TYPEORM_HOST,
-      username: process.env.TYPEORM_USERNAME,
-      password: process.env.TYPEORM_PASSWORD,
-      database: process.env.TYPEORM_DATABASE,
-    },
-    process.env.NODE_ENV === 'production'
-      ? {
-          entities: [process.env.TYPEORM_ENTITIES_DIR],
-          subscribers: [process.env.TYPEORM_SUBSCRIBERS_DIR],
-          migrations: [process.env.TYPEORM_MIGRATIONS_DIR],
-        }
-      : {}
-  );
+  const connectionOptions: any = Object.assign(await getConnectionOptions(), {
+    host: process.env.TYPEORM_HOST,
+    username: process.env.TYPEORM_USERNAME,
+    password: process.env.TYPEORM_PASSWORD,
+    database: process.env.TYPEORM_DATABASE,
+  });
 
   try {
     const connection = await createConnection(connectionOptions);
