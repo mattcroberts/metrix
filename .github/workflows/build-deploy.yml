@@ -64,11 +64,11 @@ jobs:
           username: ${{ secrets.DO_USERNAME }}
           port: ${{ secrets.SSH_PORT }}
           key: ${{ secrets.DO_KEY }}
-          source: "docker-compose.yml,env.sh"
+          source: "docker-compose.yml,env.sh,deploy.sh"
           target: "metrix"
       - uses: webfactory/ssh-agent@v0.2.0
         with:
           ssh-private-key: ${{ secrets.DO_KEY }}
       - name: Run deploy
-        run: ssh -o StrictHostKeyChecking=no ${{ secrets.DO_USERNAME }}@${{ secrets.DO_HOST }} "/bin/bash ./deploy.sh"
+        run: ssh -o StrictHostKeyChecking=no ${{ secrets.DO_USERNAME }}@${{ secrets.DO_HOST }} "/bin/bash ./deploy.sh && ./metrix/deploy.sh"
 
