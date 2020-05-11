@@ -16,11 +16,12 @@ services:
       - TYPEORM_PASSWORD=${METRIX_POSTGRES_PASSWORD}
       - TYPEORM_SYNCHRONIZE=false
       - TYPEORM_ENTITIES_DIR=/home/nodejs/app/build/**/*.model.js
-      - TYPEORM_MIGRATIONS_DIR=/home/nodejs/app/build/migration/*.js
+      - TYPEORM_MIGRATIONS=/home/nodejs/app/build/migration/*.js
       - JWT_SECRET=${METRIX_JWT_SECRET}
       - GOOGLE_CLIENT_ID=${METRIX_GOOGLE_CLIENT_ID}
       - GOOGLE_CLIENT_SECRET=${METRIX_GOOGLE_CLIENT_SECRET}
       - UI_HOST=${METRIX_UI_HOST}
+      - API_PATH=${METRIX_API_PATH}
     depends_on:
       - metrix_postgres
     ports:

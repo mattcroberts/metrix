@@ -65,7 +65,7 @@ connectWithRetry()
           clientID: config.googleAuth.clientId,
           clientSecret: config.googleAuth.clientSecret,
           scope: ['openid', 'profile', 'email'],
-          callbackURL: '/auth/google/callback',
+          callbackURL: `${config.apiPath}/auth/google/callback`,
         },
         async (accessToken, refreshToken, profile, done) => {
           const email = profile.emails[0].value;
