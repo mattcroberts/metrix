@@ -37,7 +37,7 @@ const client = new ApolloClient({
     });
   },
   cache,
-  uri: process.env.NODE_ENV === 'production' ? './api/graphql' : '/graphql',
+  uri: process.env.NODE_ENV === 'production' ? `${process.env.PUBLIC_URL}/graphql` : '/graphql',
 });
 const GlobalStyle = createGlobalStyle({
   body: { background: theme.colors.pageBackground, color: theme.colors.text },

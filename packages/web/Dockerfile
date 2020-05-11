@@ -12,6 +12,8 @@ COPY --chown=node:node . .
 
 RUN yarn
 
+ENV NODE_ENV production
+
 RUN yarn build
 
 FROM nginx:alpine
