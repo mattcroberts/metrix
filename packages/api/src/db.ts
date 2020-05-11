@@ -20,7 +20,6 @@ export const connectWithRetry = async (retries = 5, timeout = 500): Promise<Conn
 
   try {
     const connection = await createConnection(connectionOptions);
-    console.log('DB Connected');
     return connection;
   } catch (e) {
     console.error(e);

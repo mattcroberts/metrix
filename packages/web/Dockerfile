@@ -1,6 +1,8 @@
 FROM node:12-slim
 
 ENV PUBLIC_URL /metrix
+ENV REACT_APP_BASENAME /metrix
+ENV REACT_APP_API_PATH /metrix/api
 
 WORKDIR /home/nodejs/app
 RUN chown node:node .

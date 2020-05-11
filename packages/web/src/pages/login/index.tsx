@@ -6,7 +6,7 @@ export const LoginPage = () => {
   return (
     <Flex sx={{ alignItems: 'center', justifyContent: 'center', height: '10vh' }}>
       <Box>
-        <GoogleButton href="http://localhost:4000/auth/google">Google</GoogleButton>
+        <GoogleButton href={`${process.env.REACT_APP_API_PATH}/auth/google`}>Google</GoogleButton>
       </Box>
     </Flex>
   );

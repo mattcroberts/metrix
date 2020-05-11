@@ -20,7 +20,7 @@ services:
       - JWT_SECRET=${METRIX_JWT_SECRET}
       - GOOGLE_CLIENT_ID=${METRIX_GOOGLE_CLIENT_ID}
       - GOOGLE_CLIENT_SECRET=${METRIX_GOOGLE_CLIENT_SECRET}
-      - UI_HOST=$${METRIX_UI_HOST}
+      - UI_HOST=${METRIX_UI_HOST}
     depends_on:
       - metrix_postgres
     ports:

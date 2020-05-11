@@ -1,7 +1,7 @@
 import * as dotenv from 'dotenv';
 dotenv.config();
 export const config = {
-  uiHost: process.env.UI_HOST || 'http://localhost:3000',
+  uiHost: process.env.UI_HOST || 'http://localhost:3000/metrix',
   tokenCookieName: process.env.TOKEN_COOKIE_NAME || 'x-auth-token',
   jwtSecret: process.env.JWT_SECRET,
   port: process.env.PORT || 4000,
