@@ -1,5 +1,7 @@
 #!/bin/bash
 
+source env.sh
+
 echo "Running Metrix Migration"
 
-docker exec -u node www_metrix_api_1 yarn --cwd ./packages/api typeorm migration:run | xargs
+docker-compose -p www exec -u node metrix_api yarn typeorm migration:run | xargs 
