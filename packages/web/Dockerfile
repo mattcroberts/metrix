@@ -18,4 +18,5 @@ RUN yarn build
 
 FROM nginx:alpine
 
+COPY nginx.conf /etc/nginx/conf.d/default.conf
 COPY --from=0 /home/nodejs/app/build /usr/share/nginx/html
