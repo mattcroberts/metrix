@@ -2,5 +2,8 @@ query GetAllAnalyses {
   allAnalyses {
     id
     name
+    metrics {
+      name
+    }
   }
 }

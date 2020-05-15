@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Heading } from 'rebass/styled-components';
+import { Heading, Flex, Card, Text } from 'rebass/styled-components';
 import { Link } from '../../components/Link';
 import { useGetAllAnalysesQuery } from '../../generated/graphql';
 import { Page } from '../../components/Page';
@@ -12,15 +12,28 @@ export const AnalysesListPage = () => {
   if (!data) return <>No data</>;
   return (
     <Page>
-      <Heading sx={{ my: 3, mx: 2 }}>All Analyses</Heading>
+      <Heading>All Analyses</Heading>
 
-      <ul>
+      <Flex mx={-2} sx={{ flexWrap: 'wrap' }}>
         {data.allAnalyses.map((analysis) => (
-          <li key={analysis.id}>
-            <Link to={`/analyses/${analysis.id}`}>{analysis.name}</Link>
-          </li>
+          <Link key={analysis.id} to={`/analyses/${analysis.id}`} sx={{ textDecoration: 'none' }}>
+            <Card
+              sx={{
+                backgroundColor: 'primary',
+                color: 'white',
+                m: [1, 2, 2],
+                minWidth: ['100%', 'calc(50% - 16px)', 'calc(33.3% - 16px)'],
+                boxShadow: `3px 3px 3px rgba(0,0,0, 0.5)`,
+              }}
+            >
+              <Heading>{analysis.name}</Heading>
+              {analysis.metrics.map((metric) => (
+                <Text>{metric.name}</Text>
+              ))}
+            </Card>
+          </Link>
         ))}
-      </ul>
+      </Flex>
     </Page>
   );
 };

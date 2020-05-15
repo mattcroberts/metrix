@@ -15,7 +15,7 @@ export class AnalysisResolver {
 
   @Query((returns) => [Analysis])
   async allAnalyses(@Ctx() { user }: ContextType) {
-    return this.analysisRepository.find({ user });
+    return this.analysisRepository.find({ where: { user }, relations: ['metrics'] });
   }
 
   @Query((returns) => Analysis)

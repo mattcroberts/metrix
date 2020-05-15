@@ -155,6 +155,10 @@ export type GetAllAnalysesQuery = (
   & { allAnalyses: Array<(
     { __typename?: 'Analysis' }
     & Pick<Analysis, 'id' | 'name'>
+    & { metrics: Array<(
+      { __typename?: 'Metric' }
+      & Pick<Metric, 'name'>
+    )> }
   )> }
 );
 
@@ -331,6 +335,9 @@ export const GetAllAnalysesDocument = gql`
   allAnalyses {
     id
     name
+    metrics {
+      name
+    }
   }
 }
     `;
