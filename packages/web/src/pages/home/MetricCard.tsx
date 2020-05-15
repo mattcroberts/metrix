@@ -29,8 +29,8 @@ export const MetricCard: FC<{
     <Card
       sx={{
         backgroundColor: 'muted',
-        m: 2,
-        minWidth: '31.5%',
+        m: [1, 2, 2],
+        minWidth: ['100%', 'calc(50% - 16px)', 'calc(33.3% - 16px)'],
         boxShadow: `3px 3px 3px rgba(0,0,0, 0.5)`,
       }}
     >

@@ -3,22 +3,21 @@ import { Box, Button, Flex, Heading } from 'rebass/styled-components';
 import { Link } from '../Link';
 
 const NavElement = ({ to, text }: { to: string; text: string }) => (
-  <Link
-    to={to}
-    sx={{
-      p: 3,
-      '&:hover': { backgroundColor: 'primary' },
-      textDecoration: 'none',
-      fontWeight: 'bold',
-      color: 'text',
-
-      display: 'flex',
-      justifyContent: 'center',
-      alignItems: 'center',
-    }}
-  >
-    {text}
-  </Link>
+  <Flex sx={{ px: [2, 3, 3], alignItems: 'center', minWidth: 'auto', '&:hover': { backgroundColor: 'primary' } }}>
+    <Link
+      to={to}
+      sx={{
+        textDecoration: 'none',
+        fontWeight: 'bold',
+        color: 'text',
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+      }}
+    >
+      {text}
+    </Link>
+  </Flex>
 );
 
 const DropButton = () => {
@@ -27,6 +26,9 @@ const DropButton = () => {
     <Box sx={{ position: 'relative' }}>
       <Button
         sx={{
+          px: 2,
+          py: 1,
+          whiteSpace: 'nowrap',
           outline: 'none',
           borderBottomLeftRadius: 0,
           borderBottomRightRadius: 0,
@@ -78,21 +80,22 @@ const DropButton = () => {
   );
 };
 export const Nav = () => (
-  <Flex sx={{ backgroundColor: 'secondary', alignItems: 'center', boxShadow: `3px 3px 3px rgba(0,0,0, 0.5)` }}>
+  <Flex sx={{ backgroundColor: 'secondary', alignItems: 'stretch', boxShadow: `3px 3px 3px rgba(0,0,0, 0.5)` }}>
     <Heading
       sx={{
-        pl: 4,
-        pr: 4,
+        pl: [3, 4, 4],
+        pr: [1, 3, 3],
         fontSize: 3,
         fontWeight: 'bold',
         lineHeight: '54px',
+        minWidth: 'auto',
       }}
     >
       Metrix
     </Heading>
     <NavElement to="/" text="Home" />
     <NavElement to="/analyses" text="Analyses" />
-    <Flex sx={{ width: '100%', justifyContent: 'flex-end', marginRight: 4 }}>
+    <Flex sx={{ width: '100%', justifyContent: 'flex-end', marginRight: 4, alignItems: 'center' }}>
       <DropButton />
     </Flex>
   </Flex>

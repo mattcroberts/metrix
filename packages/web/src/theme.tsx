@@ -1,6 +1,7 @@
 import { merge } from 'lodash';
 
 export const theme = merge(require('@rebass/preset').default, {
+  breakpoints: ['40em', '52em', '64em'],
   colors: {
     pageBackground: '#525759',
     background: '#383d3f',
@@ -37,7 +38,7 @@ export const theme = merge(require('@rebass/preset').default, {
       fontWeight: 'bold',
       textDecoration: 'none',
       width: '100%',
-      px: 3,
+      p: [2, 3, 3],
       py: 2,
       display: 'inline-block',
       '&:hover': { backgroundColor: 'secondary', color: 'text' },
