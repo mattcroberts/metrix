@@ -1,4 +1,4 @@
-import { Input, Label, Select } from '@rebass/forms';
+import { Input, Label, Select } from '@rebass/forms/styled-components';
 import React from 'react';
 import { useForm } from 'react-hook-form';
 import { useHistory } from 'react-router-dom';

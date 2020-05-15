@@ -1,5 +1,5 @@
 import React, { FC } from 'react';
-import { Box, Button, Card, Flex } from 'rebass/styled-components';
+import { Box, Button, Card, Flex, Heading } from 'rebass/styled-components';
 import { Link } from '../../components/Link';
 import { Metric, MetricType, useDeleteMetricMutation } from '../../generated/graphql';
 import { RecordActivity } from './RecordActivity';
@@ -28,18 +28,15 @@ export const MetricCard: FC<{
   return (
     <Card
       sx={{
-        // flexDirection: 'column',
         backgroundColor: 'muted',
-        // borderRadius: 2,
-        // p: 2,
         m: 2,
-        // justifyContent: 'center',
         minWidth: '31.5%',
+        boxShadow: `3px 3px 3px rgba(0,0,0, 0.5)`,
       }}
     >
-      <Box color="background" fontSize="2" sx={{ fontWeight: 'bold' }}>
+      <Heading color="background" fontSize={2}>
         {metric.name}
-      </Box>
+      </Heading>
 
       <RecordActivity metric={metric} />
       <Flex justifyContent="space-evenly">

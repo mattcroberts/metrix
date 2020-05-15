@@ -11,5 +11,37 @@ export const theme = merge(require('@rebass/preset').default, {
     secondary: '#5941a9',
     text: '#e5d4ed',
   },
+  buttons: {
+    primary: {
+      boxShadow: `3px 3px 3px rgba(0,0,0, 0.25)`,
+      fontFamily: 'body',
+    },
+  },
+  fonts: {
+    heading: 'Open Sans',
+    body: 'Open Sans',
+  },
+  forms: {
+    label: {
+      fontFamily: 'heading',
+    },
+  },
+
+  variants: {
+    link: {
+      fontFamily: 'body',
+    },
+    dropButton: {
+      fontFamily: 'body',
+      color: 'background',
+      fontWeight: 'bold',
+      textDecoration: 'none',
+      width: '100%',
+      px: 3,
+      py: 2,
+      display: 'inline-block',
+      '&:hover': { backgroundColor: 'secondary', color: 'text' },
+    },
+  },
 });
 console.log({ theme });

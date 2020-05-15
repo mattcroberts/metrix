@@ -1,6 +1,16 @@
 import React, { FC } from 'react';
-import { FlexProps, Flex } from 'rebass/styled-components';
+import { Flex, FlexProps } from 'rebass/styled-components';
 
 export const Page: FC<FlexProps> = (props) => {
-  return <Flex sx={{ backgroundColor: 'background', padding: 4, flexDirection: 'column' }} {...props} />;
+  return (
+    <Flex
+      sx={{
+        backgroundColor: 'background',
+        padding: 4,
+        flexDirection: 'column',
+        boxShadow: `3px 3px 3px rgba(0,0,0, 0.5)`,
+      }}
+      {...props}
+    />
+  );
 };

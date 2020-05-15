@@ -4,7 +4,6 @@ import React from 'react';
 import { BrowserRouter, Route, Switch } from 'react-router-dom';
 import { Box, Flex } from 'rebass/styled-components';
 import { createGlobalStyle, ThemeProvider } from 'styled-components';
-import './App.css';
 import { Nav } from './components/Nav';
 import { ProtectedRoute } from './components/ProtectedRoute';
 import { Provider as AuthContextProvider } from './contexts/Auth';

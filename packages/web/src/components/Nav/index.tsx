@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Box, Button, Flex } from 'rebass/styled-components';
+import { Box, Button, Flex, Heading } from 'rebass/styled-components';
 import { Link } from '../Link';
 
 const NavElement = ({ to, text }: { to: string; text: string }) => (
@@ -33,6 +33,7 @@ const DropButton = () => {
           borderWidth: 2,
           borderStyle: 'solid',
           borderColor: 'secondary',
+          boxShadow: `3px 3px 3px rgba(0,0,0, 0.5)`,
         }}
         onClick={() => setOpen(!open)}
       >
@@ -61,36 +62,12 @@ const DropButton = () => {
             }}
           >
             <Box as="li">
-              <Link
-                sx={{
-                  color: 'background',
-                  fontWeight: 'bold',
-                  textDecoration: 'none',
-                  width: '100%',
-                  px: 3,
-                  py: 2,
-                  display: 'inline-block',
-                  '&:hover': { backgroundColor: 'secondary', color: 'text' },
-                }}
-                to="/metrics/new"
-              >
+              <Link variant="dropButton" to="/metrics/new">
                 Metric
               </Link>
             </Box>{' '}
             <Box as="li">
-              <Link
-                sx={{
-                  color: 'background',
-                  fontWeight: 'bold',
-                  textDecoration: 'none',
-                  width: '100%',
-                  px: 3,
-                  py: 2,
-                  display: 'inline-block',
-                  '&:hover': { backgroundColor: 'secondary', color: 'text' },
-                }}
-                to="/analyses/new"
-              >
+              <Link variant="dropButton" to="/analyses/new">
                 Analysis
               </Link>
             </Box>
@@ -101,8 +78,8 @@ const DropButton = () => {
   );
 };
 export const Nav = () => (
-  <Flex sx={{ backgroundColor: 'secondary', alignItems: 'center' }}>
-    <Box
+  <Flex sx={{ backgroundColor: 'secondary', alignItems: 'center', boxShadow: `3px 3px 3px rgba(0,0,0, 0.5)` }}>
+    <Heading
       sx={{
         pl: 4,
         pr: 4,
@@ -112,7 +89,7 @@ export const Nav = () => (
       }}
     >
       Metrix
-    </Box>
+    </Heading>
     <NavElement to="/" text="Home" />
     <NavElement to="/analyses" text="Analyses" />
     <Flex sx={{ width: '100%', justifyContent: 'flex-end', marginRight: 4 }}>
