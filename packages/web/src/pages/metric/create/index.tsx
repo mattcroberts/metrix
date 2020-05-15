@@ -13,20 +13,21 @@ export const CreateMetricPage = () => {
   const history = useHistory();
 
   return (
-    <Page>
-      <Heading mt="2">Create Metric</Heading>
-      <form
-        onSubmit={handleSubmit(async ({ name, type }) => {
-          const { errors } = await createMetric({ variables: { name, type } });
+    <Page
+      as="form"
+      onSubmit={handleSubmit(async ({ name, type }) => {
+        const { errors } = await createMetric({ variables: { name, type } });
 
-          if (errors) {
-            console.error(errors);
-            return;
-          }
+        if (errors) {
+          console.error(errors);
+          return;
+        }
 
-          history.push('/metrics');
-        })}
-      >
+        history.push('/metrics');
+      })}
+    >
+      <Heading>Create Metric</Heading>
+     
         <Flex sx={{ alignItems: 'flex-start' }}>
           <Field>
             <Label sx={{ mb: 1 }}>Name</Label>
@@ -45,7 +46,6 @@ export const CreateMetricPage = () => {
         <Flex justifyContent="flex-end">
           <Button type="submit">Create</Button>
         </Flex>
-      </form>
     </Page>
   );
 };

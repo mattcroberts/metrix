@@ -32,7 +32,7 @@ export const CreateAnalysisPage = () => {
       })}
       as="form"
     >
-      <Heading mt="2">Create Analysis</Heading>
+      <Heading>Create Analysis</Heading>
       <Flex sx={{ alignItems: 'flex-start' }}>
         <Field>
           <Label sx={{ mb: 1 }}>Name</Label>

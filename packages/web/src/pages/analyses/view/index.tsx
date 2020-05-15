@@ -1,12 +1,15 @@
 import { format } from 'date-fns';
 import * as React from 'react';
 import { RouteComponentProps } from 'react-router-dom';
-import { Box, Flex, Heading, Text } from 'rebass/styled-components';
+import { Box, Heading, Text } from 'rebass/styled-components';
 import { CartesianGrid, ComposedChart, Line, ResponsiveContainer, Scatter, Symbols, XAxis, YAxis } from 'recharts';
 import { colors } from '../../../colors';
-import { MetricType, useGetAnalysisWithDataQuery, RatingDataPoint } from '../../../generated/graphql';
+import { Page } from '../../../components/Page';
+import { MetricType, RatingDataPoint, useGetAnalysisWithDataQuery } from '../../../generated/graphql';
+import { useScreenOrientation } from '../../../hooks/screen-orientation';
+import { theme } from '../../../theme';
 
-const MARGIN = 20;
+const MARGIN = theme.space[3];
 
 export const AnalysisPage = ({
   match: {
@@ -14,6 +17,7 @@ export const AnalysisPage = ({
   },
 }: RouteComponentProps<{ id: string }>) => {
   const { data, loading } = useGetAnalysisWithDataQuery({ variables: { id } });
+  const orientation = useScreenOrientation();
 
   if (loading || !data) return <>Loading...</>;
   const { metrics } = data.getAnalysisWithData;
@@ -21,13 +25,23 @@ export const AnalysisPage = ({
   if (!metrics[0].dataPoints.length) {
     return <Text>No Data</Text>;
   }
+
   return (
-    <Flex sx={{ my: 2, flexDirection: 'column' }}>
+    <Page>
       <Heading>{data.getAnalysisWithData.name}</Heading>
 
-      <Box sx={{ background: 'white', m: 3 }}>
-        <ResponsiveContainer aspect={4}>
-          <ComposedChart margin={{ top: MARGIN, right: MARGIN, bottom: MARGIN, left: MARGIN }}>
+      <Box
+        sx={{
+          background: 'white',
+          marginTop: 3,
+          height: orientation === 'landscape-primary' ? '60vh' : '50vh',
+        }}
+      >
+        <ResponsiveContainer>
+          <ComposedChart
+            margin={{ top: MARGIN, right: MARGIN, bottom: MARGIN, left: MARGIN }}
+            style={{ fontFamily: theme.fonts.body }}
+          >
             <CartesianGrid horizontal={false} />
 
             <XAxis
@@ -74,6 +88,6 @@ export const AnalysisPage = ({
           </ComposedChart>
         </ResponsiveContainer>
       </Box>
-    </Flex>
+    </Page>
   );
 };
