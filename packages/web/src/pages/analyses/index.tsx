@@ -3,17 +3,23 @@ import { Heading, Flex, Card, Text } from 'rebass/styled-components';
 import { Link } from '../../components/Link';
 import { useGetAllAnalysesQuery } from '../../generated/graphql';
 import { Page } from '../../components/Page';
+import { Loader } from '../../components/Loader';
 
 export const AnalysesListPage = () => {
   const { data, loading } = useGetAllAnalysesQuery({ fetchPolicy: 'cache-and-network' });
 
-  if (loading) return <>Loading...</>;
+  if (!data || loading) {
+    return (
+      <Page>
+        <Heading>All Analyses</Heading>
+        <Loader />
+      </Page>
+    );
+  }
 
-  if (!data) return <>No data</>;
   return (
     <Page>
       <Heading>All Analyses</Heading>
-
       <Flex mx={-2} sx={{ flexWrap: 'wrap' }}>
         {data.allAnalyses.map((analysis) => (
           <Link key={analysis.id} to={`/analyses/${analysis.id}`} sx={{ textDecoration: 'none' }}>

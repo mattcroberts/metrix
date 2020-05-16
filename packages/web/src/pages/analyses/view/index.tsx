@@ -8,6 +8,7 @@ import { Page } from '../../../components/Page';
 import { MetricType, RatingDataPoint, useGetAnalysisWithDataQuery } from '../../../generated/graphql';
 import { useScreenOrientation } from '../../../hooks/screen-orientation';
 import { theme } from '../../../theme';
+import { Loader } from '../../../components/Loader';
 
 const MARGIN = theme.space[3];
 
@@ -19,7 +20,13 @@ export const AnalysisPage = ({
   const { data, loading } = useGetAnalysisWithDataQuery({ variables: { id } });
   const orientation = useScreenOrientation();
 
-  if (loading || !data) return <>Loading...</>;
+  if (!data || loading)
+    return (
+      <Page>
+        <Loader />
+      </Page>
+    );
+
   const { metrics } = data.getAnalysisWithData;
 
   if (!metrics[0].dataPoints.length) {
@@ -29,7 +36,6 @@ export const AnalysisPage = ({
   return (
     <Page>
       <Heading>{data.getAnalysisWithData.name}</Heading>
-
       <Box
         sx={{
           background: 'white',
