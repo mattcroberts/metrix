@@ -15,6 +15,7 @@ import { config } from './config';
 import { DataPointResolver } from './datapoint/resolver';
 import { connectWithRetry } from './db';
 import { MetricResolver } from './metrics/resolver';
+import * as pushNotifications from './push-notifications';
 import { ContextType } from './types';
 import { UserResolver } from './users/resolver';
 import { User } from './users/User.model';
@@ -28,10 +29,11 @@ TypeORM.useContainer(Container);
 const PORT = config.port;
 const app = express();
 
+app.use(cors());
 app.use(bodyParser.json());
 app.use(passport.initialize());
 
-app.get('/auth/google', passport.authenticate('google', {}));
+app.get('/auth/google', passport.authenticate('google'));
 
 app.get(
   '/auth/google/callback',
@@ -55,40 +57,43 @@ app.get(
   }
 );
 
-app.use(cors());
+passport.use(
+  new GoogleTokenStrategy(
+    {
+      clientID: config.googleAuth.clientId,
+      clientSecret: config.googleAuth.clientSecret,
+      scope: ['openid', 'profile', 'email'],
+      callbackURL: `${config.apiPath}/auth/google/callback`,
+    },
+    async (accessToken, refreshToken, profile, done) => {
+      const connection = Container.get<TypeORM.Connection>('connection');
+      const userRepo = connection.getRepository(User);
+      const email = profile.emails[0].value;
+
+      const user = await userRepo.findOne({ email });
+
+      if (user) {
+        done(null, user);
+      } else {
+        const newUser = new User();
+        newUser.firstName = profile.name.givenName;
+        newUser.lastName = profile.name.familyName;
+        newUser.email = email;
+        await userRepo.save(newUser);
+        done(null, newUser);
+      }
+    }
+  )
+);
+
+app.use(pushNotifications.router);
 
 connectWithRetry()
   .then(async (connection) => {
     console.log('DB connected');
+    Container.set('connection', connection);
 
     const userRepo = connection.getRepository(User);
-
-    passport.use(
-      new GoogleTokenStrategy(
-        {
-          clientID: config.googleAuth.clientId,
-          clientSecret: config.googleAuth.clientSecret,
-          scope: ['openid', 'profile', 'email'],
-          callbackURL: `${config.apiPath}/auth/google/callback`,
-        },
-        async (accessToken, refreshToken, profile, done) => {
-          const email = profile.emails[0].value;
-
-          const user = await userRepo.findOne({ email });
-
-          if (user) {
-            done(null, user);
-          } else {
-            const newUser = new User();
-            newUser.firstName = profile.name.givenName;
-            newUser.lastName = profile.name.familyName;
-            newUser.email = email;
-            await userRepo.save(newUser);
-            done(null, newUser);
-          }
-        }
-      )
-    );
 
     const schema = await TypeGraphQL.buildSchema({
       resolvers: [MetricResolver, AnalysisResolver, DataPointResolver, UserResolver],
@@ -123,10 +128,12 @@ connectWithRetry()
     });
 
     apolloServer.applyMiddleware({ app });
+    const firebaseApp = pushNotifications.initialise();
 
     return new Promise((resolve) => {
       app.listen(PORT, () => {
         console.log(`API ready at http://localhost:${PORT}`);
+
         resolve();
       });
     });

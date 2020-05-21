@@ -1,12 +1,13 @@
+import { Input, Label, Select } from '@rebass/forms/styled-components';
 import React from 'react';
 import { useForm } from 'react-hook-form';
 import { RouteComponentProps, useHistory } from 'react-router-dom';
-import { useGetMetricByIdQuery, useUpdateMetricMutation } from '../../../generated/graphql';
-import { Page } from '../../../components/Page';
-import { Heading, Button, Flex } from 'rebass/styled-components';
-import { Loader } from '../../../components/Loader';
-import { Label, Input, Select } from '@rebass/forms/styled-components';
+import { Button, Flex, Heading } from 'rebass/styled-components';
 import { Field } from '../../../components/Field';
+import { Loader } from '../../../components/Loader';
+import { Page } from '../../../components/Page';
+import { useGetMetricByIdQuery, useUpdateMetricMutation } from '../../../generated/graphql';
+import { registerDevice } from '../../../registerDevice';
 
 export const EditMetricPage = ({
   match: {
@@ -49,13 +50,33 @@ export const EditMetricPage = ({
           <Input name="name" defaultValue={data.metricById.name} ref={register({ required: 'Required' })} />
         </Field>
         <Field>
-            <Label >Type</Label>
-            <Select name="type" ref={register({ required: 'Required' })}>
-              <option value="DataPoint">Marker</option>
-              <option value="RatingDataPoint">Rating</option>
-            </Select>
-            {errors.type && <p>errors.type.message</p>}
-          </Field>
+          <Label>Type</Label>
+          <Select name="type" ref={register({ required: 'Required' })}>
+            <option value="DataPoint">Marker</option>
+            <option value="RatingDataPoint">Rating</option>
+          </Select>
+          {errors.type && <p>errors.type.message</p>}
+        </Field>
+      </Flex>
+
+      {Notification.permission !== 'granted' && (
+        <Flex>
+          <Button onClick={registerDevice}>Setup Reminders</Button>
+        </Flex>
+      )}
+
+      <Flex sx={{ flexDirection: 'row' }}>
+        <Field>
+          <Label>Every</Label>
+          <Input type="number" />
+        </Field>
+        <Field>
+          <Select>
+            <option>Days</option>
+            <option>Hours</option>
+            <option>minutes</option>
+          </Select>
+        </Field>
       </Flex>
 
       <Flex justifyContent="flex-end">
