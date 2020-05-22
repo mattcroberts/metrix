@@ -1,14 +1,13 @@
-import { initializeApp, credential, messaging } from 'firebase-admin';
-import * as firebaseCredentials from '../../firebase-credentials.json';
 import { Router } from 'express';
+import { credential, initializeApp } from 'firebase-admin';
+import { verify } from 'jsonwebtoken';
+import { ExtractJwt } from 'passport-jwt';
 import Container from 'typedi';
 import { Connection } from 'typeorm';
+import { config } from '../config';
 import { User } from '../users/User.model';
 import { DeviceRegistration } from './DeviceRegistration.model';
-import * as passport from 'passport';
-import { ExtractJwt } from 'passport-jwt';
-import { verify } from 'jsonwebtoken';
-import { config } from '../config';
+import './scheduler';
 
 export const initialise = () => {
   return initializeApp({

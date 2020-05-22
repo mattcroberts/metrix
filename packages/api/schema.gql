@@ -45,10 +45,16 @@ type Metric {
   dataPoints: [DataPointUnion!]!
   type: MetricType!
   analyses: [Analysis!]!
+  reminder: Boolean!
+  reminderUnit: ReminderUnit
+  reminderValue: Float
 }
 
 input MetricInput {
   name: String!
+  reminder: Boolean!
+  reminderUnit: ReminderUnit
+  reminderValue: Float
 }
 
 enum MetricType {
@@ -76,4 +82,10 @@ type RatingDataPoint implements IDataPoint {
   metric: Metric!
   datetime: DateTime!
   rating: Float!
+}
+
+enum ReminderUnit {
+  Day
+  Hour
+  Minute
 }

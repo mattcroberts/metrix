@@ -19,6 +19,7 @@ import * as pushNotifications from './push-notifications';
 import { ContextType } from './types';
 import { UserResolver } from './users/resolver';
 import { User } from './users/User.model';
+import { initialiseJobs } from './push-notifications/scheduler';
 
 process.on('unhandledRejection', (reason) => {
   console.error('Unhandled Rejection');
@@ -129,7 +130,7 @@ connectWithRetry()
 
     apolloServer.applyMiddleware({ app });
     const firebaseApp = pushNotifications.initialise();
-
+    initialiseJobs();
     return new Promise((resolve) => {
       app.listen(PORT, () => {
         console.log(`API ready at http://localhost:${PORT}`);

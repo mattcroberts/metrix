@@ -19,8 +19,15 @@ export enum MetricType {
   DataPoint = 'DataPoint',
   RatingDataPoint = 'RatingDataPoint',
 }
-
 registerEnumType(MetricType, { name: 'MetricType' });
+
+export enum ReminderUnit {
+  Day = 'day',
+  Hour = 'hour',
+  Minute = 'minute',
+}
+
+registerEnumType(ReminderUnit, { name: 'ReminderUnit' });
 
 export const DataPointUnion = createUnionType({
   name: 'DataPointUnion',
@@ -68,4 +75,16 @@ export class Metric {
   @ManyToOne((type) => User)
   @JoinColumn()
   user: User;
+
+  @Field()
+  @Column({ default: false })
+  reminder: boolean;
+
+  @Field(() => ReminderUnit, { nullable: true })
+  @Column({ type: 'enum', enum: ReminderUnit, nullable: true })
+  reminderUnit: ReminderUnit;
+
+  @Field({ nullable: true })
+  @Column({ nullable: true })
+  reminderValue: number;
 }

@@ -54,10 +54,16 @@ export type Metric = {
   dataPoints: Array<DataPointUnion>;
   type: MetricType;
   analyses: Array<Analysis>;
+  reminder: Scalars['Boolean'];
+  reminderUnit?: Maybe<ReminderUnit>;
+  reminderValue?: Maybe<Scalars['Float']>;
 };
 
 export type MetricInput = {
   name: Scalars['String'];
+  reminder: Scalars['Boolean'];
+  reminderUnit?: Maybe<ReminderUnit>;
+  reminderValue?: Maybe<Scalars['Float']>;
 };
 
 export enum MetricType {
@@ -128,6 +134,12 @@ export type RatingDataPoint = IDataPoint & {
   datetime: Scalars['DateTime'];
   rating: Scalars['Float'];
 };
+
+export enum ReminderUnit {
+  Day = 'Day',
+  Hour = 'Hour',
+  Minute = 'Minute'
+}
 
 export type CreateAnalysisMutationVariables = {
   name: Scalars['String'];
@@ -274,7 +286,7 @@ export type GetMetricByIdQuery = (
   { __typename?: 'Query' }
   & { metricById: (
     { __typename?: 'Metric' }
-    & Pick<Metric, 'id' | 'name'>
+    & Pick<Metric, 'id' | 'name' | 'type' | 'reminder' | 'reminderUnit' | 'reminderValue'>
   ) }
 );
 
@@ -600,6 +612,10 @@ export const GetMetricByIdDocument = gql`
   metricById(id: $id) {
     id
     name
+    type
+    reminder
+    reminderUnit
+    reminderValue
   }
 }
     `;

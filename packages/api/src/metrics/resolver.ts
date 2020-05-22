@@ -3,12 +3,21 @@ import { Arg, Ctx, Field, InputType, Mutation, Query, Resolver } from 'type-grap
 import { Repository } from 'typeorm';
 import { InjectRepository } from 'typeorm-typedi-extensions';
 import { ContextType } from '../types';
-import { Metric, MetricType } from './Metric.model';
+import { Metric, MetricType, ReminderUnit } from './Metric.model';
 
 @InputType()
 class MetricInput {
   @Field()
   name: string;
+
+  @Field()
+  reminder: boolean;
+
+  @Field(() => ReminderUnit, { nullable: true })
+  reminderUnit: ReminderUnit;
+
+  @Field({ nullable: true })
+  reminderValue: number;
 }
 
 @Resolver((of) => Metric)

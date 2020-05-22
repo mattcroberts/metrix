@@ -2,5 +2,9 @@ query GetMetricById($id: String!) {
   metricById(id: $id) {
     id
     name
+    type
+    reminder
+    reminderUnit
+    reminderValue
   }
 }

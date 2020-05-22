@@ -17,7 +17,3 @@ const messaging = app.messaging();
 messaging.onTokenRefresh((...args) => {
   console.log('onTokenRefresh', args);
 });
-
-messaging.onMessage(() => {
-  new Notification('Hello');
-});

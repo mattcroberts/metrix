@@ -1,4 +1,4 @@
-import { Column, Entity, PrimaryGeneratedColumn, OneToOne, JoinColumn } from 'typeorm';
+import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 import { User } from '../users/User.model';
 
 @Entity()
@@ -6,8 +6,7 @@ export class DeviceRegistration {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @OneToOne((type) => User)
-  @JoinColumn()
+  @ManyToOne((type) => User, (user) => user.devices)
   user: User;
 
   @Column()

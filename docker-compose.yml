@@ -22,8 +22,10 @@ services:
       - GOOGLE_CLIENT_SECRET=${METRIX_GOOGLE_CLIENT_SECRET}
       - UI_HOST=${METRIX_UI_HOST}
       - API_PATH=${METRIX_API_PATH}
+      - REDIS_HOST=metrix_redis
     depends_on:
       - metrix_postgres
+      - metrix_redis
     ports:
       - '8889:4000'
   metrix_postgres:
@@ -35,5 +37,8 @@ services:
       POSTGRES_DB: ${METRIX_POSTGRES_DB_NAME}
     volumes:
       - metrix_postgres:/var/lib/postgresql/data
+  metrix_redis:
+    image: redis:6-alpine
+    restart: always
 volumes:
   metrix_postgres:

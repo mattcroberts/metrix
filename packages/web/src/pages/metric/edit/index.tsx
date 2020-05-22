@@ -1,3 +1,4 @@
+import { Checkbox } from '@rebass/forms';
 import { Input, Label, Select } from '@rebass/forms/styled-components';
 import React from 'react';
 import { useForm } from 'react-hook-form';
@@ -5,8 +6,9 @@ import { RouteComponentProps, useHistory } from 'react-router-dom';
 import { Button, Flex, Heading } from 'rebass/styled-components';
 import { Field } from '../../../components/Field';
 import { Loader } from '../../../components/Loader';
+import { Option } from '../../../components/Option';
 import { Page } from '../../../components/Page';
-import { useGetMetricByIdQuery, useUpdateMetricMutation } from '../../../generated/graphql';
+import { ReminderUnit, useGetMetricByIdQuery, useUpdateMetricMutation } from '../../../generated/graphql';
 import { registerDevice } from '../../../registerDevice';
 
 export const EditMetricPage = ({
@@ -14,10 +16,10 @@ export const EditMetricPage = ({
     params: { id },
   },
 }: RouteComponentProps<{ id: string }>) => {
-  const { data, loading } = useGetMetricByIdQuery({ variables: { id } });
+  const { data, loading } = useGetMetricByIdQuery({ variables: { id }, fetchPolicy: 'cache-and-network' });
 
   const [updateMetric] = useUpdateMetricMutation();
-  const { register, handleSubmit, errors } = useForm();
+  const { register, handleSubmit, errors, getValues } = useForm();
   const history = useHistory();
 
   if (!data || loading) {
@@ -31,8 +33,13 @@ export const EditMetricPage = ({
   return (
     <Page
       as="form"
-      onSubmit={handleSubmit(async ({ name }) => {
-        const { errors } = await updateMetric({ variables: { id: data.metricById.id, metricInput: { name } } });
+      onSubmit={handleSubmit(async ({ name, reminder, reminderUnit, reminderValue }) => {
+        const { errors } = await updateMetric({
+          variables: {
+            id: data.metricById.id,
+            metricInput: { name, reminder: reminder == true, reminderUnit, reminderValue: parseInt(reminderValue, 10) },
+          },
+        });
 
         if (errors) {
           alert('error');
@@ -51,33 +58,47 @@ export const EditMetricPage = ({
         </Field>
         <Field>
           <Label>Type</Label>
-          <Select name="type" ref={register({ required: 'Required' })}>
-            <option value="DataPoint">Marker</option>
-            <option value="RatingDataPoint">Rating</option>
+          <Select name="type" ref={register({ required: 'Required' })} defaultValue={data.metricById.type}>
+            <Option value="DataPoint">Marker</Option>
+            <Option value="RatingDataPoint">Rating</Option>
           </Select>
           {errors.type && <p>errors.type.message</p>}
         </Field>
       </Flex>
 
-      {Notification.permission !== 'granted' && (
+      {(Notification.permission !== 'granted' && (
         <Flex>
           <Button onClick={registerDevice}>Setup Reminders</Button>
         </Flex>
+      )) || (
+        <Flex>
+          <Field>
+            <Label sx={{ flexDirection: 'column' }}>
+              Send reminder?
+              <Checkbox name="reminder" ref={register} defaultChecked={data.metricById.reminder} />
+            </Label>
+          </Field>
+        </Flex>
       )}
-
-      <Flex sx={{ flexDirection: 'row' }}>
-        <Field>
-          <Label>Every</Label>
-          <Input type="number" />
-        </Field>
-        <Field>
-          <Select>
-            <option>Days</option>
-            <option>Hours</option>
-            <option>minutes</option>
-          </Select>
-        </Field>
-      </Flex>
+     
+      {Notification.permission === 'granted' && (data.metricById.reminder || getValues().reminder) && (
+        <>
+          <Flex sx={{ flexDirection: 'row' }}>
+            <Field width={[1 / 3, 1 / 10]}>
+              <Label>Every</Label>
+              <Input type="number" name="reminderValue" ref={register()} defaultValue={data.metricById.reminderValue} />
+            </Field>
+            <Field width={[2 / 3, 1 / 4]}>
+              <Label>&nbsp;</Label>
+              <Select name="reminderUnit" ref={register()} defaultValue={data.metricById.reminderUnit}>
+                <Option value={ReminderUnit.Day}>Days</Option>
+                <Option value={ReminderUnit.Hour}>Hours</Option>
+                <Option value={ReminderUnit.Minute}>Minutes</Option>
+              </Select>
+            </Field>
+          </Flex>
+        </>
+      )}
 
       <Flex justifyContent="flex-end">
         <Button type="submit">Save</Button>
