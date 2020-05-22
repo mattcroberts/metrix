@@ -87,4 +87,7 @@ export class Metric {
   @Field({ nullable: true })
   @Column({ nullable: true })
   reminderValue: number;
+
+  @Column({ nullable: true })
+  reminderJobId: string;
 }

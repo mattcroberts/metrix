@@ -18,6 +18,18 @@ const generateCron = (unit: ReminderUnit, value: number): string => {
   }
 };
 
+export const createMetricReminderJob = (metric: Metric): { data: any; options: Queue.JobOptions } => {
+  const cron = generateCron(metric.reminderUnit, metric.reminderValue);
+  return {
+    data: {
+      metric,
+      tokens: metric.user.devices.map((device) => device.token),
+    },
+    options: { jobId: `metric:${metric.id}`, repeat: { cron }, delay: 0 }, // BUG in bull setting jobid doesn't work for repeatable jobs
+  };
+};
+
+// recreate all repeatable jobs (reminders)
 export const initialiseJobs = async () => {
   const connection = Container.get<Connection>('connection');
 
@@ -25,16 +37,24 @@ export const initialiseJobs = async () => {
   const metrics = await metricRepo.find({ relations: ['user', 'user.devices'], where: { reminder: true } });
 
   await Promise.all(
-    metrics.map((metric) => {
-      const cron = generateCron(metric.reminderUnit, metric.reminderValue);
+    (await notificationsQueue.getRepeatableJobs()).map((job) => {
+      return notificationsQueue.removeRepeatableByKey(job.key);
+    })
+  );
 
-      return notificationsQueue.add(
-        {
-          metric,
-          tokens: metric.user.devices.map((device) => device.token),
-        },
-        { jobId: `metric:${metric.id}`, repeat: { cron }, delay: 0 }
-      );
+  const jobs = await Promise.all(
+    metrics.map((metric) => {
+      const { data, options } = createMetricReminderJob(metric);
+      return notificationsQueue.add(data, options);
+    })
+  );
+
+  await metricRepo.save(
+    jobs.map((job) => {
+      return {
+        ...job.data.metric,
+        reminderJobId: job.id,
+      };
     })
   );
 
