@@ -10,10 +10,7 @@ import { DeviceRegistration } from './DeviceRegistration.model';
 import './scheduler';
 
 export const initialise = () => {
-  return initializeApp({
-    credential: credential.cert('/home/matt/dev/metrix/packages/api/firebase-credentials.json'),
-    databaseURL: 'https://metrix-1587646391040.firebaseio.com',
-  });
+  return initializeApp();
 };
 
 export const router = Router();
