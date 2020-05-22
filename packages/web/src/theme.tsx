@@ -25,6 +25,7 @@ export const theme = merge(require('@rebass/preset').default, {
   forms: {
     label: {
       fontFamily: 'heading',
+      marginBottom: 2,
     },
   },
 

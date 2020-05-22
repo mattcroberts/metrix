@@ -41,14 +41,20 @@ export const CreateAnalysisPage = () => {
         </Field>
         <Field>
           <Label>Metrics</Label>
-          <Select sx={{ width: '100%' }} multiple name="metricIds" ref={register({ required: 'Required' })}>
+          <Select
+            sx={{ width: '100%' }}
+            multiple
+            name="metricIds"
+            ref={register({ required: 'Required' })}
+            overflow="hidden"
+          >
             {metrics.allMetrics.map((metric) => (
               <option value={metric.id}>{metric.name}</option>
             ))}
           </Select>
         </Field>
       </Flex>
-      <Flex justifyContent="flex-end">
+      <Flex justifyContent="flex-end" mt="4">
         <Button type="submit">Create</Button>
       </Flex>
     </Page>

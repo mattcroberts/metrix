@@ -19,7 +19,7 @@ export const EditMetricPage = ({
   const { data, loading } = useGetMetricByIdQuery({ variables: { id }, fetchPolicy: 'cache-and-network' });
 
   const [updateMetric] = useUpdateMetricMutation();
-  const { register, handleSubmit, errors, getValues } = useForm();
+  const { register, handleSubmit, errors, watch } = useForm();
   const history = useHistory();
 
   if (!data || loading) {
@@ -29,7 +29,7 @@ export const EditMetricPage = ({
       </Page>
     );
   }
-
+  const reminder = watch('reminder');
   return (
     <Page
       as="form"
@@ -51,7 +51,7 @@ export const EditMetricPage = ({
     >
       <Heading>{data.metricById.name} - Edit</Heading>
 
-      <Flex sx={{ alignItems: 'flex-start' }}>
+      <Flex sx={{ alignItems: 'flex-start', flexDirection: ['column', 'row'] }}>
         <Field>
           <Label>Name</Label>
           <Input name="name" defaultValue={data.metricById.name} ref={register({ required: 'Required' })} />
@@ -80,8 +80,8 @@ export const EditMetricPage = ({
           </Field>
         </Flex>
       )}
-     
-      {Notification.permission === 'granted' && (data.metricById.reminder || getValues().reminder) && (
+
+      {Notification.permission === 'granted' && reminder && (
         <>
           <Flex sx={{ flexDirection: 'row' }}>
             <Field width={[1 / 3, 1 / 10]}>
