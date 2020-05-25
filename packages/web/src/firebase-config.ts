@@ -12,8 +12,12 @@ export const firebaseConfig = {
   measurementId: 'G-YB88WZMZQJ',
 };
 
-const app = firebase.initializeApp(firebaseConfig);
+export const app = firebase.initializeApp(firebaseConfig);
 const messaging = app.messaging();
+navigator.serviceWorker.register(`${process.env.PUBLIC_URL}/firebase-messaging-sw.js`).then((serviceWorker) => {
+  messaging.useServiceWorker(serviceWorker);
+});
+
 messaging.usePublicVapidKey('BPze25H4zpB3LDfvMPZ9gxzJJLSnRlccauNuTaSsW6HB21qgGZdsaN4OEXEzuSS2S-nlapodPDVRzBoWYBJ-8LI');
 
 messaging.onTokenRefresh(async (...args) => {

@@ -1,8 +1,9 @@
-import { messaging } from 'firebase';
+import { app } from './firebase-config';
+const messaging = app.messaging();
 
 export const registerDevice = async () => {
-  const token = await messaging().getToken();
-  await fetch('/push-reg', {
+  const token = await messaging.getToken();
+  await fetch(`${process.env.REACT_APP_API_PATH}/push-reg`, {
     headers: {
       'Content-Type': 'application/json',
     },

@@ -20,7 +20,7 @@ const registerDevice = async (token) => {
   }
 
   if (permission === 'granted') {
-    const resp = await fetch('/push-reg', {
+    const resp = await fetch(`${process.env.REACT_APP_API_PATH}/push-reg`, {
       headers: {
         'Content-Type': 'application/json',
       },
