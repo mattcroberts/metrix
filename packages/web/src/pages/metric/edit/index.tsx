@@ -1,6 +1,6 @@
 import { Checkbox } from '@rebass/forms';
 import { Input, Label, Select } from '@rebass/forms/styled-components';
-import React from 'react';
+import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { RouteComponentProps, useHistory } from 'react-router-dom';
 import { Button, Flex, Heading } from 'rebass/styled-components';
@@ -21,6 +21,7 @@ export const EditMetricPage = ({
   const [updateMetric] = useUpdateMetricMutation();
   const { register, handleSubmit, errors, watch } = useForm();
   const history = useHistory();
+  const [notificationPermission, setNotificationPermission] = useState(Notification.permission);
 
   if (!data || loading) {
     return (
@@ -66,9 +67,18 @@ export const EditMetricPage = ({
         </Field>
       </Flex>
 
-      {(Notification.permission !== 'granted' && (
+      {(notificationPermission !== 'granted' && (
         <Flex>
-          <Button onClick={registerDevice}>Setup Reminders</Button>
+          <Button
+            onClick={async () => {
+              const permission = await registerDevice();
+              setNotificationPermission(permission);
+              return false;
+            }}
+            type="button"
+          >
+            Setup Reminders
+          </Button>
         </Flex>
       )) || (
         <Flex>
@@ -81,7 +91,7 @@ export const EditMetricPage = ({
         </Flex>
       )}
 
-      {Notification.permission === 'granted' && reminder && (
+      {notificationPermission === 'granted' && reminder && (
         <>
           <Flex sx={{ flexDirection: 'row' }}>
             <Field width={[1 / 3, 1 / 10]}>

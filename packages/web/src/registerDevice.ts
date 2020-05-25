@@ -2,7 +2,14 @@ import { messaging } from 'firebase';
 import Cookie from 'js-cookie';
 
 export const registerDevice = async () => {
-  const permission = await Notification.requestPermission();
+  let permission: NotificationPermission = 'default';
+
+  try {
+    permission = await Notification.requestPermission();
+  } catch (e) {
+    console.error(e);
+  }
+
   if (permission === 'granted') {
     const authToken = Cookie.get('x-auth-token');
     const token = await messaging().getToken();
@@ -15,4 +22,6 @@ export const registerDevice = async () => {
       body: JSON.stringify({ token }),
     });
   }
+
+  return permission;
 };

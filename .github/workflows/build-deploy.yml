@@ -59,7 +59,7 @@ jobs:
             export METRIX_GOOGLE_CLIENT_SECRET="${{ secrets.METRIX_GOOGLE_CLIENT_SECRET }}"
             export METRIX_UI_HOST="https://irix.dev/metrix"
             export METRIX_API_PATH="https://irix.dev/metrix/api"
-            export METRIX_FIREBASE_CONFIG=$(cat ./firebase-credentials.json)
+            export METRIX_FIREBASE_CONFIG=`$(cat ./firebase-credentials.json)`
           EOM
       - name: SCP Files
         uses: appleboy/scp-action@master
