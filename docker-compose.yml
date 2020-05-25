@@ -23,7 +23,7 @@ services:
       - UI_HOST=${METRIX_UI_HOST}
       - API_PATH=${METRIX_API_PATH}
       - REDIS_HOST=metrix_redis
-      - FIREBASE_CONFIG=${METRIX_FIREBASE_CONFIG}
+      - GOOGLE_APPLICATION_CREDENTIALS=${METRIX_GOOGLE_APPLICATION_CREDENTIALS}
     depends_on:
       - metrix_postgres
       - metrix_redis

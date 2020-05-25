@@ -1,22 +1,5 @@
-importScripts('https://www.gstatic.com/firebasejs/7.14.0/firebase-app.js');
-importScripts('https://www.gstatic.com/firebasejs/7.14.0/firebase-messaging.js');
-importScripts('https://cdnjs.cloudflare.com/ajax/libs/js-cookie/2.2.1/js.cookie.min.js');
-
-const registerDevice = async (token) => {
-  const permission = await Notification.requestPermission();
-  if (permission === 'granted') {
-    const authToken = Cookie.get('x-auth-token');
-
-    const resp = await fetch('/push-reg', {
-      headers: {
-        Authorization: `Bearer ${authToken}`,
-        'Content-Type': 'application/json',
-      },
-      method: 'POST',
-      body: JSON.stringify({ token }),
-    });
-  }
-};
+importScripts('https://www.gstatic.com/firebasejs/7.14.5/firebase-app.js');
+importScripts('https://www.gstatic.com/firebasejs/7.14.5/firebase-messaging.js');
 
 const firebaseConfig = {
   apiKey: 'AIzaSyBZ8pCndLluwK7xe0IaWvOVcFXIAOFvtTM',
@@ -29,30 +12,35 @@ const firebaseConfig = {
   measurementId: 'G-YB88WZMZQJ',
 };
 
+const registerDevice = async (token) => {
+  let permission = Notification.permission;
+
+  if (permission !== 'granted' && Notification.requestPermission) {
+    permission = await Notification.requestPermission();
+  }
+
+  if (permission === 'granted') {
+    const resp = await fetch('/push-reg', {
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      method: 'POST',
+      body: JSON.stringify({ token }),
+    });
+  }
+};
+
 const app = firebase.initializeApp(firebaseConfig);
 const messaging = app.messaging();
 
-messaging.setBackgroundMessageHandler((payload) => {
-  new Notification({ title: 'background' });
+messaging.setBackgroundMessageHandler(function (payload) {
+  console.log('[firebase-messaging-sw.js] Received background message ', payload);
+
+  const notificationTitle = 'Background Message Title';
+  const notificationOptions = {
+    body: 'Background Message body.',
+    icon: '/firebase-logo.png',
+  };
+
+  return self.registration.showNotification(notificationTitle, notificationOptions);
 });
-
-(async () => {
-  let currentToken;
-  try {
-    currentToken = await messaging.getToken();
-  } catch (e) {
-    console.error(e);
-    return;
-  }
-
-  console.log({ currentToken });
-  if (currentToken) {
-    await registerDevice();
-  } else {
-    // Show permission request.
-    console.log('No Instance ID token available. Request permission to generate one.');
-    // Show permission UI.
-    // updateUIForPushPermissionRequired();
-    // setTokenSentToServer(false);
-  }
-})();

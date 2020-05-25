@@ -1,7 +1,6 @@
 import { Router } from 'express';
-import { credential, initializeApp } from 'firebase-admin';
+import { initializeApp } from 'firebase-admin';
 import { verify } from 'jsonwebtoken';
-import { ExtractJwt } from 'passport-jwt';
 import Container from 'typedi';
 import { Connection } from 'typeorm';
 import { config } from '../config';
@@ -18,7 +17,7 @@ export const router = Router();
 router.post('/push-reg', async (req, res) => {
   const connection = Container.get<Connection>('connection');
   const userRepo = connection.getRepository(User);
-  const authToken = ExtractJwt.fromAuthHeaderAsBearerToken()(req);
+  const authToken = req.cookies['x-auth-token'];
   const jwt = verify(authToken, config.jwtSecret);
 
   if (typeof jwt === 'object') {

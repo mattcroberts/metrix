@@ -72,10 +72,15 @@ export class MetricResolver {
 
     if (metricInput.reminderUnit !== metric.reminderUnit || metricInput.reminderValue !== metric.reminderValue) {
       await this.removeReminder(metric.reminderJobId);
-      const { data, options } = createMetricReminderJob({ ...metric, ...metricInput });
-      reminderJobId = '' + (await (await notificationsQueue.add(data, options)).id);
+
+      if (metricInput.reminder) {
+        const { data, options } = createMetricReminderJob({ ...metric, ...metricInput });
+        reminderJobId = '' + (await (await notificationsQueue.add(data, options)).id);
+      } else {
+        reminderJobId = '';
+      }
     }
-    
+
     return this.metricRepository.save({ ...metric, ...metricInput, reminderJobId });
   }
 

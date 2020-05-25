@@ -1,4 +1,5 @@
 import * as firebase from 'firebase';
+import { registerDevice } from './registerDevice';
 
 export const firebaseConfig = {
   apiKey: 'AIzaSyBZ8pCndLluwK7xe0IaWvOVcFXIAOFvtTM',
@@ -13,7 +14,13 @@ export const firebaseConfig = {
 
 const app = firebase.initializeApp(firebaseConfig);
 const messaging = app.messaging();
+messaging.usePublicVapidKey('BPze25H4zpB3LDfvMPZ9gxzJJLSnRlccauNuTaSsW6HB21qgGZdsaN4OEXEzuSS2S-nlapodPDVRzBoWYBJ-8LI');
 
-messaging.onTokenRefresh((...args) => {
+messaging.onTokenRefresh(async (...args) => {
   console.log('onTokenRefresh', args);
+  try {
+    await registerDevice();
+  } catch (e) {
+    console.error(e);
+  }
 });

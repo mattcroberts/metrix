@@ -45,10 +45,9 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
-      - name: Create firebase credentials
-        run: echo "${{ secrets.FIREBASE_CREDENTIALS}}" > firebase-credentials.json
       - name: Create env
         run: |
+          echo "${{ secrets.FIREBASE_CREDENTIALS}}" > firebase-credentials.json
           cat > env.sh <<- EOM
             export METRIX_TAG="$(git rev-parse --short "$GITHUB_SHA")"
             export METRIX_POSTGRES_USERNAME="${{ secrets.METRIX_POSTGRES_USERNAME }}"
@@ -59,7 +58,7 @@ jobs:
             export METRIX_GOOGLE_CLIENT_SECRET="${{ secrets.METRIX_GOOGLE_CLIENT_SECRET }}"
             export METRIX_UI_HOST="https://irix.dev/metrix"
             export METRIX_API_PATH="https://irix.dev/metrix/api"
-            export METRIX_FIREBASE_CONFIG=`$(cat ./firebase-credentials.json)`
+            export METRIX_GOOGLE_APPLICATION_CREDENTIALS=`$(cat ./firebase-credentials.json)`
           EOM
       - name: SCP Files
         uses: appleboy/scp-action@master

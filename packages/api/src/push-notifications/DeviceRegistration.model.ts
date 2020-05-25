@@ -9,6 +9,6 @@ export class DeviceRegistration {
   @ManyToOne((type) => User, (user) => user.devices)
   user: User;
 
-  @Column()
+  @Column({ unique: true })
   token: string;
 }

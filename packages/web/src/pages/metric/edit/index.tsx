@@ -30,7 +30,8 @@ export const EditMetricPage = ({
       </Page>
     );
   }
-  const reminder = watch('reminder');
+  const reminder = watch('reminder', { reminder: data.metricById.reminder });
+
   return (
     <Page
       as="form"
@@ -68,11 +69,20 @@ export const EditMetricPage = ({
       </Flex>
 
       {(notificationPermission !== 'granted' && (
-        <Flex>
+        <Flex mt="4">
           <Button
             onClick={async () => {
-              const permission = await registerDevice();
-              setNotificationPermission(permission);
+              let permission = Notification.permission;
+              try {
+                permission = await Notification.requestPermission();
+                setNotificationPermission(permission);
+              } catch (e) {
+                console.error(e);
+              }
+
+              if (permission === 'granted') {
+                await registerDevice();
+              }
               return false;
             }}
             type="button"

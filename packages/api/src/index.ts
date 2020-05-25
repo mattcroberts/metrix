@@ -20,6 +20,7 @@ import { ContextType } from './types';
 import { UserResolver } from './users/resolver';
 import { User } from './users/User.model';
 import { initialiseJobs } from './push-notifications/scheduler';
+import * as cookieParser from 'cookie-parser';
 
 process.on('unhandledRejection', (reason) => {
   console.error('Unhandled Rejection');
@@ -31,6 +32,7 @@ const PORT = config.port;
 const app = express();
 
 app.use(cors());
+app.use(cookieParser());
 app.use(bodyParser.json());
 app.use(passport.initialize());
 
