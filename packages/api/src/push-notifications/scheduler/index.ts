@@ -58,5 +58,7 @@ export const initialiseJobs = async () => {
     })
   );
 
-  notificationsQueue.process(resolve(__dirname, './processor.ts'));
+  notificationsQueue.process(
+    resolve(__dirname, './processor' + (process.env.NODE_ENV === 'production' ? '.js' : '.ts'))
+  );
 };
