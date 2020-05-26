@@ -1,8 +1,9 @@
-import { Field, ID } from 'type-graphql';
+import { Field, ID, ObjectType } from 'type-graphql';
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 import { DeviceRegistration } from '../push-notifications/DeviceRegistration.model';
 
 @Entity()
+@ObjectType()
 export class User {
   @Field(ID)
   @PrimaryGeneratedColumn('uuid')
@@ -21,5 +22,6 @@ export class User {
   email: string;
 
   @OneToMany((type) => DeviceRegistration, (device) => device.user)
+  @Field((type) => [DeviceRegistration])
   devices: DeviceRegistration[];
 }

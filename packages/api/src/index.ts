@@ -1,5 +1,6 @@
 import { ApolloServer, AuthenticationError } from 'apollo-server-express';
 import * as bodyParser from 'body-parser';
+import * as cookieParser from 'cookie-parser';
 import * as cors from 'cors';
 import * as express from 'express';
 import { sign, verify } from 'jsonwebtoken';
@@ -16,11 +17,11 @@ import { DataPointResolver } from './datapoint/resolver';
 import { connectWithRetry } from './db';
 import { MetricResolver } from './metrics/resolver';
 import * as pushNotifications from './push-notifications';
+import { DeviceRegistrationResolver } from './push-notifications/resolver';
+import { initialiseJobs } from './push-notifications/scheduler';
 import { ContextType } from './types';
 import { UserResolver } from './users/resolver';
 import { User } from './users/User.model';
-import { initialiseJobs } from './push-notifications/scheduler';
-import * as cookieParser from 'cookie-parser';
 
 process.on('unhandledRejection', (reason) => {
   console.error('Unhandled Rejection');
@@ -99,7 +100,7 @@ connectWithRetry()
     const userRepo = connection.getRepository(User);
 
     const schema = await TypeGraphQL.buildSchema({
-      resolvers: [MetricResolver, AnalysisResolver, DataPointResolver, UserResolver],
+      resolvers: [MetricResolver, AnalysisResolver, DataPointResolver, UserResolver, DeviceRegistrationResolver],
       container: Container,
       emitSchemaFile: true,
     });

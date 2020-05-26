@@ -40,6 +40,13 @@ export type DataPointInput = {
 export type DataPointUnion = DataPoint | RatingDataPoint;
 
 
+export type DeviceRegistration = {
+   __typename?: 'DeviceRegistration';
+  id: Scalars['String'];
+  user: User;
+  token: Scalars['String'];
+};
+
 export type IDataPoint = {
   id: Scalars['ID'];
   metric: Metric;
@@ -115,6 +122,7 @@ export type Query = {
   getAnalysisWithData: Analysis;
   allMetrics: Array<Metric>;
   metricById: Metric;
+  devices: Array<DeviceRegistration>;
 };
 
 
@@ -140,6 +148,33 @@ export enum ReminderUnit {
   Hour = 'Hour',
   Minute = 'Minute'
 }
+
+export type User = {
+   __typename?: 'User';
+  /**
+   * The `ID` scalar type represents a unique identifier, often used to refetch an
+   * object or as key for a cache. The ID type appears in a JSON response as a
+   * String; however, it is not intended to be human-readable. When expected as an
+   * input type, any string (such as `"4"`) or integer (such as `4`) input value
+   * will be accepted as an ID.
+   */
+  ID: Scalars['String'];
+  firstName: Scalars['String'];
+  lastName: Scalars['String'];
+  email: Scalars['String'];
+  devices: Array<DeviceRegistration>;
+};
+
+export type GetNotifcationConfigQueryVariables = {};
+
+
+export type GetNotifcationConfigQuery = (
+  { __typename?: 'Query' }
+  & { devices: Array<(
+    { __typename?: 'DeviceRegistration' }
+    & Pick<DeviceRegistration, 'id' | 'token'>
+  )> }
+);
 
 export type CreateAnalysisMutationVariables = {
   name: Scalars['String'];
@@ -305,6 +340,39 @@ export type UpdateMetricMutation = (
 );
 
 
+export const GetNotifcationConfigDocument = gql`
+    query GetNotifcationConfig {
+  devices {
+    id
+    token
+  }
+}
+    `;
+
+/**
+ * __useGetNotifcationConfigQuery__
+ *
+ * To run a query within a React component, call `useGetNotifcationConfigQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetNotifcationConfigQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetNotifcationConfigQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useGetNotifcationConfigQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<GetNotifcationConfigQuery, GetNotifcationConfigQueryVariables>) {
+        return ApolloReactHooks.useQuery<GetNotifcationConfigQuery, GetNotifcationConfigQueryVariables>(GetNotifcationConfigDocument, baseOptions);
+      }
+export function useGetNotifcationConfigLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<GetNotifcationConfigQuery, GetNotifcationConfigQueryVariables>) {
+          return ApolloReactHooks.useLazyQuery<GetNotifcationConfigQuery, GetNotifcationConfigQueryVariables>(GetNotifcationConfigDocument, baseOptions);
+        }
+export type GetNotifcationConfigQueryHookResult = ReturnType<typeof useGetNotifcationConfigQuery>;
+export type GetNotifcationConfigLazyQueryHookResult = ReturnType<typeof useGetNotifcationConfigLazyQuery>;
+export type GetNotifcationConfigQueryResult = ApolloReactCommon.QueryResult<GetNotifcationConfigQuery, GetNotifcationConfigQueryVariables>;
 export const CreateAnalysisDocument = gql`
     mutation CreateAnalysis($name: String!, $metricIds: [ID!]!) {
   createAnalysis(name: $name, metricIds: $metricIds) {

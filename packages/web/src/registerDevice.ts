@@ -3,7 +3,7 @@ const messaging = app.messaging();
 
 export const registerDevice = async () => {
   const token = await messaging.getToken();
-  await fetch(`${process.env.REACT_APP_API_PATH}/push-reg`, {
+  await fetch(`${process.env.PUBLIC_URL}/push-reg`, {
     headers: {
       'Content-Type': 'application/json',
     },

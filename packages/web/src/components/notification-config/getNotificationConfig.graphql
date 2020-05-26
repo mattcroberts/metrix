@@ -1,0 +1,6 @@
+query GetNotifcationConfig {
+  devices {
+    id
+    token
+  }
+}

@@ -1,6 +1,8 @@
 import * as React from 'react';
 import { Box, Button, Flex, Heading } from 'rebass/styled-components';
 import { Link } from '../Link';
+import { Drawer } from '../drawer';
+import { NotificationConfig } from '../notification-config';
 
 const NavElement = ({ to, text }: { to: string; text: string }) => (
   <Flex sx={{ px: [2, 3, 3], alignItems: 'center', minWidth: 'auto', '&:hover': { backgroundColor: 'primary' } }}>
@@ -79,24 +81,38 @@ const DropButton = () => {
     </Box>
   );
 };
-export const Nav = () => (
-  <Flex sx={{ backgroundColor: 'secondary', alignItems: 'stretch', boxShadow: `3px 3px 3px rgba(0,0,0, 0.5)` }}>
-    <Heading
-      sx={{
-        pl: [3, 4, 4],
-        pr: [1, 3, 3],
-        fontSize: 3,
-        fontWeight: 'bold',
-        lineHeight: '54px',
-        minWidth: 'auto',
-      }}
-    >
-      Metrix
-    </Heading>
-    <NavElement to="/" text="Home" />
-    <NavElement to="/analyses" text="Analyses" />
-    <Flex sx={{ width: '100%', justifyContent: 'flex-end', marginRight: 4, alignItems: 'center' }}>
-      <DropButton />
+export const Nav = () => {
+  const [drawerOpen, setDrawerOpen] = React.useState(false);
+
+  return (
+    <Flex sx={{ backgroundColor: 'secondary', alignItems: 'stretch', boxShadow: `3px 3px 3px rgba(0,0,0, 0.5)` }}>
+      <Heading
+        sx={{
+          pl: [3, 4, 4],
+          pr: [1, 3, 3],
+          fontSize: 3,
+          fontWeight: 'bold',
+          lineHeight: '54px',
+          minWidth: 'auto',
+        }}
+      >
+        Metrix
+      </Heading>
+      <NavElement to="/" text="Home" />
+      <NavElement to="/analyses" text="Analyses" />
+      <Flex sx={{ width: '100%', justifyContent: 'flex-end', marginRight: 4, alignItems: 'center' }}>
+        <DropButton />
+        <Button
+          onClick={() => {
+            setDrawerOpen(!drawerOpen);
+          }}
+        >
+          Notifications
+        </Button>
+        <Drawer open={drawerOpen} setOpen={setDrawerOpen}>
+          <NotificationConfig visible={drawerOpen}/>
+        </Drawer>
+      </Flex>
     </Flex>
-  </Flex>
-);
+  );
+};
