@@ -1,9 +1,9 @@
-import React, { useEffect, useState, FC } from 'react';
-import { useGetNotifcationConfigQuery, useGetNotifcationConfigLazyQuery } from '../../generated/graphql';
-import { Box, Text, Button, Flex } from 'rebass/styled-components';
+import React, { FC, useEffect, useState } from 'react';
+import { Button, Flex, Heading, Text } from 'rebass/styled-components';
+import styled from 'styled-components';
+import { useGetNotifcationConfigLazyQuery } from '../../generated/graphql';
 import { registerDevice } from '../../registerDevice';
 import { app } from '../../firebase-config';
-import styled from 'styled-components';
 
 const messaging = app.messaging();
 
@@ -31,6 +31,12 @@ export const NotificationConfig: FC<{ visible: boolean }> = ({ visible }) => {
 
   return (
     <Flex sx={{ flexDirection: 'column' }}>
+      <Heading>Device Configuration</Heading>
+      {isCurrentDeviceRegistered && (
+        <Text as="span" sx={{ fontFamily: 'body' }}>
+          Device Registered
+        </Text>
+      )}
       <Text as="span" sx={{ fontFamily: 'body' }}>
         Current device token:
       </Text>
@@ -46,6 +52,9 @@ export const NotificationConfig: FC<{ visible: boolean }> = ({ visible }) => {
           Register this device
         </Button>
       )}
+      <Heading as="h3" fontSize="3">
+        All Tokens
+      </Heading>
       <UL>
         {data?.devices.map((device) => (
           <li key={device.id}>

@@ -11,13 +11,14 @@ export const Drawer: FC<{ open: boolean; setOpen: (toggle: boolean) => any }> = 
         left: 0,
         height: '100%',
         backgroundColor: 'muted',
-        width: open ? '50%' : '0%',
+        width: open ? ['95%', '50%'] : '0%',
+        maxWidth: '600px',
         color: 'background',
         overflow: 'hidden',
         transition: 'width 0.5s',
       }}
     >
-      <Flex sx={{ padding: 4, flexDirection: 'column', width: '50vw', position: 'absolute' }}>
+      <Flex sx={{ padding: 4, flexDirection: 'column', width: ['95vw', '43.75vw'], position: 'absolute' }}>
         <Text sx={{ ml: 'auto' }}>
           <a href="#" onClick={() => setOpen(false)}>
             Close
