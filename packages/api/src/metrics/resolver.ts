@@ -7,10 +7,12 @@ import { ContextType } from '../types';
 import { Metric, MetricType, ReminderUnit } from './Metric.model';
 import { Logger } from '../logger';
 import { DeviceRegistration } from '../push-notifications/DeviceRegistration.model';
+import { Min, Length } from 'class-validator';
 
 @InputType()
 class MetricInput {
   @Field()
+  @Length(3, 20)
   name: string;
 
   @Field()
@@ -20,6 +22,7 @@ class MetricInput {
   reminderUnit: ReminderUnit;
 
   @Field({ nullable: true })
+  @Min(1)
   reminderValue: number;
 }
 

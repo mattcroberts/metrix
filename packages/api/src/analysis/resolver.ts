@@ -1,9 +1,20 @@
-import { Arg, Mutation, Resolver, ID, Query, Ctx } from 'type-graphql';
+import { Arg, Mutation, Resolver, ID, Query, Ctx, ArgsType, Args, Field } from 'type-graphql';
 import { Analysis } from './Analysis.model';
 import { InjectRepository } from 'typeorm-typedi-extensions';
 import { Repository, In } from 'typeorm';
 import { Metric } from '../metrics/Metric.model';
 import { ContextType } from '../types';
+import { Length } from 'class-validator';
+
+@ArgsType()
+class AnalysisArgs {
+  @Field((returns) => ID)
+  metricIds: Metric['id'][];
+
+  @Length(3, 20)
+  @Field()
+  name: string;
+}
 
 @Resolver((of) => Analysis)
 export class AnalysisResolver {
@@ -25,11 +36,7 @@ export class AnalysisResolver {
   }
 
   @Mutation((returns) => Analysis, { nullable: false })
-  async createAnalysis(
-    @Ctx() { user }: ContextType,
-    @Arg('name') name: string,
-    @Arg('metricIds', (returns) => ID) metricIds: string[]
-  ) {
+  async createAnalysis(@Ctx() { user }: ContextType, @Args() { name, metricIds }: AnalysisArgs) {
     const metrics = await this.metricRepository.find({ id: In(metricIds), user });
     const analysis = await this.analysisRepository.create({ name, metrics, user });
     return await this.analysisRepository.save(analysis);
