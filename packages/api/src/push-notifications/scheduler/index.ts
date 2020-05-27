@@ -4,6 +4,7 @@ import Container from 'typedi';
 import { Connection } from 'typeorm';
 import { Metric, ReminderUnit } from '../../metrics/Metric.model';
 import { config } from '../../config';
+import { Logger } from '../../logger';
 
 export const notificationsQueue = new Queue('notifications', `redis://${config.redisHost}:6379`);
 
@@ -45,7 +46,7 @@ export const initialiseJobs = async () => {
   const jobs = await Promise.all(
     metrics.map((metric) => {
       const { data, options } = createMetricReminderJob(metric);
-      console.log('adding job', data);
+      Logger.info(data, 'Adding job');
       return notificationsQueue.add(data, options);
     })
   );

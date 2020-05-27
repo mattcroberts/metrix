@@ -1,4 +1,5 @@
 import { getConnectionOptions, Connection, createConnection } from 'typeorm';
+import { Logger } from './logger';
 
 export const connectWithRetry = async (retries = 5, timeout = 500): Promise<Connection> => {
   const connectionOptions: any = Object.assign(await getConnectionOptions(), {
@@ -12,15 +13,15 @@ export const connectWithRetry = async (retries = 5, timeout = 500): Promise<Conn
     const connection = await createConnection(connectionOptions);
     return connection;
   } catch (e) {
-    console.error(e);
+    Logger.error(e);
 
     if (retries > 0) {
       setTimeout(() => {
-        console.warn(`Retrying connection, retrys remaining: ${retries}, timeout: ${timeout}`);
+        Logger.warn(`Retrying connection, retrys remaining: ${retries}, timeout: ${timeout}`);
         return connectWithRetry(retries - 1, timeout);
       }, timeout);
     } else {
-      console.error(new Error(`DB connection failed with retrys`));
+      Logger.error(new Error(`DB connection failed with retrys`));
       throw new Error('DB Fail');
     }
   }

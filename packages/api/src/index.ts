@@ -22,10 +22,11 @@ import { initialiseJobs } from './push-notifications/scheduler';
 import { ContextType } from './types';
 import { UserResolver } from './users/resolver';
 import { User } from './users/User.model';
+import { Logger } from './logger';
 
 process.on('unhandledRejection', (reason) => {
-  console.error('Unhandled Rejection');
-  console.error(reason);
+  Logger.error('Unhandled Rejection');
+  Logger.error(reason);
 });
 
 TypeORM.useContainer(Container);
@@ -94,7 +95,7 @@ app.use(pushNotifications.router);
 
 connectWithRetry()
   .then(async (connection) => {
-    console.log('DB connected');
+    Logger.info('DB connected');
     Container.set('connection', connection);
 
     const userRepo = connection.getRepository(User);
@@ -119,13 +120,13 @@ connectWithRetry()
             return { connection, user };
           }
         } catch (e) {
-          console.error(e);
+          Logger.error(e);
         }
 
         throw new AuthenticationError('Error');
       },
       formatError: (err) => {
-        console.error(err);
+        Logger.error(err);
 
         return err;
       },
@@ -136,10 +137,10 @@ connectWithRetry()
     initialiseJobs();
     return new Promise((resolve) => {
       app.listen(PORT, () => {
-        console.log(`API ready at http://localhost:${PORT}`);
+        Logger.info(`API ready at http://localhost:${PORT}`);
 
         resolve();
       });
     });
   })
-  .catch((error) => console.log(error));
+  .catch((error) => Logger.info(error));

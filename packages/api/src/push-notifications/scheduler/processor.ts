@@ -3,6 +3,7 @@ import { messaging } from 'firebase-admin';
 import { initialise } from '..';
 import { config } from '../../config';
 import { Metric } from '../../metrics/Metric.model';
+import { Logger } from '../../logger';
 
 initialise();
 
@@ -25,6 +26,6 @@ export default async (job: Job<{ tokens: string[]; metric: Metric }>) => {
       tokens: job.data.tokens,
     });
   } catch (e) {
-    console.error(e);
+    Logger.error(e);
   }
 };

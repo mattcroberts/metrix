@@ -5,6 +5,7 @@ import { InjectRepository } from 'typeorm-typedi-extensions';
 import { createMetricReminderJob, notificationsQueue } from '../push-notifications/scheduler';
 import { ContextType } from '../types';
 import { Metric, MetricType, ReminderUnit } from './Metric.model';
+import { Logger } from '../logger';
 
 @InputType()
 class MetricInput {
@@ -42,14 +43,14 @@ export class MetricResolver {
     @Arg('name') name: string,
     @Arg('type', { nullable: true }) type: MetricType | null
   ) {
-    console.log('creating');
+    Logger.info('Creating metric');
     const newMetric = new Metric();
     newMetric.name = name;
     newMetric.type = type || MetricType.DataPoint;
     newMetric.user = user;
     const result = await this.metricRepository.save(newMetric);
 
-    console.log('Created Metric', result);
+    Logger.info(result, 'Created Metric');
     return result;
   }
 
