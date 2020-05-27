@@ -6,6 +6,7 @@ import { createMetricReminderJob, notificationsQueue } from '../push-notificatio
 import { ContextType } from '../types';
 import { Metric, MetricType, ReminderUnit } from './Metric.model';
 import { Logger } from '../logger';
+import { DeviceRegistration } from '../push-notifications/DeviceRegistration.model';
 
 @InputType()
 class MetricInput {
@@ -27,6 +28,9 @@ export class MetricResolver {
   @InjectRepository(Metric)
   private metricRepository: Repository<Metric>;
 
+  @InjectRepository(DeviceRegistration)
+  private deviceRepository: Repository<DeviceRegistration>;
+
   @Query((returns) => [Metric])
   allMetrics(@Ctx() { user }: ContextType): Promise<Metric[]> {
     return this.metricRepository.find({ user });
@@ -40,15 +44,22 @@ export class MetricResolver {
   @Mutation((returns) => Metric)
   async createMetric(
     @Ctx() { user }: ContextType,
-    @Arg('name') name: string,
+    @Arg('metricInput') metricInput: MetricInput,
     @Arg('type', { nullable: true }) type: MetricType | null
   ) {
     Logger.info('Creating metric');
-    const newMetric = new Metric();
-    newMetric.name = name;
-    newMetric.type = type || MetricType.DataPoint;
-    newMetric.user = user;
-    const result = await this.metricRepository.save(newMetric);
+    let reminderJobId = null;
+    const metric = new Metric();
+
+    Object.assign(metric, { type: type || MetricType.DataPoint, user, ...metricInput });
+    if (metric.reminder) {
+      const devices = await this.deviceRepository.find({ user });
+      const { data, options } = createMetricReminderJob(metric, devices);
+      reminderJobId = '' + (await (await notificationsQueue.add(data, options)).id);
+      Logger.info({ data, options, reminderJobId }, 'Created notifcation job');
+    }
+
+    const result = await this.metricRepository.save({ ...metric, reminderJobId });
 
     Logger.info(result, 'Created Metric');
     return result;
@@ -75,7 +86,7 @@ export class MetricResolver {
       await this.removeReminder(metric.reminderJobId);
 
       if (metricInput.reminder) {
-        const { data, options } = createMetricReminderJob({ ...metric, ...metricInput });
+        const { data, options } = createMetricReminderJob({ ...metric, ...metricInput }, metric.user.devices);
         reminderJobId = '' + (await (await notificationsQueue.add(data, options)).id);
       } else {
         reminderJobId = '';

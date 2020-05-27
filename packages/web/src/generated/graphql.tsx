@@ -103,7 +103,7 @@ export type MutationRecordDataPointArgs = {
 
 export type MutationCreateMetricArgs = {
   type?: Maybe<Scalars['String']>;
-  name: Scalars['String'];
+  metricInput: MetricInput;
 };
 
 
@@ -294,7 +294,7 @@ export type RecordDataPointMutation = (
 );
 
 export type CreateMetricMutationVariables = {
-  name: Scalars['String'];
+  metric: MetricInput;
   type?: Maybe<Scalars['String']>;
 };
 
@@ -303,7 +303,7 @@ export type CreateMetricMutation = (
   { __typename?: 'Mutation' }
   & { createMetric: (
     { __typename?: 'Metric' }
-    & Pick<Metric, 'id' | 'name' | 'type'>
+    & Pick<Metric, 'id' | 'name' | 'type' | 'reminder' | 'reminderUnit' | 'reminderValue'>
   ) }
 );
 
@@ -624,11 +624,14 @@ export type RecordDataPointMutationHookResult = ReturnType<typeof useRecordDataP
 export type RecordDataPointMutationResult = ApolloReactCommon.MutationResult<RecordDataPointMutation>;
 export type RecordDataPointMutationOptions = ApolloReactCommon.BaseMutationOptions<RecordDataPointMutation, RecordDataPointMutationVariables>;
 export const CreateMetricDocument = gql`
-    mutation CreateMetric($name: String!, $type: String) {
-  createMetric(name: $name, type: $type) {
+    mutation CreateMetric($metric: MetricInput!, $type: String) {
+  createMetric(metricInput: $metric, type: $type) {
     id
     name
     type
+    reminder
+    reminderUnit
+    reminderValue
   }
 }
     `;
@@ -647,7 +650,7 @@ export type CreateMetricMutationFn = ApolloReactCommon.MutationFunction<CreateMe
  * @example
  * const [createMetricMutation, { data, loading, error }] = useCreateMetricMutation({
  *   variables: {
- *      name: // value for 'name'
+ *      metric: // value for 'metric'
  *      type: // value for 'type'
  *   },
  * });

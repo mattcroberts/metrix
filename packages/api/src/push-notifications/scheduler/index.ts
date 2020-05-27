@@ -5,6 +5,7 @@ import { Connection } from 'typeorm';
 import { Metric, ReminderUnit } from '../../metrics/Metric.model';
 import { config } from '../../config';
 import { Logger } from '../../logger';
+import { DeviceRegistration } from '../DeviceRegistration.model';
 
 export const notificationsQueue = new Queue('notifications', `redis://${config.redisHost}:6379`);
 
@@ -19,12 +20,15 @@ const generateCron = (unit: ReminderUnit, value: number): string => {
   }
 };
 
-export const createMetricReminderJob = (metric: Metric): { data: any; options: Queue.JobOptions } => {
+export const createMetricReminderJob = (
+  metric: Metric,
+  devices: DeviceRegistration[]
+): { data: any; options: Queue.JobOptions } => {
   const cron = generateCron(metric.reminderUnit, metric.reminderValue);
   return {
     data: {
       metric,
-      tokens: metric.user.devices.map((device) => device.token),
+      tokens: devices.map((device) => device.token),
     },
     options: { jobId: `metric:${metric.id}`, repeat: { cron }, delay: 0 }, // BUG in bull setting jobid doesn't work for repeatable jobs
   };
@@ -45,7 +49,7 @@ export const initialiseJobs = async () => {
 
   const jobs = await Promise.all(
     metrics.map((metric) => {
-      const { data, options } = createMetricReminderJob(metric);
+      const { data, options } = createMetricReminderJob(metric, metric.user.devices);
       Logger.info(data, 'Adding job');
       return notificationsQueue.add(data, options);
     })

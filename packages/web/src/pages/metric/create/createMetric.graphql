@@ -1,7 +1,10 @@
-mutation CreateMetric($name: String!, $type: String) {
-  createMetric(name: $name, type: $type) {
+mutation CreateMetric($metric: MetricInput!, $type: String) {
+  createMetric(metricInput: $metric, type: $type) {
     id
     name
     type
+    reminder
+    reminderUnit
+    reminderValue
   }
 }
