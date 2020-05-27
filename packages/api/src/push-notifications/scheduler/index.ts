@@ -45,6 +45,7 @@ export const initialiseJobs = async () => {
   const jobs = await Promise.all(
     metrics.map((metric) => {
       const { data, options } = createMetricReminderJob(metric);
+      console.log('adding job', data);
       return notificationsQueue.add(data, options);
     })
   );

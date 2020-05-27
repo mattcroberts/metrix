@@ -1,8 +1,8 @@
 import * as React from 'react';
-import { Box, Button, Flex, Heading } from 'rebass/styled-components';
+import { Settings } from 'react-feather';
+import { Flex, Heading } from 'rebass/styled-components';
+import { DropButton } from '../DropButton';
 import { Link } from '../Link';
-import { Drawer } from '../drawer';
-import { NotificationConfig } from '../notification-config';
 
 const NavElement = ({ to, text }: { to: string; text: string }) => (
   <Flex sx={{ px: [2, 3, 3], alignItems: 'center', minWidth: 'auto', '&:hover': { backgroundColor: 'primary' } }}>
@@ -22,68 +22,7 @@ const NavElement = ({ to, text }: { to: string; text: string }) => (
   </Flex>
 );
 
-const DropButton = () => {
-  const [open, setOpen] = React.useState(false);
-  return (
-    <Box sx={{ position: 'relative' }}>
-      <Button
-        sx={{
-          px: 2,
-          py: 1,
-          whiteSpace: 'nowrap',
-          outline: 'none',
-          borderBottomLeftRadius: 0,
-          borderBottomRightRadius: 0,
-          borderWidth: 2,
-          borderStyle: 'solid',
-          borderColor: 'secondary',
-          boxShadow: `3px 3px 3px rgba(0,0,0, 0.5)`,
-        }}
-        onClick={() => setOpen(!open)}
-      >
-        Create ▼
-      </Button>
-      {open && (
-        <Box
-          sx={{
-            backgroundColor: 'primary',
-            position: 'absolute',
-            top: 4,
-            width: '100%',
-            borderBottomRightRadius: 4,
-            borderBottomLeftRadius: 4,
-            borderWidth: 2,
-            borderStyle: 'solid',
-            borderColor: 'secondary',
-            borderTop: 'none',
-          }}
-        >
-          <Box
-            as="ul"
-            sx={{
-              listStyle: 'none',
-              p: 0,
-            }}
-          >
-            <Box as="li">
-              <Link variant="dropButton" to="/metrics/new">
-                Metric
-              </Link>
-            </Box>{' '}
-            <Box as="li">
-              <Link variant="dropButton" to="/analyses/new">
-                Analysis
-              </Link>
-            </Box>
-          </Box>
-        </Box>
-      )}
-    </Box>
-  );
-};
 export const Nav = () => {
-  const [drawerOpen, setDrawerOpen] = React.useState(false);
-
   return (
     <Flex sx={{ backgroundColor: 'secondary', alignItems: 'stretch', boxShadow: `3px 3px 3px rgba(0,0,0, 0.5)` }}>
       <Heading
@@ -100,18 +39,11 @@ export const Nav = () => {
       </Heading>
       <NavElement to="/" text="Home" />
       <NavElement to="/analyses" text="Analyses" />
-      <Flex sx={{ width: '100%', justifyContent: 'flex-end', marginRight: 4, alignItems: 'center' }}>
+      <Flex sx={{ width: '100%', justifyContent: 'flex-end', marginRight: [3, 4], alignItems: 'center' }}>
         <DropButton />
-        <Button
-          onClick={() => {
-            setDrawerOpen(!drawerOpen);
-          }}
-        >
-          Notifications
-        </Button>
-        <Drawer open={drawerOpen} setOpen={setDrawerOpen}>
-          <NotificationConfig visible={drawerOpen}/>
-        </Drawer>
+        <Link to="/settings" sx={{ color: 'muted', pt: 2 }}>
+          <Settings />
+        </Link>
       </Flex>
     </Flex>
   );

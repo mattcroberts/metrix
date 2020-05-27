@@ -85,6 +85,7 @@ export type Mutation = {
   createMetric: Metric;
   updateMetric: Metric;
   deleteMetric?: Maybe<Metric>;
+  unregisterDevice?: Maybe<Scalars['Boolean']>;
 };
 
 
@@ -113,6 +114,11 @@ export type MutationUpdateMetricArgs = {
 
 
 export type MutationDeleteMetricArgs = {
+  id: Scalars['String'];
+};
+
+
+export type MutationUnregisterDeviceArgs = {
   id: Scalars['String'];
 };
 
@@ -164,17 +170,6 @@ export type User = {
   email: Scalars['String'];
   devices: Array<DeviceRegistration>;
 };
-
-export type GetNotifcationConfigQueryVariables = {};
-
-
-export type GetNotifcationConfigQuery = (
-  { __typename?: 'Query' }
-  & { devices: Array<(
-    { __typename?: 'DeviceRegistration' }
-    & Pick<DeviceRegistration, 'id' | 'token'>
-  )> }
-);
 
 export type CreateAnalysisMutationVariables = {
   name: Scalars['String'];
@@ -339,40 +334,28 @@ export type UpdateMetricMutation = (
   ) }
 );
 
+export type GetNotifcationConfigQueryVariables = {};
 
-export const GetNotifcationConfigDocument = gql`
-    query GetNotifcationConfig {
-  devices {
-    id
-    token
-  }
-}
-    `;
 
-/**
- * __useGetNotifcationConfigQuery__
- *
- * To run a query within a React component, call `useGetNotifcationConfigQuery` and pass it any options that fit your needs.
- * When your component renders, `useGetNotifcationConfigQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useGetNotifcationConfigQuery({
- *   variables: {
- *   },
- * });
- */
-export function useGetNotifcationConfigQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<GetNotifcationConfigQuery, GetNotifcationConfigQueryVariables>) {
-        return ApolloReactHooks.useQuery<GetNotifcationConfigQuery, GetNotifcationConfigQueryVariables>(GetNotifcationConfigDocument, baseOptions);
-      }
-export function useGetNotifcationConfigLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<GetNotifcationConfigQuery, GetNotifcationConfigQueryVariables>) {
-          return ApolloReactHooks.useLazyQuery<GetNotifcationConfigQuery, GetNotifcationConfigQueryVariables>(GetNotifcationConfigDocument, baseOptions);
-        }
-export type GetNotifcationConfigQueryHookResult = ReturnType<typeof useGetNotifcationConfigQuery>;
-export type GetNotifcationConfigLazyQueryHookResult = ReturnType<typeof useGetNotifcationConfigLazyQuery>;
-export type GetNotifcationConfigQueryResult = ApolloReactCommon.QueryResult<GetNotifcationConfigQuery, GetNotifcationConfigQueryVariables>;
+export type GetNotifcationConfigQuery = (
+  { __typename?: 'Query' }
+  & { devices: Array<(
+    { __typename?: 'DeviceRegistration' }
+    & Pick<DeviceRegistration, 'id' | 'token'>
+  )> }
+);
+
+export type UnregisterDeviceMutationVariables = {
+  id: Scalars['String'];
+};
+
+
+export type UnregisterDeviceMutation = (
+  { __typename?: 'Mutation' }
+  & Pick<Mutation, 'unregisterDevice'>
+);
+
+
 export const CreateAnalysisDocument = gql`
     mutation CreateAnalysis($name: String!, $metricIds: [ID!]!) {
   createAnalysis(name: $name, metricIds: $metricIds) {
@@ -747,3 +730,66 @@ export function useUpdateMetricMutation(baseOptions?: ApolloReactHooks.MutationH
 export type UpdateMetricMutationHookResult = ReturnType<typeof useUpdateMetricMutation>;
 export type UpdateMetricMutationResult = ApolloReactCommon.MutationResult<UpdateMetricMutation>;
 export type UpdateMetricMutationOptions = ApolloReactCommon.BaseMutationOptions<UpdateMetricMutation, UpdateMetricMutationVariables>;
+export const GetNotifcationConfigDocument = gql`
+    query GetNotifcationConfig {
+  devices {
+    id
+    token
+  }
+}
+    `;
+
+/**
+ * __useGetNotifcationConfigQuery__
+ *
+ * To run a query within a React component, call `useGetNotifcationConfigQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetNotifcationConfigQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetNotifcationConfigQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useGetNotifcationConfigQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<GetNotifcationConfigQuery, GetNotifcationConfigQueryVariables>) {
+        return ApolloReactHooks.useQuery<GetNotifcationConfigQuery, GetNotifcationConfigQueryVariables>(GetNotifcationConfigDocument, baseOptions);
+      }
+export function useGetNotifcationConfigLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<GetNotifcationConfigQuery, GetNotifcationConfigQueryVariables>) {
+          return ApolloReactHooks.useLazyQuery<GetNotifcationConfigQuery, GetNotifcationConfigQueryVariables>(GetNotifcationConfigDocument, baseOptions);
+        }
+export type GetNotifcationConfigQueryHookResult = ReturnType<typeof useGetNotifcationConfigQuery>;
+export type GetNotifcationConfigLazyQueryHookResult = ReturnType<typeof useGetNotifcationConfigLazyQuery>;
+export type GetNotifcationConfigQueryResult = ApolloReactCommon.QueryResult<GetNotifcationConfigQuery, GetNotifcationConfigQueryVariables>;
+export const UnregisterDeviceDocument = gql`
+    mutation UnregisterDevice($id: String!) {
+  unregisterDevice(id: $id)
+}
+    `;
+export type UnregisterDeviceMutationFn = ApolloReactCommon.MutationFunction<UnregisterDeviceMutation, UnregisterDeviceMutationVariables>;
+
+/**
+ * __useUnregisterDeviceMutation__
+ *
+ * To run a mutation, you first call `useUnregisterDeviceMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUnregisterDeviceMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [unregisterDeviceMutation, { data, loading, error }] = useUnregisterDeviceMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useUnregisterDeviceMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<UnregisterDeviceMutation, UnregisterDeviceMutationVariables>) {
+        return ApolloReactHooks.useMutation<UnregisterDeviceMutation, UnregisterDeviceMutationVariables>(UnregisterDeviceDocument, baseOptions);
+      }
+export type UnregisterDeviceMutationHookResult = ReturnType<typeof useUnregisterDeviceMutation>;
+export type UnregisterDeviceMutationResult = ApolloReactCommon.MutationResult<UnregisterDeviceMutation>;
+export type UnregisterDeviceMutationOptions = ApolloReactCommon.BaseMutationOptions<UnregisterDeviceMutation, UnregisterDeviceMutationVariables>;

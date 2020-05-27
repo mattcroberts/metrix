@@ -1,0 +1,3 @@
+mutation UnregisterDevice($id: String!) {
+  unregisterDevice(id: $id)
+}

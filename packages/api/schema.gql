@@ -74,6 +74,7 @@ type Mutation {
   createMetric(type: String, name: String!): Metric!
   updateMetric(metricInput: MetricInput!, id: String!): Metric!
   deleteMetric(id: String!): Metric
+  unregisterDevice(id: String!): Boolean
 }
 
 type Query {
