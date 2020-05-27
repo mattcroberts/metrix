@@ -1,3 +1,4 @@
+import { Min, Max, IsInt } from 'class-validator';
 import { Arg, Ctx, Field, InputType, Mutation, Resolver } from 'type-graphql';
 import { EntityManager, Repository } from 'typeorm';
 import { InjectManager, InjectRepository } from 'typeorm-typedi-extensions';
@@ -8,6 +9,9 @@ import { DataPoint } from './DataPoint.model';
 @InputType()
 class DataPointInput {
   @Field({ nullable: true })
+  @Min(1)
+  @Max(10)
+  @IsInt()
   rating: number;
 }
 
