@@ -5,13 +5,14 @@ import { useFormContext } from 'react-hook-form';
 import { Button, Flex, Text } from 'rebass/styled-components';
 import { Field } from '../../components/Field';
 import { Option } from '../../components/Option';
-import { Metric, ReminderUnit } from '../../generated/graphql';
-import { registerDevice } from '../../registerDevice';
+import { messaging } from '../../firebase-config';
+import { Metric, ReminderUnit, useRegisterDeviceMutation } from '../../generated/graphql';
 import { TimeInput } from './TimeInput';
 
 export const MetricReminderFormControls: FC<{
   metric?: Pick<Metric, 'reminder' | 'reminderValue' | 'reminderUnit' | 'reminderHour' | 'reminderMinute'>;
 }> = ({ metric = { reminderHour: 0, reminderMinute: 0 } }) => {
+  const [registerDevice] = useRegisterDeviceMutation();
   const [notificationPermission, setNotificationPermission] = useState(Notification.permission);
   const { register, unregister, watch, setValue } = useFormContext<Metric>();
   const { reminder, reminderUnit } = watch(['reminder', 'reminderUnit'], {
@@ -41,7 +42,11 @@ export const MetricReminderFormControls: FC<{
                 console.error(e);
               }
               if (permission === 'granted') {
-                await registerDevice();
+                const token = await messaging?.getToken();
+
+                if (token) {
+                  await registerDevice({ variables: { token } });
+                }
               }
               return false;
             }}

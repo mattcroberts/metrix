@@ -1,5 +1,5 @@
 import * as firebase from 'firebase';
-import { registerDevice } from './registerDevice';
+import { useRegisterDeviceMutation } from './generated/graphql';
 
 export const firebaseConfig = {
   apiKey: 'AIzaSyBZ8pCndLluwK7xe0IaWvOVcFXIAOFvtTM',
@@ -24,10 +24,15 @@ if (firebase.messaging.isSupported()) {
 
   m.usePublicVapidKey('BPze25H4zpB3LDfvMPZ9gxzJJLSnRlccauNuTaSsW6HB21qgGZdsaN4OEXEzuSS2S-nlapodPDVRzBoWYBJ-8LI');
 
-  m.onTokenRefresh(async (...args) => {
-    console.log('onTokenRefresh', args);
+  m.onTokenRefresh(async (token) => {
+    // not sure this'll work... hook outside a component...
+    const [registerDevice] = useRegisterDeviceMutation();
     try {
-      await registerDevice();
+      await registerDevice({
+        variables: {
+          token,
+        },
+      });
     } catch (e) {
       console.error(e);
     }

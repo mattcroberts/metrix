@@ -14,6 +14,11 @@ export class DeviceRegistrationResolver {
     return this.deviceRegistrationRepository.find({ user });
   }
 
+  @Mutation((returns) => DeviceRegistration)
+  registerDevice(@Ctx() { user }: ContextType, @Arg('token') token: string) {
+    return this.deviceRegistrationRepository.save({ token, user });
+  }
+
   @Mutation((returns) => Boolean, { nullable: true })
   unregisterDevice(@Ctx() { user }: ContextType, @Arg('id') id: string) {
     this.deviceRegistrationRepository.delete({ user, id });

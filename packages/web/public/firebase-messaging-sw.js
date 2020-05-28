@@ -12,24 +12,6 @@ const firebaseConfig = {
   measurementId: 'G-YB88WZMZQJ',
 };
 
-const registerDevice = async (token) => {
-  let permission = Notification.permission;
-
-  if (permission !== 'granted' && Notification.requestPermission) {
-    permission = await Notification.requestPermission();
-  }
-
-  if (permission === 'granted') {
-    const resp = await fetch(`${process.env.REACT_APP_API_PATH}/push-reg`, {
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      method: 'POST',
-      body: JSON.stringify({ token }),
-    });
-  }
-};
-
 const app = firebase.initializeApp(firebaseConfig);
 const messaging = app.messaging();
 

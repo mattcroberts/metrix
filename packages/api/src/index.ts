@@ -1,12 +1,12 @@
-import { ApolloServer, AuthenticationError } from 'apollo-server-express';
+import { ApolloServer } from 'apollo-server-express';
 import * as bodyParser from 'body-parser';
 import * as cookieParser from 'cookie-parser';
 import * as cors from 'cors';
 import * as express from 'express';
-import { sign, verify } from 'jsonwebtoken';
+import { sign } from 'jsonwebtoken';
 import * as passport from 'passport';
 import { Strategy as GoogleTokenStrategy } from 'passport-google-oauth20';
-import { ExtractJwt } from 'passport-jwt';
+import { ExtractJwt, Strategy as JWTStrategy } from 'passport-jwt';
 import 'reflect-metadata';
 import * as TypeGraphQL from 'type-graphql';
 import { Container } from 'typedi';
@@ -15,6 +15,7 @@ import { AnalysisResolver } from './analysis/resolver';
 import { config } from './config';
 import { DataPointResolver } from './datapoint/resolver';
 import { connectWithRetry } from './db';
+import { Logger } from './logger';
 import { MetricResolver } from './metrics/resolver';
 import * as pushNotifications from './push-notifications';
 import { DeviceRegistrationResolver } from './push-notifications/resolver';
@@ -22,7 +23,6 @@ import { initialiseJobs } from './push-notifications/scheduler';
 import { ContextType } from './types';
 import { UserResolver } from './users/resolver';
 import { User } from './users/User.model';
-import { Logger } from './logger';
 
 process.on('unhandledRejection', (reason) => {
   Logger.error('Unhandled Rejection');
@@ -91,7 +91,24 @@ passport.use(
   )
 );
 
-app.use(pushNotifications.router);
+passport.use(
+  new JWTStrategy(
+    { secretOrKey: config.jwtSecret, jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken() },
+    (jwt, done) => {
+      const connection = Container.get<TypeORM.Connection>('connection');
+      const userRepo = connection.getRepository(User);
+
+      userRepo
+        .findOneOrFail({ id: jwt.id })
+        .then((user) => done(null, user))
+        .catch((err) => done(err));
+    }
+  )
+);
+
+app.use('/graphql', passport.authenticate('jwt', { session: false }), (req, res, next) => {
+  next();
+});
 
 connectWithRetry()
   .then(async (connection) => {
@@ -109,21 +126,7 @@ connectWithRetry()
     const apolloServer = new ApolloServer({
       schema,
       context: async ({ req, res }): Promise<ContextType> => {
-        try {
-          const token = ExtractJwt.fromAuthHeaderAsBearerToken()(req);
-          const jwt = verify(token, config.jwtSecret);
-
-          if (typeof jwt === 'object') {
-            const userId = jwt['id'];
-
-            const user = await userRepo.findOne(userId);
-            return { connection, user };
-          }
-        } catch (e) {
-          Logger.error(e);
-        }
-
-        throw new AuthenticationError('Error');
+        return { user: req.user };
       },
       formatError: (err) => {
         Logger.error(err);

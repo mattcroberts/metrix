@@ -1,0 +1,6 @@
+mutation registerDevice($token: String!) {
+  registerDevice(token: $token) {
+    id
+    token
+  }
+}

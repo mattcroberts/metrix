@@ -6,14 +6,17 @@ import { Box, Button, Flex, Heading } from 'rebass/styled-components';
 import { Field } from '../../../components/Field';
 import { Loader } from '../../../components/Loader';
 import { messaging } from '../../../firebase-config';
-import { useGetNotifcationConfigQuery, useUnregisterDeviceMutation } from '../../../generated/graphql';
-import { registerDevice } from '../../../registerDevice';
+import {
+  useGetNotifcationConfigQuery,
+  useUnregisterDeviceMutation,
+  useRegisterDeviceMutation,
+} from '../../../generated/graphql';
 
 export const NotificationConfig: FC = () => {
   const { data, loading, refetch } = useGetNotifcationConfigQuery();
   const [currentToken, setCurrentToken] = useState('');
   const currentDevice = data?.devices.find((device) => device.token === currentToken);
-
+  const [registerDevice] = useRegisterDeviceMutation();
   const [unregisterDevice] = useUnregisterDeviceMutation();
 
   useEffect(() => {
@@ -75,7 +78,7 @@ export const NotificationConfig: FC = () => {
         <Flex sx={{ mt: 2, justifyContent: 'center' }}>
           <Button
             onClick={async () => {
-              await registerDevice();
+              await registerDevice({ variables: { token: currentToken } });
               await refetch();
             }}
           >
