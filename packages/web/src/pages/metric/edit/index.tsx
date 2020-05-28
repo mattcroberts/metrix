@@ -8,7 +8,7 @@ import { Loader } from '../../../components/Loader';
 import { Option } from '../../../components/Option';
 import { Page } from '../../../components/Page';
 import { useGetMetricByIdQuery, useUpdateMetricMutation } from '../../../generated/graphql';
-import { MetricPermissionsFormControls } from '../PermissionsFormControls';
+import { MetricReminderFormControls } from '../ReminderFormControls';
 
 export const EditMetricPage = ({
   match: {
@@ -34,26 +34,30 @@ export const EditMetricPage = ({
     <FormContext {...formMethods}>
       <Page
         as="form"
-        onSubmit={handleSubmit(async ({ name, reminder, reminderUnit, reminderValue }) => {
-          const { errors } = await updateMetric({
-            variables: {
-              id: data.metricById.id,
-              metricInput: {
-                name,
-                reminder: reminder == true,
-                reminderUnit,
-                reminderValue: parseInt(reminderValue, 10),
+        onSubmit={handleSubmit(
+          async ({ name, reminder, reminderUnit, reminderValue, reminderHour, reminderMinute }) => {
+            const { errors } = await updateMetric({
+              variables: {
+                id: data.metricById.id,
+                metricInput: {
+                  name,
+                  reminder: reminder == true,
+                  reminderUnit,
+                  reminderValue: parseInt(reminderValue, 10),
+                  reminderHour: parseInt(reminderHour, 10),
+                  reminderMinute: parseInt(reminderMinute, 10),
+                },
               },
-            },
-          });
+            });
 
-          if (errors) {
-            alert('error');
-            return;
+            if (errors) {
+              console.error(errors);
+              return;
+            }
+
+            history.push(`/`);
           }
-
-          history.push(`/`);
-        })}
+        )}
       >
         <Heading>{data.metricById.name} - Edit</Heading>
 
@@ -72,7 +76,7 @@ export const EditMetricPage = ({
           </Field>
         </Flex>
 
-        <MetricPermissionsFormControls metric={data.metricById} />
+        <MetricReminderFormControls metric={data.metricById} />
 
         <Flex justifyContent="flex-end">
           <Button type="submit">Save</Button>

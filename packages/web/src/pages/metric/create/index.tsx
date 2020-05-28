@@ -7,7 +7,7 @@ import { Field } from '../../../components/Field';
 import { Option } from '../../../components/Option';
 import { Page } from '../../../components/Page';
 import { useCreateMetricMutation } from '../../../generated/graphql';
-import { MetricPermissionsFormControls } from '../PermissionsFormControls';
+import { MetricReminderFormControls } from '../ReminderFormControls';
 
 export const CreateMetricPage = () => {
   const formMethods = useForm();
@@ -19,26 +19,30 @@ export const CreateMetricPage = () => {
     <FormContext {...formMethods}>
       <Page
         as="form"
-        onSubmit={handleSubmit(async ({ name, type, reminder, reminderUnit, reminderValue }) => {
-          const { errors } = await createMetric({
-            variables: {
-              metric: {
-                name,
-                reminder: reminder == true,
-                reminderUnit,
-                reminderValue: parseInt(reminderValue, 10),
+        onSubmit={handleSubmit(
+          async ({ name, type, reminder, reminderUnit, reminderValue, reminderHour, reminderMinute }) => {
+            const { errors } = await createMetric({
+              variables: {
+                metric: {
+                  name,
+                  reminder: reminder == true,
+                  reminderUnit,
+                  reminderValue: parseInt(reminderValue, 10),
+                  reminderHour: parseInt(reminderHour, 10),
+                  reminderMinute: parseInt(reminderMinute, 10),
+                },
+                type,
               },
-              type,
-            },
-          });
+            });
 
-          if (errors) {
-            console.error(errors);
-            return;
+            if (errors) {
+              console.error(errors);
+              return;
+            }
+
+            history.push('/');
           }
-
-          history.push('/metrics');
-        })}
+        )}
       >
         <Heading>Create Metric</Heading>
 
@@ -57,7 +61,7 @@ export const CreateMetricPage = () => {
             {errors.type && <p>errors.type.message</p>}
           </Field>
         </Flex>
-        <MetricPermissionsFormControls />
+        <MetricReminderFormControls />
         <Flex justifyContent="flex-end" mt="4">
           <Button type="submit">Create</Button>
         </Flex>

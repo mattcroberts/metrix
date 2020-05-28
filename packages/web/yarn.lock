@@ -10961,6 +10961,14 @@ react-smooth@^1.0.5:
     raf "^3.4.0"
     react-transition-group "^2.5.0"
 
+react-time-input-polyfill@^1.0.1:
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/react-time-input-polyfill/-/react-time-input-polyfill-1.0.1.tgz#ca0aa055530389468a29e4cc0d14d0c9b28ed9dd"
+  integrity sha512-RNEWne7AD4bNgZlZYnmFn6puZ8nZYk+kp3IORd0YBPdAK96HlZzC/RxOws1duRa5WyJ8oBr46qtWoubJBmiv5A==
+  dependencies:
+    react "^16.10.2"
+    time-input-polyfill latest
+
 react-transition-group@^2.5.0:
   version "2.9.0"
   resolved "https://registry.yarnpkg.com/react-transition-group/-/react-transition-group-2.9.0.tgz#df9cdb025796211151a436c69a8f3b97b5b07c8d"
@@ -10971,7 +10979,7 @@ react-transition-group@^2.5.0:
     prop-types "^15.6.2"
     react-lifecycles-compat "^3.0.4"
 
-react@^16.13.1:
+react@^16.10.2, react@^16.13.1:
   version "16.13.1"
   resolved "https://registry.yarnpkg.com/react/-/react-16.13.1.tgz#2e818822f1a9743122c063d6410d85c1e3afe48e"
   integrity sha512-YMZQQq32xHLX0bz5Mnibv1/LHb3Sqzngu7xstSM+vrkE5Kzr9xE0yMByK5kMoTK30YVJE61WfbxIFFvfeDKT1w==
@@ -12485,6 +12493,11 @@ thunky@^1.0.2:
   version "1.1.0"
   resolved "https://registry.yarnpkg.com/thunky/-/thunky-1.1.0.tgz#5abaf714a9405db0504732bbccd2cedd9ef9537d"
   integrity sha512-eHY7nBftgThBqOyHGVN+l8gF0BucP09fMo0oO/Lb0w1OF80dJv+lDVpXG60WMQvkcxAkNybKsrEIE3ZtKGmPrA==
+
+time-input-polyfill@latest:
+  version "1.0.9"
+  resolved "https://registry.yarnpkg.com/time-input-polyfill/-/time-input-polyfill-1.0.9.tgz#d5541738ee854424e4f908143ff957dabee01c86"
+  integrity sha512-Ow1PGUnAigUYf41HE/wcM5IjfmQCar86DrOKp5jb9p1DJfLyONDESd2u1WUdt5VG9kxTc8Snh08XoOGl4bLZKA==
 
 timers-browserify@^2.0.4:
   version "2.0.11"

@@ -64,6 +64,8 @@ export type Metric = {
   reminder: Scalars['Boolean'];
   reminderUnit?: Maybe<ReminderUnit>;
   reminderValue?: Maybe<Scalars['Float']>;
+  reminderMinute?: Maybe<Scalars['Float']>;
+  reminderHour?: Maybe<Scalars['Float']>;
 };
 
 export type MetricInput = {
@@ -71,6 +73,8 @@ export type MetricInput = {
   reminder: Scalars['Boolean'];
   reminderUnit?: Maybe<ReminderUnit>;
   reminderValue?: Maybe<Scalars['Float']>;
+  reminderMinute?: Maybe<Scalars['Float']>;
+  reminderHour?: Maybe<Scalars['Float']>;
 };
 
 export enum MetricType {
@@ -303,7 +307,7 @@ export type CreateMetricMutation = (
   { __typename?: 'Mutation' }
   & { createMetric: (
     { __typename?: 'Metric' }
-    & Pick<Metric, 'id' | 'name' | 'type' | 'reminder' | 'reminderUnit' | 'reminderValue'>
+    & Pick<Metric, 'id' | 'name' | 'type' | 'reminder' | 'reminderUnit' | 'reminderValue' | 'reminderHour' | 'reminderMinute'>
   ) }
 );
 
@@ -316,7 +320,7 @@ export type GetMetricByIdQuery = (
   { __typename?: 'Query' }
   & { metricById: (
     { __typename?: 'Metric' }
-    & Pick<Metric, 'id' | 'name' | 'type' | 'reminder' | 'reminderUnit' | 'reminderValue'>
+    & Pick<Metric, 'id' | 'name' | 'type' | 'reminder' | 'reminderUnit' | 'reminderValue' | 'reminderHour' | 'reminderMinute'>
   ) }
 );
 
@@ -632,6 +636,8 @@ export const CreateMetricDocument = gql`
     reminder
     reminderUnit
     reminderValue
+    reminderHour
+    reminderMinute
   }
 }
     `;
@@ -670,6 +676,8 @@ export const GetMetricByIdDocument = gql`
     reminder
     reminderUnit
     reminderValue
+    reminderHour
+    reminderMinute
   }
 }
     `;

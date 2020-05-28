@@ -9,12 +9,12 @@ import { DeviceRegistration } from '../DeviceRegistration.model';
 
 export const notificationsQueue = new Queue('notifications', `redis://${config.redisHost}:6379`);
 
-const generateCron = (unit: ReminderUnit, value: number): string => {
+const generateCron = (unit: ReminderUnit, value: number, startingMinute: number, startingHour: number): string => {
   switch (unit) {
     case ReminderUnit.Day:
-      return `0 0 */${value} * *`;
+      return `${startingMinute} ${startingHour} */${value} * *`;
     case ReminderUnit.Hour:
-      return `0 */${value} * * *`;
+      return `${startingMinute} */${value} * * *`;
     case ReminderUnit.Minute:
       return `*/${value} * * * *`;
   }
@@ -24,7 +24,7 @@ export const createMetricReminderJob = (
   metric: Metric,
   devices: DeviceRegistration[]
 ): { data: any; options: Queue.JobOptions } => {
-  const cron = generateCron(metric.reminderUnit, metric.reminderValue);
+  const cron = generateCron(metric.reminderUnit, metric.reminderValue, metric.reminderMinute, metric.reminderHour);
   return {
     data: {
       metric,
@@ -50,7 +50,7 @@ export const initialiseJobs = async () => {
   const jobs = await Promise.all(
     metrics.map((metric) => {
       const { data, options } = createMetricReminderJob(metric, metric.user.devices);
-      Logger.info(data, 'Adding job');
+      Logger.info({ data, options }, 'Adding job');
       return notificationsQueue.add(data, options);
     })
   );

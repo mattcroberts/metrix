@@ -6,5 +6,7 @@ mutation CreateMetric($metric: MetricInput!, $type: String) {
     reminder
     reminderUnit
     reminderValue
+    reminderHour
+    reminderMinute
   }
 }

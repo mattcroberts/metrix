@@ -88,6 +88,14 @@ export class Metric {
   @Column({ nullable: true })
   reminderValue: number;
 
+  @Field({ nullable: true })
+  @Column({ default: 0 })
+  reminderMinute: number;
+
+  @Field({ nullable: true })
+  @Column({ default: 0 })
+  reminderHour: number;
+
   @Column({ nullable: true })
   reminderJobId: string;
 }

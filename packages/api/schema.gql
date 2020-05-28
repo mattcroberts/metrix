@@ -54,6 +54,8 @@ type Metric {
   reminder: Boolean!
   reminderUnit: ReminderUnit
   reminderValue: Float
+  reminderMinute: Float
+  reminderHour: Float
 }
 
 input MetricInput {
@@ -61,6 +63,8 @@ input MetricInput {
   reminder: Boolean!
   reminderUnit: ReminderUnit
   reminderValue: Float
+  reminderMinute: Float
+  reminderHour: Float
 }
 
 enum MetricType {

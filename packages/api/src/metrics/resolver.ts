@@ -1,13 +1,13 @@
 import { ApolloError } from 'apollo-server-express';
+import { IsInt, Length, Max, Min } from 'class-validator';
 import { Arg, Ctx, Field, InputType, Mutation, Query, Resolver } from 'type-graphql';
 import { Repository } from 'typeorm';
 import { InjectRepository } from 'typeorm-typedi-extensions';
+import { Logger } from '../logger';
+import { DeviceRegistration } from '../push-notifications/DeviceRegistration.model';
 import { createMetricReminderJob, notificationsQueue } from '../push-notifications/scheduler';
 import { ContextType } from '../types';
 import { Metric, MetricType, ReminderUnit } from './Metric.model';
-import { Logger } from '../logger';
-import { DeviceRegistration } from '../push-notifications/DeviceRegistration.model';
-import { Min, Length } from 'class-validator';
 
 @InputType()
 class MetricInput {
@@ -23,7 +23,20 @@ class MetricInput {
 
   @Field({ nullable: true })
   @Min(1)
+  @IsInt()
   reminderValue: number;
+
+  @Field({ nullable: true })
+  @Min(0)
+  @Max(59)
+  @IsInt()
+  reminderMinute: number;
+
+  @Field({ nullable: true })
+  @Min(0)
+  @Max(23)
+  @IsInt()
+  reminderHour: number;
 }
 
 @Resolver((of) => Metric)
@@ -78,6 +91,8 @@ export class MetricResolver {
     if (!metric) {
       throw new ApolloError('Metric does not exist');
     }
+    const reminderHour = metricInput.reminderHour === null ? metric.reminderHour : metricInput.reminderHour;
+    const reminderMinute = metricInput.reminderMinute === null ? metric.reminderMinute : metricInput.reminderMinute;
 
     let reminderJobId = metric.reminderJobId;
     if (metricInput.reminder !== metric.reminder && metricInput.reminder === false) {
@@ -89,14 +104,23 @@ export class MetricResolver {
       await this.removeReminder(metric.reminderJobId);
 
       if (metricInput.reminder) {
-        const { data, options } = createMetricReminderJob({ ...metric, ...metricInput }, metric.user.devices);
+        const { data, options } = createMetricReminderJob(
+          { ...metric, ...metricInput, reminderHour, reminderMinute },
+          metric.user.devices
+        );
         reminderJobId = '' + (await (await notificationsQueue.add(data, options)).id);
       } else {
         reminderJobId = '';
       }
     }
 
-    return this.metricRepository.save({ ...metric, ...metricInput, reminderJobId });
+    return this.metricRepository.save({
+      ...metric,
+      ...metricInput,
+      reminderJobId,
+      reminderHour,
+      reminderMinute,
+    });
   }
 
   @Mutation((returns) => Metric, { nullable: true })
