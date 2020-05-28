@@ -1,14 +1,13 @@
 import { Textarea } from '@rebass/forms';
 import { Label } from '@rebass/forms/styled-components';
 import React, { FC, useEffect, useState } from 'react';
-import { Box, Button, Flex, Heading, Text } from 'rebass/styled-components';
+import { Check, X } from 'react-feather';
+import { Box, Button, Flex, Heading } from 'rebass/styled-components';
 import { Field } from '../../../components/Field';
-import { app } from '../../../firebase-config';
+import { Loader } from '../../../components/Loader';
+import { messaging } from '../../../firebase-config';
 import { useGetNotifcationConfigQuery, useUnregisterDeviceMutation } from '../../../generated/graphql';
 import { registerDevice } from '../../../registerDevice';
-import { Loader } from '../../../components/Loader';
-import { Check, X } from 'react-feather';
-const messaging = app.messaging();
 
 export const NotificationConfig: FC = () => {
   const { data, loading, refetch } = useGetNotifcationConfigQuery();
@@ -18,10 +17,12 @@ export const NotificationConfig: FC = () => {
   const [unregisterDevice] = useUnregisterDeviceMutation();
 
   useEffect(() => {
-    messaging.getToken().then((token) => {
-      setCurrentToken(token);
-    });
-  }, []);
+    if (messaging) {
+      messaging.getToken().then((token) => {
+        setCurrentToken(token);
+      });
+    }
+  }, [setCurrentToken]);
 
   if (!data || loading) {
     return (
@@ -44,10 +45,19 @@ export const NotificationConfig: FC = () => {
           Device Registered <Check color="green" style={{ marginLeft: '4px' }} />
         </Flex>
       )}
-      <Field>
-        <Label>Current device token:</Label>
-        <Textarea value={currentToken} readOnly />
-      </Field>
+      {(messaging && (
+        <Field>
+          <Label>Current device token:</Label>
+          <Textarea value={currentToken} readOnly />
+        </Field>
+      )) || (
+        <Flex
+          as="span"
+          sx={{ fontFamily: 'body', fontWeight: 'bold', justifyContent: 'center', alignItems: 'center', mt: 2 }}
+        >
+          Device not supported <X color="red" style={{ marginLeft: '4px' }} />
+        </Flex>
+      )}
 
       {currentDevice && (
         <Flex sx={{ mt: 2, justifyContent: 'center' }}>

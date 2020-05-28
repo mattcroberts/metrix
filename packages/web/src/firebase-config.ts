@@ -13,18 +13,23 @@ export const firebaseConfig = {
 };
 
 export const app = firebase.initializeApp(firebaseConfig);
-const messaging = app.messaging();
-navigator.serviceWorker.register(`${process.env.PUBLIC_URL}/firebase-messaging-sw.js`).then((serviceWorker) => {
-  messaging.useServiceWorker(serviceWorker);
-});
+export let messaging: firebase.messaging.Messaging | null = null;
 
-messaging.usePublicVapidKey('BPze25H4zpB3LDfvMPZ9gxzJJLSnRlccauNuTaSsW6HB21qgGZdsaN4OEXEzuSS2S-nlapodPDVRzBoWYBJ-8LI');
+if (firebase.messaging.isSupported()) {
+  const m = app.messaging();
+  messaging = m;
+  navigator.serviceWorker.register(`${process.env.PUBLIC_URL}/firebase-messaging-sw.js`).then((serviceWorker) => {
+    m.useServiceWorker(serviceWorker);
+  });
 
-messaging.onTokenRefresh(async (...args) => {
-  console.log('onTokenRefresh', args);
-  try {
-    await registerDevice();
-  } catch (e) {
-    console.error(e);
-  }
-});
+  m.usePublicVapidKey('BPze25H4zpB3LDfvMPZ9gxzJJLSnRlccauNuTaSsW6HB21qgGZdsaN4OEXEzuSS2S-nlapodPDVRzBoWYBJ-8LI');
+
+  m.onTokenRefresh(async (...args) => {
+    console.log('onTokenRefresh', args);
+    try {
+      await registerDevice();
+    } catch (e) {
+      console.error(e);
+    }
+  });
+}
