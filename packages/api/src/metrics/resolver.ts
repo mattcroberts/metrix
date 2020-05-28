@@ -66,8 +66,9 @@ export class MetricResolver {
     Logger.info('Creating metric');
     let reminderJobId = null;
     const metric = new Metric();
-
-    Object.assign(metric, { type: type || MetricType.DataPoint, user, ...metricInput });
+    const reminderHour = metricInput.reminderHour === null ? metric.reminderHour : metricInput.reminderHour;
+    const reminderMinute = metricInput.reminderMinute === null ? metric.reminderMinute : metricInput.reminderMinute;
+    Object.assign(metric, { type: type || MetricType.DataPoint, user, ...metricInput, reminderHour, reminderMinute });
     if (metric.reminder) {
       const devices = await this.deviceRepository.find({ user });
       const { data, options } = createMetricReminderJob(metric, devices);

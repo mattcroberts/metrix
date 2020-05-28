@@ -6,7 +6,7 @@
   "password": "metrix",
   "database": "metrix",
   "synchronize": true,
-  "logging": true,
+  "logging": false,
   "entities": ["src/**/*.model.ts"],
   "migrations": ["src/migration/**/*.ts"],
   "subscribers": ["src/subscriber/**/*.ts"],

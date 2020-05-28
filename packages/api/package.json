@@ -10,7 +10,7 @@
     "clean": "rm -rf build",
     "build": "tsc",
     "predev": "docker-compose up -d",
-    "dev": "nodemon -x ts-node src/index.ts",
+    "dev": "nodemon -x ts-node src/index.ts | bunyan",
     "start": "node build/index.js",
     "typeorm": "ts-node ./node_modules/typeorm/cli.js"
   },
