@@ -1,26 +1,38 @@
 import * as React from 'react';
 import { Settings } from 'react-feather';
+import { useRouteMatch } from 'react-router-dom';
 import { Flex, Heading } from 'rebass/styled-components';
 import { DropButton } from '../DropButton';
 import { Link } from '../Link';
 
-const NavElement = ({ to, text }: { to: string; text: string }) => (
-  <Flex sx={{ px: [2, 3, 3], alignItems: 'center', minWidth: 'auto', '&:hover': { backgroundColor: 'primary' } }}>
-    <Link
-      to={to}
+const NavElement = ({ to, text }: { to: string; text: string }) => {
+  const match = useRouteMatch(to);
+  return (
+    <Flex
       sx={{
-        textDecoration: 'none',
-        fontWeight: 'bold',
-        color: 'text',
-        display: 'flex',
-        justifyContent: 'center',
+        px: [2, 3, 3],
         alignItems: 'center',
+        minWidth: 'auto',
       }}
     >
-      {text}
-    </Link>
-  </Flex>
-);
+      <Link
+        to={to}
+        sx={{
+          textDecoration: 'none',
+          fontWeight: 'bold',
+          color: 'text',
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          borderBottomWidth: 2,
+          borderBottomStyle: match?.isExact ? 'solid' : 'none',
+        }}
+      >
+        {text}
+      </Link>
+    </Flex>
+  );
+};
 
 export const Nav = () => {
   return (
