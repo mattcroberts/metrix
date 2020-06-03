@@ -14,7 +14,7 @@ export type Scalars = {
 };
 
 export type Analysis = {
-  __typename?: 'Analysis';
+   __typename?: 'Analysis';
   id: Scalars['ID'];
   name: Scalars['String'];
   chartType: Array<ChartType>;
@@ -23,11 +23,11 @@ export type Analysis = {
 
 export enum ChartType {
   Marker = 'MARKER',
-  Line = 'LINE',
+  Line = 'LINE'
 }
 
 export type DataPoint = IDataPoint & {
-  __typename?: 'DataPoint';
+   __typename?: 'DataPoint';
   id: Scalars['ID'];
   metric: Metric;
   datetime: Scalars['DateTime'];
@@ -39,8 +39,9 @@ export type DataPointInput = {
 
 export type DataPointUnion = DataPoint | RatingDataPoint;
 
+
 export type DeviceRegistration = {
-  __typename?: 'DeviceRegistration';
+   __typename?: 'DeviceRegistration';
   id: Scalars['String'];
   user: User;
   token: Scalars['String'];
@@ -53,7 +54,7 @@ export type IDataPoint = {
 };
 
 export type Metric = {
-  __typename?: 'Metric';
+   __typename?: 'Metric';
   id: Scalars['ID'];
   name: Scalars['String'];
   datetime: Scalars['DateTime'];
@@ -78,12 +79,14 @@ export type MetricInput = {
 
 export enum MetricType {
   DataPoint = 'DataPoint',
-  RatingDataPoint = 'RatingDataPoint',
+  RatingDataPoint = 'RatingDataPoint'
 }
 
 export type Mutation = {
-  __typename?: 'Mutation';
+   __typename?: 'Mutation';
   createAnalysis: Analysis;
+  updateAnalysis: Analysis;
+  deleteAnalysis?: Maybe<Analysis>;
   recordDataPoint: Metric;
   createMetric: Metric;
   updateMetric: Metric;
@@ -92,40 +95,59 @@ export type Mutation = {
   unregisterDevice?: Maybe<Scalars['Boolean']>;
 };
 
+
 export type MutationCreateAnalysisArgs = {
   metricIds: Array<Scalars['ID']>;
   name: Scalars['String'];
 };
+
+
+export type MutationUpdateAnalysisArgs = {
+  metricIds: Array<Scalars['ID']>;
+  name: Scalars['String'];
+  id: Scalars['ID'];
+};
+
+
+export type MutationDeleteAnalysisArgs = {
+  id: Scalars['ID'];
+};
+
 
 export type MutationRecordDataPointArgs = {
   data?: Maybe<DataPointInput>;
   metricId: Scalars['String'];
 };
 
+
 export type MutationCreateMetricArgs = {
   type?: Maybe<Scalars['String']>;
   metricInput: MetricInput;
 };
+
 
 export type MutationUpdateMetricArgs = {
   metricInput: MetricInput;
   id: Scalars['String'];
 };
 
+
 export type MutationDeleteMetricArgs = {
   id: Scalars['String'];
 };
 
+
 export type MutationRegisterDeviceArgs = {
   token: Scalars['String'];
 };
+
 
 export type MutationUnregisterDeviceArgs = {
   id: Scalars['String'];
 };
 
 export type Query = {
-  __typename?: 'Query';
+   __typename?: 'Query';
   allAnalyses: Array<Analysis>;
   getAnalysisWithData: Analysis;
   allMetrics: Array<Metric>;
@@ -133,16 +155,18 @@ export type Query = {
   devices: Array<DeviceRegistration>;
 };
 
+
 export type QueryGetAnalysisWithDataArgs = {
   id: Scalars['String'];
 };
+
 
 export type QueryMetricByIdArgs = {
   id: Scalars['String'];
 };
 
 export type RatingDataPoint = IDataPoint & {
-  __typename?: 'RatingDataPoint';
+   __typename?: 'RatingDataPoint';
   id: Scalars['ID'];
   metric: Metric;
   datetime: Scalars['DateTime'];
@@ -152,11 +176,11 @@ export type RatingDataPoint = IDataPoint & {
 export enum ReminderUnit {
   Day = 'Day',
   Hour = 'Hour',
-  Minute = 'Minute',
+  Minute = 'Minute'
 }
 
 export type User = {
-  __typename?: 'User';
+   __typename?: 'User';
   /**
    * The `ID` scalar type represents a unique identifier, often used to refetch an
    * object or as key for a cache. The ID type appears in a JSON response as a
@@ -176,147 +200,243 @@ export type CreateAnalysisMutationVariables = {
   metricIds: Array<Scalars['ID']>;
 };
 
-export type CreateAnalysisMutation = { __typename?: 'Mutation' } & {
-  createAnalysis: { __typename?: 'Analysis' } & Pick<Analysis, 'id' | 'name'> & {
-      metrics: Array<{ __typename?: 'Metric' } & Pick<Metric, 'id'>>;
-    };
+
+export type CreateAnalysisMutation = (
+  { __typename?: 'Mutation' }
+  & { createAnalysis: (
+    { __typename?: 'Analysis' }
+    & Pick<Analysis, 'id' | 'name'>
+    & { metrics: Array<(
+      { __typename?: 'Metric' }
+      & Pick<Metric, 'id'>
+    )> }
+  ) }
+);
+
+export type DeleteAnalysisMutationVariables = {
+  id: Scalars['ID'];
 };
+
+
+export type DeleteAnalysisMutation = (
+  { __typename?: 'Mutation' }
+  & { deleteAnalysis?: Maybe<(
+    { __typename?: 'Analysis' }
+    & Pick<Analysis, 'id'>
+  )> }
+);
+
+export type UpdateAnalysisMutationVariables = {
+  id: Scalars['ID'];
+  name: Scalars['String'];
+  metricIds: Array<Scalars['ID']>;
+};
+
+
+export type UpdateAnalysisMutation = (
+  { __typename?: 'Mutation' }
+  & { updateAnalysis: (
+    { __typename?: 'Analysis' }
+    & Pick<Analysis, 'id' | 'name'>
+    & { metrics: Array<(
+      { __typename?: 'Metric' }
+      & Pick<Metric, 'id'>
+    )> }
+  ) }
+);
 
 export type GetAllAnalysesQueryVariables = {};
 
-export type GetAllAnalysesQuery = { __typename?: 'Query' } & {
-  allAnalyses: Array<
-    { __typename?: 'Analysis' } & Pick<Analysis, 'id' | 'name'> & {
-        metrics: Array<{ __typename?: 'Metric' } & Pick<Metric, 'name'>>;
-      }
-  >;
-};
+
+export type GetAllAnalysesQuery = (
+  { __typename?: 'Query' }
+  & { allAnalyses: Array<(
+    { __typename?: 'Analysis' }
+    & Pick<Analysis, 'id' | 'name'>
+    & { metrics: Array<(
+      { __typename?: 'Metric' }
+      & Pick<Metric, 'name'>
+    )> }
+  )> }
+);
 
 export type GetMetricWithDataPointsQueryVariables = {
   metricId: Scalars['String'];
 };
 
-export type GetMetricWithDataPointsQuery = { __typename?: 'Query' } & {
-  metricById: { __typename?: 'Metric' } & Pick<Metric, 'id' | 'name'> & {
-      dataPoints: Array<
-        | ({ __typename?: 'DataPoint' } & Pick<DataPoint, 'id' | 'datetime'>)
-        | ({ __typename?: 'RatingDataPoint' } & Pick<RatingDataPoint, 'id' | 'datetime'>)
-      >;
-    };
-};
+
+export type GetMetricWithDataPointsQuery = (
+  { __typename?: 'Query' }
+  & { metricById: (
+    { __typename?: 'Metric' }
+    & Pick<Metric, 'id' | 'name'>
+    & { dataPoints: Array<(
+      { __typename?: 'DataPoint' }
+      & Pick<DataPoint, 'id' | 'datetime'>
+    ) | (
+      { __typename?: 'RatingDataPoint' }
+      & Pick<RatingDataPoint, 'id' | 'datetime'>
+    )> }
+  ) }
+);
 
 export type GetAnalysisWithDataQueryVariables = {
   id: Scalars['String'];
 };
 
-export type GetAnalysisWithDataQuery = { __typename?: 'Query' } & {
-  getAnalysisWithData: { __typename?: 'Analysis' } & Pick<Analysis, 'id' | 'name'> & {
-      metrics: Array<
-        { __typename?: 'Metric' } & Pick<Metric, 'id' | 'name' | 'type'> & {
-            dataPoints: Array<
-              | ({ __typename?: 'DataPoint' } & Pick<DataPoint, 'id' | 'datetime'>)
-              | ({ __typename?: 'RatingDataPoint' } & Pick<RatingDataPoint, 'id' | 'datetime' | 'rating'>)
-            >;
-          }
-      >;
-    };
-};
+
+export type GetAnalysisWithDataQuery = (
+  { __typename?: 'Query' }
+  & { getAnalysisWithData: (
+    { __typename?: 'Analysis' }
+    & Pick<Analysis, 'id' | 'name'>
+    & { metrics: Array<(
+      { __typename?: 'Metric' }
+      & Pick<Metric, 'id' | 'name' | 'type'>
+      & { dataPoints: Array<(
+        { __typename?: 'DataPoint' }
+        & Pick<DataPoint, 'id' | 'datetime'>
+      ) | (
+        { __typename?: 'RatingDataPoint' }
+        & Pick<RatingDataPoint, 'id' | 'datetime' | 'rating'>
+      )> }
+    )> }
+  ) }
+);
 
 export type DeleteMetricMutationVariables = {
   id: Scalars['String'];
 };
 
-export type DeleteMetricMutation = { __typename?: 'Mutation' } & {
-  deleteMetric?: Maybe<{ __typename?: 'Metric' } & Pick<Metric, 'id'>>;
-};
+
+export type DeleteMetricMutation = (
+  { __typename?: 'Mutation' }
+  & { deleteMetric?: Maybe<(
+    { __typename?: 'Metric' }
+    & Pick<Metric, 'id'>
+  )> }
+);
 
 export type GetAllMetricsQueryVariables = {};
 
-export type GetAllMetricsQuery = { __typename?: 'Query' } & {
-  allMetrics: Array<{ __typename?: 'Metric' } & Pick<Metric, 'id' | 'name' | 'type'>>;
-};
+
+export type GetAllMetricsQuery = (
+  { __typename?: 'Query' }
+  & { allMetrics: Array<(
+    { __typename?: 'Metric' }
+    & Pick<Metric, 'id' | 'name' | 'type'>
+  )> }
+);
 
 export type RecordDataPointMutationVariables = {
   metricId: Scalars['String'];
   data: DataPointInput;
 };
 
-export type RecordDataPointMutation = { __typename?: 'Mutation' } & {
-  recordDataPoint: { __typename?: 'Metric' } & Pick<Metric, 'id' | 'name'> & {
-      dataPoints: Array<
-        | ({ __typename?: 'DataPoint' } & Pick<DataPoint, 'id' | 'datetime'>)
-        | ({ __typename?: 'RatingDataPoint' } & Pick<RatingDataPoint, 'id' | 'datetime'>)
-      >;
-    };
-};
+
+export type RecordDataPointMutation = (
+  { __typename?: 'Mutation' }
+  & { recordDataPoint: (
+    { __typename?: 'Metric' }
+    & Pick<Metric, 'id' | 'name'>
+    & { dataPoints: Array<(
+      { __typename?: 'DataPoint' }
+      & Pick<DataPoint, 'id' | 'datetime'>
+    ) | (
+      { __typename?: 'RatingDataPoint' }
+      & Pick<RatingDataPoint, 'id' | 'datetime'>
+    )> }
+  ) }
+);
 
 export type CreateMetricMutationVariables = {
   metric: MetricInput;
   type?: Maybe<Scalars['String']>;
 };
 
-export type CreateMetricMutation = { __typename?: 'Mutation' } & {
-  createMetric: { __typename?: 'Metric' } & Pick<
-    Metric,
-    'id' | 'name' | 'type' | 'reminder' | 'reminderUnit' | 'reminderValue' | 'reminderHour' | 'reminderMinute'
-  >;
-};
+
+export type CreateMetricMutation = (
+  { __typename?: 'Mutation' }
+  & { createMetric: (
+    { __typename?: 'Metric' }
+    & Pick<Metric, 'id' | 'name' | 'type' | 'reminder' | 'reminderUnit' | 'reminderValue' | 'reminderHour' | 'reminderMinute'>
+  ) }
+);
 
 export type GetMetricByIdQueryVariables = {
   id: Scalars['String'];
 };
 
-export type GetMetricByIdQuery = { __typename?: 'Query' } & {
-  metricById: { __typename?: 'Metric' } & Pick<
-    Metric,
-    'id' | 'name' | 'type' | 'reminder' | 'reminderUnit' | 'reminderValue' | 'reminderHour' | 'reminderMinute'
-  >;
-};
+
+export type GetMetricByIdQuery = (
+  { __typename?: 'Query' }
+  & { metricById: (
+    { __typename?: 'Metric' }
+    & Pick<Metric, 'id' | 'name' | 'type' | 'reminder' | 'reminderUnit' | 'reminderValue' | 'reminderHour' | 'reminderMinute'>
+  ) }
+);
 
 export type UpdateMetricMutationVariables = {
   id: Scalars['String'];
   metricInput: MetricInput;
 };
 
-export type UpdateMetricMutation = { __typename?: 'Mutation' } & {
-  updateMetric: { __typename?: 'Metric' } & Pick<Metric, 'id' | 'name'>;
-};
+
+export type UpdateMetricMutation = (
+  { __typename?: 'Mutation' }
+  & { updateMetric: (
+    { __typename?: 'Metric' }
+    & Pick<Metric, 'id' | 'name'>
+  ) }
+);
 
 export type GetNotifcationConfigQueryVariables = {};
 
-export type GetNotifcationConfigQuery = { __typename?: 'Query' } & {
-  devices: Array<{ __typename?: 'DeviceRegistration' } & Pick<DeviceRegistration, 'id' | 'token'>>;
-};
+
+export type GetNotifcationConfigQuery = (
+  { __typename?: 'Query' }
+  & { devices: Array<(
+    { __typename?: 'DeviceRegistration' }
+    & Pick<DeviceRegistration, 'id' | 'token'>
+  )> }
+);
 
 export type RegisterDeviceMutationVariables = {
   token: Scalars['String'];
 };
 
-export type RegisterDeviceMutation = { __typename?: 'Mutation' } & {
-  registerDevice: { __typename?: 'DeviceRegistration' } & Pick<DeviceRegistration, 'id' | 'token'>;
-};
+
+export type RegisterDeviceMutation = (
+  { __typename?: 'Mutation' }
+  & { registerDevice: (
+    { __typename?: 'DeviceRegistration' }
+    & Pick<DeviceRegistration, 'id' | 'token'>
+  ) }
+);
 
 export type UnregisterDeviceMutationVariables = {
   id: Scalars['String'];
 };
 
-export type UnregisterDeviceMutation = { __typename?: 'Mutation' } & Pick<Mutation, 'unregisterDevice'>;
+
+export type UnregisterDeviceMutation = (
+  { __typename?: 'Mutation' }
+  & Pick<Mutation, 'unregisterDevice'>
+);
+
 
 export const CreateAnalysisDocument = gql`
-  mutation CreateAnalysis($name: String!, $metricIds: [ID!]!) {
-    createAnalysis(name: $name, metricIds: $metricIds) {
+    mutation CreateAnalysis($name: String!, $metricIds: [ID!]!) {
+  createAnalysis(name: $name, metricIds: $metricIds) {
+    id
+    name
+    metrics {
       id
-      name
-      metrics {
-        id
-      }
     }
   }
-`;
-export type CreateAnalysisMutationFn = ApolloReactCommon.MutationFunction<
-  CreateAnalysisMutation,
-  CreateAnalysisMutationVariables
->;
+}
+    `;
+export type CreateAnalysisMutationFn = ApolloReactCommon.MutationFunction<CreateAnalysisMutation, CreateAnalysisMutationVariables>;
 
 /**
  * __useCreateAnalysisMutation__
@@ -336,31 +456,93 @@ export type CreateAnalysisMutationFn = ApolloReactCommon.MutationFunction<
  *   },
  * });
  */
-export function useCreateAnalysisMutation(
-  baseOptions?: ApolloReactHooks.MutationHookOptions<CreateAnalysisMutation, CreateAnalysisMutationVariables>
-) {
-  return ApolloReactHooks.useMutation<CreateAnalysisMutation, CreateAnalysisMutationVariables>(
-    CreateAnalysisDocument,
-    baseOptions
-  );
-}
+export function useCreateAnalysisMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<CreateAnalysisMutation, CreateAnalysisMutationVariables>) {
+        return ApolloReactHooks.useMutation<CreateAnalysisMutation, CreateAnalysisMutationVariables>(CreateAnalysisDocument, baseOptions);
+      }
 export type CreateAnalysisMutationHookResult = ReturnType<typeof useCreateAnalysisMutation>;
 export type CreateAnalysisMutationResult = ApolloReactCommon.MutationResult<CreateAnalysisMutation>;
-export type CreateAnalysisMutationOptions = ApolloReactCommon.BaseMutationOptions<
-  CreateAnalysisMutation,
-  CreateAnalysisMutationVariables
->;
-export const GetAllAnalysesDocument = gql`
-  query GetAllAnalyses {
-    allAnalyses {
-      id
-      name
-      metrics {
-        name
+export type CreateAnalysisMutationOptions = ApolloReactCommon.BaseMutationOptions<CreateAnalysisMutation, CreateAnalysisMutationVariables>;
+export const DeleteAnalysisDocument = gql`
+    mutation DeleteAnalysis($id: ID!) {
+  deleteAnalysis(id: $id) {
+    id
+  }
+}
+    `;
+export type DeleteAnalysisMutationFn = ApolloReactCommon.MutationFunction<DeleteAnalysisMutation, DeleteAnalysisMutationVariables>;
+
+/**
+ * __useDeleteAnalysisMutation__
+ *
+ * To run a mutation, you first call `useDeleteAnalysisMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useDeleteAnalysisMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [deleteAnalysisMutation, { data, loading, error }] = useDeleteAnalysisMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useDeleteAnalysisMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<DeleteAnalysisMutation, DeleteAnalysisMutationVariables>) {
+        return ApolloReactHooks.useMutation<DeleteAnalysisMutation, DeleteAnalysisMutationVariables>(DeleteAnalysisDocument, baseOptions);
       }
+export type DeleteAnalysisMutationHookResult = ReturnType<typeof useDeleteAnalysisMutation>;
+export type DeleteAnalysisMutationResult = ApolloReactCommon.MutationResult<DeleteAnalysisMutation>;
+export type DeleteAnalysisMutationOptions = ApolloReactCommon.BaseMutationOptions<DeleteAnalysisMutation, DeleteAnalysisMutationVariables>;
+export const UpdateAnalysisDocument = gql`
+    mutation UpdateAnalysis($id: ID!, $name: String!, $metricIds: [ID!]!) {
+  updateAnalysis(name: $name, metricIds: $metricIds, id: $id) {
+    id
+    name
+    metrics {
+      id
     }
   }
-`;
+}
+    `;
+export type UpdateAnalysisMutationFn = ApolloReactCommon.MutationFunction<UpdateAnalysisMutation, UpdateAnalysisMutationVariables>;
+
+/**
+ * __useUpdateAnalysisMutation__
+ *
+ * To run a mutation, you first call `useUpdateAnalysisMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateAnalysisMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateAnalysisMutation, { data, loading, error }] = useUpdateAnalysisMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *      name: // value for 'name'
+ *      metricIds: // value for 'metricIds'
+ *   },
+ * });
+ */
+export function useUpdateAnalysisMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<UpdateAnalysisMutation, UpdateAnalysisMutationVariables>) {
+        return ApolloReactHooks.useMutation<UpdateAnalysisMutation, UpdateAnalysisMutationVariables>(UpdateAnalysisDocument, baseOptions);
+      }
+export type UpdateAnalysisMutationHookResult = ReturnType<typeof useUpdateAnalysisMutation>;
+export type UpdateAnalysisMutationResult = ApolloReactCommon.MutationResult<UpdateAnalysisMutation>;
+export type UpdateAnalysisMutationOptions = ApolloReactCommon.BaseMutationOptions<UpdateAnalysisMutation, UpdateAnalysisMutationVariables>;
+export const GetAllAnalysesDocument = gql`
+    query GetAllAnalyses {
+  allAnalyses {
+    id
+    name
+    metrics {
+      name
+    }
+  }
+}
+    `;
 
 /**
  * __useGetAllAnalysesQuery__
@@ -377,42 +559,29 @@ export const GetAllAnalysesDocument = gql`
  *   },
  * });
  */
-export function useGetAllAnalysesQuery(
-  baseOptions?: ApolloReactHooks.QueryHookOptions<GetAllAnalysesQuery, GetAllAnalysesQueryVariables>
-) {
-  return ApolloReactHooks.useQuery<GetAllAnalysesQuery, GetAllAnalysesQueryVariables>(
-    GetAllAnalysesDocument,
-    baseOptions
-  );
-}
-export function useGetAllAnalysesLazyQuery(
-  baseOptions?: ApolloReactHooks.LazyQueryHookOptions<GetAllAnalysesQuery, GetAllAnalysesQueryVariables>
-) {
-  return ApolloReactHooks.useLazyQuery<GetAllAnalysesQuery, GetAllAnalysesQueryVariables>(
-    GetAllAnalysesDocument,
-    baseOptions
-  );
-}
+export function useGetAllAnalysesQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<GetAllAnalysesQuery, GetAllAnalysesQueryVariables>) {
+        return ApolloReactHooks.useQuery<GetAllAnalysesQuery, GetAllAnalysesQueryVariables>(GetAllAnalysesDocument, baseOptions);
+      }
+export function useGetAllAnalysesLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<GetAllAnalysesQuery, GetAllAnalysesQueryVariables>) {
+          return ApolloReactHooks.useLazyQuery<GetAllAnalysesQuery, GetAllAnalysesQueryVariables>(GetAllAnalysesDocument, baseOptions);
+        }
 export type GetAllAnalysesQueryHookResult = ReturnType<typeof useGetAllAnalysesQuery>;
 export type GetAllAnalysesLazyQueryHookResult = ReturnType<typeof useGetAllAnalysesLazyQuery>;
-export type GetAllAnalysesQueryResult = ApolloReactCommon.QueryResult<
-  GetAllAnalysesQuery,
-  GetAllAnalysesQueryVariables
->;
+export type GetAllAnalysesQueryResult = ApolloReactCommon.QueryResult<GetAllAnalysesQuery, GetAllAnalysesQueryVariables>;
 export const GetMetricWithDataPointsDocument = gql`
-  query GetMetricWithDataPoints($metricId: String!) {
-    metricById(id: $metricId) {
-      id
-      name
-      dataPoints {
-        ... on IDataPoint {
-          id
-          datetime
-        }
+    query GetMetricWithDataPoints($metricId: String!) {
+  metricById(id: $metricId) {
+    id
+    name
+    dataPoints {
+      ... on IDataPoint {
+        id
+        datetime
       }
     }
   }
-`;
+}
+    `;
 
 /**
  * __useGetMetricWithDataPointsQuery__
@@ -430,53 +599,37 @@ export const GetMetricWithDataPointsDocument = gql`
  *   },
  * });
  */
-export function useGetMetricWithDataPointsQuery(
-  baseOptions?: ApolloReactHooks.QueryHookOptions<GetMetricWithDataPointsQuery, GetMetricWithDataPointsQueryVariables>
-) {
-  return ApolloReactHooks.useQuery<GetMetricWithDataPointsQuery, GetMetricWithDataPointsQueryVariables>(
-    GetMetricWithDataPointsDocument,
-    baseOptions
-  );
-}
-export function useGetMetricWithDataPointsLazyQuery(
-  baseOptions?: ApolloReactHooks.LazyQueryHookOptions<
-    GetMetricWithDataPointsQuery,
-    GetMetricWithDataPointsQueryVariables
-  >
-) {
-  return ApolloReactHooks.useLazyQuery<GetMetricWithDataPointsQuery, GetMetricWithDataPointsQueryVariables>(
-    GetMetricWithDataPointsDocument,
-    baseOptions
-  );
-}
+export function useGetMetricWithDataPointsQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<GetMetricWithDataPointsQuery, GetMetricWithDataPointsQueryVariables>) {
+        return ApolloReactHooks.useQuery<GetMetricWithDataPointsQuery, GetMetricWithDataPointsQueryVariables>(GetMetricWithDataPointsDocument, baseOptions);
+      }
+export function useGetMetricWithDataPointsLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<GetMetricWithDataPointsQuery, GetMetricWithDataPointsQueryVariables>) {
+          return ApolloReactHooks.useLazyQuery<GetMetricWithDataPointsQuery, GetMetricWithDataPointsQueryVariables>(GetMetricWithDataPointsDocument, baseOptions);
+        }
 export type GetMetricWithDataPointsQueryHookResult = ReturnType<typeof useGetMetricWithDataPointsQuery>;
 export type GetMetricWithDataPointsLazyQueryHookResult = ReturnType<typeof useGetMetricWithDataPointsLazyQuery>;
-export type GetMetricWithDataPointsQueryResult = ApolloReactCommon.QueryResult<
-  GetMetricWithDataPointsQuery,
-  GetMetricWithDataPointsQueryVariables
->;
+export type GetMetricWithDataPointsQueryResult = ApolloReactCommon.QueryResult<GetMetricWithDataPointsQuery, GetMetricWithDataPointsQueryVariables>;
 export const GetAnalysisWithDataDocument = gql`
-  query GetAnalysisWithData($id: String!) {
-    getAnalysisWithData(id: $id) {
+    query GetAnalysisWithData($id: String!) {
+  getAnalysisWithData(id: $id) {
+    id
+    name
+    metrics {
       id
       name
-      metrics {
-        id
-        name
-        type
-        dataPoints {
-          ... on IDataPoint {
-            id
-            datetime
-          }
-          ... on RatingDataPoint {
-            rating
-          }
+      type
+      dataPoints {
+        ... on IDataPoint {
+          id
+          datetime
+        }
+        ... on RatingDataPoint {
+          rating
         }
       }
     }
   }
-`;
+}
+    `;
 
 /**
  * __useGetAnalysisWithDataQuery__
@@ -494,39 +647,23 @@ export const GetAnalysisWithDataDocument = gql`
  *   },
  * });
  */
-export function useGetAnalysisWithDataQuery(
-  baseOptions?: ApolloReactHooks.QueryHookOptions<GetAnalysisWithDataQuery, GetAnalysisWithDataQueryVariables>
-) {
-  return ApolloReactHooks.useQuery<GetAnalysisWithDataQuery, GetAnalysisWithDataQueryVariables>(
-    GetAnalysisWithDataDocument,
-    baseOptions
-  );
-}
-export function useGetAnalysisWithDataLazyQuery(
-  baseOptions?: ApolloReactHooks.LazyQueryHookOptions<GetAnalysisWithDataQuery, GetAnalysisWithDataQueryVariables>
-) {
-  return ApolloReactHooks.useLazyQuery<GetAnalysisWithDataQuery, GetAnalysisWithDataQueryVariables>(
-    GetAnalysisWithDataDocument,
-    baseOptions
-  );
-}
+export function useGetAnalysisWithDataQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<GetAnalysisWithDataQuery, GetAnalysisWithDataQueryVariables>) {
+        return ApolloReactHooks.useQuery<GetAnalysisWithDataQuery, GetAnalysisWithDataQueryVariables>(GetAnalysisWithDataDocument, baseOptions);
+      }
+export function useGetAnalysisWithDataLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<GetAnalysisWithDataQuery, GetAnalysisWithDataQueryVariables>) {
+          return ApolloReactHooks.useLazyQuery<GetAnalysisWithDataQuery, GetAnalysisWithDataQueryVariables>(GetAnalysisWithDataDocument, baseOptions);
+        }
 export type GetAnalysisWithDataQueryHookResult = ReturnType<typeof useGetAnalysisWithDataQuery>;
 export type GetAnalysisWithDataLazyQueryHookResult = ReturnType<typeof useGetAnalysisWithDataLazyQuery>;
-export type GetAnalysisWithDataQueryResult = ApolloReactCommon.QueryResult<
-  GetAnalysisWithDataQuery,
-  GetAnalysisWithDataQueryVariables
->;
+export type GetAnalysisWithDataQueryResult = ApolloReactCommon.QueryResult<GetAnalysisWithDataQuery, GetAnalysisWithDataQueryVariables>;
 export const DeleteMetricDocument = gql`
-  mutation deleteMetric($id: String!) {
-    deleteMetric(id: $id) {
-      id
-    }
+    mutation deleteMetric($id: String!) {
+  deleteMetric(id: $id) {
+    id
   }
-`;
-export type DeleteMetricMutationFn = ApolloReactCommon.MutationFunction<
-  DeleteMetricMutation,
-  DeleteMetricMutationVariables
->;
+}
+    `;
+export type DeleteMetricMutationFn = ApolloReactCommon.MutationFunction<DeleteMetricMutation, DeleteMetricMutationVariables>;
 
 /**
  * __useDeleteMetricMutation__
@@ -545,29 +682,21 @@ export type DeleteMetricMutationFn = ApolloReactCommon.MutationFunction<
  *   },
  * });
  */
-export function useDeleteMetricMutation(
-  baseOptions?: ApolloReactHooks.MutationHookOptions<DeleteMetricMutation, DeleteMetricMutationVariables>
-) {
-  return ApolloReactHooks.useMutation<DeleteMetricMutation, DeleteMetricMutationVariables>(
-    DeleteMetricDocument,
-    baseOptions
-  );
-}
+export function useDeleteMetricMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<DeleteMetricMutation, DeleteMetricMutationVariables>) {
+        return ApolloReactHooks.useMutation<DeleteMetricMutation, DeleteMetricMutationVariables>(DeleteMetricDocument, baseOptions);
+      }
 export type DeleteMetricMutationHookResult = ReturnType<typeof useDeleteMetricMutation>;
 export type DeleteMetricMutationResult = ApolloReactCommon.MutationResult<DeleteMetricMutation>;
-export type DeleteMetricMutationOptions = ApolloReactCommon.BaseMutationOptions<
-  DeleteMetricMutation,
-  DeleteMetricMutationVariables
->;
+export type DeleteMetricMutationOptions = ApolloReactCommon.BaseMutationOptions<DeleteMetricMutation, DeleteMetricMutationVariables>;
 export const GetAllMetricsDocument = gql`
-  query getAllMetrics {
-    allMetrics {
-      id
-      name
-      type
-    }
+    query getAllMetrics {
+  allMetrics {
+    id
+    name
+    type
   }
-`;
+}
+    `;
 
 /**
  * __useGetAllMetricsQuery__
@@ -584,40 +713,30 @@ export const GetAllMetricsDocument = gql`
  *   },
  * });
  */
-export function useGetAllMetricsQuery(
-  baseOptions?: ApolloReactHooks.QueryHookOptions<GetAllMetricsQuery, GetAllMetricsQueryVariables>
-) {
-  return ApolloReactHooks.useQuery<GetAllMetricsQuery, GetAllMetricsQueryVariables>(GetAllMetricsDocument, baseOptions);
-}
-export function useGetAllMetricsLazyQuery(
-  baseOptions?: ApolloReactHooks.LazyQueryHookOptions<GetAllMetricsQuery, GetAllMetricsQueryVariables>
-) {
-  return ApolloReactHooks.useLazyQuery<GetAllMetricsQuery, GetAllMetricsQueryVariables>(
-    GetAllMetricsDocument,
-    baseOptions
-  );
-}
+export function useGetAllMetricsQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<GetAllMetricsQuery, GetAllMetricsQueryVariables>) {
+        return ApolloReactHooks.useQuery<GetAllMetricsQuery, GetAllMetricsQueryVariables>(GetAllMetricsDocument, baseOptions);
+      }
+export function useGetAllMetricsLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<GetAllMetricsQuery, GetAllMetricsQueryVariables>) {
+          return ApolloReactHooks.useLazyQuery<GetAllMetricsQuery, GetAllMetricsQueryVariables>(GetAllMetricsDocument, baseOptions);
+        }
 export type GetAllMetricsQueryHookResult = ReturnType<typeof useGetAllMetricsQuery>;
 export type GetAllMetricsLazyQueryHookResult = ReturnType<typeof useGetAllMetricsLazyQuery>;
 export type GetAllMetricsQueryResult = ApolloReactCommon.QueryResult<GetAllMetricsQuery, GetAllMetricsQueryVariables>;
 export const RecordDataPointDocument = gql`
-  mutation recordDataPoint($metricId: String!, $data: DataPointInput!) {
-    recordDataPoint(metricId: $metricId, data: $data) {
-      id
-      name
-      dataPoints {
-        ... on IDataPoint {
-          id
-          datetime
-        }
+    mutation recordDataPoint($metricId: String!, $data: DataPointInput!) {
+  recordDataPoint(metricId: $metricId, data: $data) {
+    id
+    name
+    dataPoints {
+      ... on IDataPoint {
+        id
+        datetime
       }
     }
   }
-`;
-export type RecordDataPointMutationFn = ApolloReactCommon.MutationFunction<
-  RecordDataPointMutation,
-  RecordDataPointMutationVariables
->;
+}
+    `;
+export type RecordDataPointMutationFn = ApolloReactCommon.MutationFunction<RecordDataPointMutation, RecordDataPointMutationVariables>;
 
 /**
  * __useRecordDataPointMutation__
@@ -637,38 +756,27 @@ export type RecordDataPointMutationFn = ApolloReactCommon.MutationFunction<
  *   },
  * });
  */
-export function useRecordDataPointMutation(
-  baseOptions?: ApolloReactHooks.MutationHookOptions<RecordDataPointMutation, RecordDataPointMutationVariables>
-) {
-  return ApolloReactHooks.useMutation<RecordDataPointMutation, RecordDataPointMutationVariables>(
-    RecordDataPointDocument,
-    baseOptions
-  );
-}
+export function useRecordDataPointMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<RecordDataPointMutation, RecordDataPointMutationVariables>) {
+        return ApolloReactHooks.useMutation<RecordDataPointMutation, RecordDataPointMutationVariables>(RecordDataPointDocument, baseOptions);
+      }
 export type RecordDataPointMutationHookResult = ReturnType<typeof useRecordDataPointMutation>;
 export type RecordDataPointMutationResult = ApolloReactCommon.MutationResult<RecordDataPointMutation>;
-export type RecordDataPointMutationOptions = ApolloReactCommon.BaseMutationOptions<
-  RecordDataPointMutation,
-  RecordDataPointMutationVariables
->;
+export type RecordDataPointMutationOptions = ApolloReactCommon.BaseMutationOptions<RecordDataPointMutation, RecordDataPointMutationVariables>;
 export const CreateMetricDocument = gql`
-  mutation CreateMetric($metric: MetricInput!, $type: String) {
-    createMetric(metricInput: $metric, type: $type) {
-      id
-      name
-      type
-      reminder
-      reminderUnit
-      reminderValue
-      reminderHour
-      reminderMinute
-    }
+    mutation CreateMetric($metric: MetricInput!, $type: String) {
+  createMetric(metricInput: $metric, type: $type) {
+    id
+    name
+    type
+    reminder
+    reminderUnit
+    reminderValue
+    reminderHour
+    reminderMinute
   }
-`;
-export type CreateMetricMutationFn = ApolloReactCommon.MutationFunction<
-  CreateMetricMutation,
-  CreateMetricMutationVariables
->;
+}
+    `;
+export type CreateMetricMutationFn = ApolloReactCommon.MutationFunction<CreateMetricMutation, CreateMetricMutationVariables>;
 
 /**
  * __useCreateMetricMutation__
@@ -688,34 +796,26 @@ export type CreateMetricMutationFn = ApolloReactCommon.MutationFunction<
  *   },
  * });
  */
-export function useCreateMetricMutation(
-  baseOptions?: ApolloReactHooks.MutationHookOptions<CreateMetricMutation, CreateMetricMutationVariables>
-) {
-  return ApolloReactHooks.useMutation<CreateMetricMutation, CreateMetricMutationVariables>(
-    CreateMetricDocument,
-    baseOptions
-  );
-}
+export function useCreateMetricMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<CreateMetricMutation, CreateMetricMutationVariables>) {
+        return ApolloReactHooks.useMutation<CreateMetricMutation, CreateMetricMutationVariables>(CreateMetricDocument, baseOptions);
+      }
 export type CreateMetricMutationHookResult = ReturnType<typeof useCreateMetricMutation>;
 export type CreateMetricMutationResult = ApolloReactCommon.MutationResult<CreateMetricMutation>;
-export type CreateMetricMutationOptions = ApolloReactCommon.BaseMutationOptions<
-  CreateMetricMutation,
-  CreateMetricMutationVariables
->;
+export type CreateMetricMutationOptions = ApolloReactCommon.BaseMutationOptions<CreateMetricMutation, CreateMetricMutationVariables>;
 export const GetMetricByIdDocument = gql`
-  query GetMetricById($id: String!) {
-    metricById(id: $id) {
-      id
-      name
-      type
-      reminder
-      reminderUnit
-      reminderValue
-      reminderHour
-      reminderMinute
-    }
+    query GetMetricById($id: String!) {
+  metricById(id: $id) {
+    id
+    name
+    type
+    reminder
+    reminderUnit
+    reminderValue
+    reminderHour
+    reminderMinute
   }
-`;
+}
+    `;
 
 /**
  * __useGetMetricByIdQuery__
@@ -733,34 +833,24 @@ export const GetMetricByIdDocument = gql`
  *   },
  * });
  */
-export function useGetMetricByIdQuery(
-  baseOptions?: ApolloReactHooks.QueryHookOptions<GetMetricByIdQuery, GetMetricByIdQueryVariables>
-) {
-  return ApolloReactHooks.useQuery<GetMetricByIdQuery, GetMetricByIdQueryVariables>(GetMetricByIdDocument, baseOptions);
-}
-export function useGetMetricByIdLazyQuery(
-  baseOptions?: ApolloReactHooks.LazyQueryHookOptions<GetMetricByIdQuery, GetMetricByIdQueryVariables>
-) {
-  return ApolloReactHooks.useLazyQuery<GetMetricByIdQuery, GetMetricByIdQueryVariables>(
-    GetMetricByIdDocument,
-    baseOptions
-  );
-}
+export function useGetMetricByIdQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<GetMetricByIdQuery, GetMetricByIdQueryVariables>) {
+        return ApolloReactHooks.useQuery<GetMetricByIdQuery, GetMetricByIdQueryVariables>(GetMetricByIdDocument, baseOptions);
+      }
+export function useGetMetricByIdLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<GetMetricByIdQuery, GetMetricByIdQueryVariables>) {
+          return ApolloReactHooks.useLazyQuery<GetMetricByIdQuery, GetMetricByIdQueryVariables>(GetMetricByIdDocument, baseOptions);
+        }
 export type GetMetricByIdQueryHookResult = ReturnType<typeof useGetMetricByIdQuery>;
 export type GetMetricByIdLazyQueryHookResult = ReturnType<typeof useGetMetricByIdLazyQuery>;
 export type GetMetricByIdQueryResult = ApolloReactCommon.QueryResult<GetMetricByIdQuery, GetMetricByIdQueryVariables>;
 export const UpdateMetricDocument = gql`
-  mutation UpdateMetric($id: String!, $metricInput: MetricInput!) {
-    updateMetric(id: $id, metricInput: $metricInput) {
-      id
-      name
-    }
+    mutation UpdateMetric($id: String!, $metricInput: MetricInput!) {
+  updateMetric(id: $id, metricInput: $metricInput) {
+    id
+    name
   }
-`;
-export type UpdateMetricMutationFn = ApolloReactCommon.MutationFunction<
-  UpdateMetricMutation,
-  UpdateMetricMutationVariables
->;
+}
+    `;
+export type UpdateMetricMutationFn = ApolloReactCommon.MutationFunction<UpdateMetricMutation, UpdateMetricMutationVariables>;
 
 /**
  * __useUpdateMetricMutation__
@@ -780,28 +870,20 @@ export type UpdateMetricMutationFn = ApolloReactCommon.MutationFunction<
  *   },
  * });
  */
-export function useUpdateMetricMutation(
-  baseOptions?: ApolloReactHooks.MutationHookOptions<UpdateMetricMutation, UpdateMetricMutationVariables>
-) {
-  return ApolloReactHooks.useMutation<UpdateMetricMutation, UpdateMetricMutationVariables>(
-    UpdateMetricDocument,
-    baseOptions
-  );
-}
+export function useUpdateMetricMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<UpdateMetricMutation, UpdateMetricMutationVariables>) {
+        return ApolloReactHooks.useMutation<UpdateMetricMutation, UpdateMetricMutationVariables>(UpdateMetricDocument, baseOptions);
+      }
 export type UpdateMetricMutationHookResult = ReturnType<typeof useUpdateMetricMutation>;
 export type UpdateMetricMutationResult = ApolloReactCommon.MutationResult<UpdateMetricMutation>;
-export type UpdateMetricMutationOptions = ApolloReactCommon.BaseMutationOptions<
-  UpdateMetricMutation,
-  UpdateMetricMutationVariables
->;
+export type UpdateMetricMutationOptions = ApolloReactCommon.BaseMutationOptions<UpdateMetricMutation, UpdateMetricMutationVariables>;
 export const GetNotifcationConfigDocument = gql`
-  query GetNotifcationConfig {
-    devices {
-      id
-      token
-    }
+    query GetNotifcationConfig {
+  devices {
+    id
+    token
   }
-`;
+}
+    `;
 
 /**
  * __useGetNotifcationConfigQuery__
@@ -818,40 +900,24 @@ export const GetNotifcationConfigDocument = gql`
  *   },
  * });
  */
-export function useGetNotifcationConfigQuery(
-  baseOptions?: ApolloReactHooks.QueryHookOptions<GetNotifcationConfigQuery, GetNotifcationConfigQueryVariables>
-) {
-  return ApolloReactHooks.useQuery<GetNotifcationConfigQuery, GetNotifcationConfigQueryVariables>(
-    GetNotifcationConfigDocument,
-    baseOptions
-  );
-}
-export function useGetNotifcationConfigLazyQuery(
-  baseOptions?: ApolloReactHooks.LazyQueryHookOptions<GetNotifcationConfigQuery, GetNotifcationConfigQueryVariables>
-) {
-  return ApolloReactHooks.useLazyQuery<GetNotifcationConfigQuery, GetNotifcationConfigQueryVariables>(
-    GetNotifcationConfigDocument,
-    baseOptions
-  );
-}
+export function useGetNotifcationConfigQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<GetNotifcationConfigQuery, GetNotifcationConfigQueryVariables>) {
+        return ApolloReactHooks.useQuery<GetNotifcationConfigQuery, GetNotifcationConfigQueryVariables>(GetNotifcationConfigDocument, baseOptions);
+      }
+export function useGetNotifcationConfigLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<GetNotifcationConfigQuery, GetNotifcationConfigQueryVariables>) {
+          return ApolloReactHooks.useLazyQuery<GetNotifcationConfigQuery, GetNotifcationConfigQueryVariables>(GetNotifcationConfigDocument, baseOptions);
+        }
 export type GetNotifcationConfigQueryHookResult = ReturnType<typeof useGetNotifcationConfigQuery>;
 export type GetNotifcationConfigLazyQueryHookResult = ReturnType<typeof useGetNotifcationConfigLazyQuery>;
-export type GetNotifcationConfigQueryResult = ApolloReactCommon.QueryResult<
-  GetNotifcationConfigQuery,
-  GetNotifcationConfigQueryVariables
->;
+export type GetNotifcationConfigQueryResult = ApolloReactCommon.QueryResult<GetNotifcationConfigQuery, GetNotifcationConfigQueryVariables>;
 export const RegisterDeviceDocument = gql`
-  mutation registerDevice($token: String!) {
-    registerDevice(token: $token) {
-      id
-      token
-    }
+    mutation registerDevice($token: String!) {
+  registerDevice(token: $token) {
+    id
+    token
   }
-`;
-export type RegisterDeviceMutationFn = ApolloReactCommon.MutationFunction<
-  RegisterDeviceMutation,
-  RegisterDeviceMutationVariables
->;
+}
+    `;
+export type RegisterDeviceMutationFn = ApolloReactCommon.MutationFunction<RegisterDeviceMutation, RegisterDeviceMutationVariables>;
 
 /**
  * __useRegisterDeviceMutation__
@@ -870,29 +936,18 @@ export type RegisterDeviceMutationFn = ApolloReactCommon.MutationFunction<
  *   },
  * });
  */
-export function useRegisterDeviceMutation(
-  baseOptions?: ApolloReactHooks.MutationHookOptions<RegisterDeviceMutation, RegisterDeviceMutationVariables>
-) {
-  return ApolloReactHooks.useMutation<RegisterDeviceMutation, RegisterDeviceMutationVariables>(
-    RegisterDeviceDocument,
-    baseOptions
-  );
-}
+export function useRegisterDeviceMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<RegisterDeviceMutation, RegisterDeviceMutationVariables>) {
+        return ApolloReactHooks.useMutation<RegisterDeviceMutation, RegisterDeviceMutationVariables>(RegisterDeviceDocument, baseOptions);
+      }
 export type RegisterDeviceMutationHookResult = ReturnType<typeof useRegisterDeviceMutation>;
 export type RegisterDeviceMutationResult = ApolloReactCommon.MutationResult<RegisterDeviceMutation>;
-export type RegisterDeviceMutationOptions = ApolloReactCommon.BaseMutationOptions<
-  RegisterDeviceMutation,
-  RegisterDeviceMutationVariables
->;
+export type RegisterDeviceMutationOptions = ApolloReactCommon.BaseMutationOptions<RegisterDeviceMutation, RegisterDeviceMutationVariables>;
 export const UnregisterDeviceDocument = gql`
-  mutation UnregisterDevice($id: String!) {
-    unregisterDevice(id: $id)
-  }
-`;
-export type UnregisterDeviceMutationFn = ApolloReactCommon.MutationFunction<
-  UnregisterDeviceMutation,
-  UnregisterDeviceMutationVariables
->;
+    mutation UnregisterDevice($id: String!) {
+  unregisterDevice(id: $id)
+}
+    `;
+export type UnregisterDeviceMutationFn = ApolloReactCommon.MutationFunction<UnregisterDeviceMutation, UnregisterDeviceMutationVariables>;
 
 /**
  * __useUnregisterDeviceMutation__
@@ -911,17 +966,9 @@ export type UnregisterDeviceMutationFn = ApolloReactCommon.MutationFunction<
  *   },
  * });
  */
-export function useUnregisterDeviceMutation(
-  baseOptions?: ApolloReactHooks.MutationHookOptions<UnregisterDeviceMutation, UnregisterDeviceMutationVariables>
-) {
-  return ApolloReactHooks.useMutation<UnregisterDeviceMutation, UnregisterDeviceMutationVariables>(
-    UnregisterDeviceDocument,
-    baseOptions
-  );
-}
+export function useUnregisterDeviceMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<UnregisterDeviceMutation, UnregisterDeviceMutationVariables>) {
+        return ApolloReactHooks.useMutation<UnregisterDeviceMutation, UnregisterDeviceMutationVariables>(UnregisterDeviceDocument, baseOptions);
+      }
 export type UnregisterDeviceMutationHookResult = ReturnType<typeof useUnregisterDeviceMutation>;
 export type UnregisterDeviceMutationResult = ApolloReactCommon.MutationResult<UnregisterDeviceMutation>;
-export type UnregisterDeviceMutationOptions = ApolloReactCommon.BaseMutationOptions<
-  UnregisterDeviceMutation,
-  UnregisterDeviceMutationVariables
->;
+export type UnregisterDeviceMutationOptions = ApolloReactCommon.BaseMutationOptions<UnregisterDeviceMutation, UnregisterDeviceMutationVariables>;

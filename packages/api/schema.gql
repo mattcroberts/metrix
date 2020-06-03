@@ -74,6 +74,8 @@ enum MetricType {
 
 type Mutation {
   createAnalysis(metricIds: [ID!]!, name: String!): Analysis!
+  updateAnalysis(metricIds: [ID!]!, name: String!, id: ID!): Analysis!
+  deleteAnalysis(id: ID!): Analysis
   recordDataPoint(data: DataPointInput, metricId: String!): Metric!
   createMetric(type: String, metricInput: MetricInput!): Metric!
   updateMetric(metricInput: MetricInput!, id: String!): Metric!

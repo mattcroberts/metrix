@@ -29,6 +29,15 @@ export const theme = merge(require('@rebass/preset').default, {
     },
   },
 
+  styles: {
+    root: {
+      fontFamily: 'body',
+    },
+  },
+
+  text: {
+    ellipsis: { textOverflow: 'ellipsis', overflow: 'hidden' },
+  },
   variants: {
     link: {
       fontFamily: 'body',

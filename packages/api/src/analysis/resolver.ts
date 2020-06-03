@@ -1,19 +1,25 @@
-import { Arg, Mutation, Resolver, ID, Query, Ctx, ArgsType, Args, Field } from 'type-graphql';
-import { Analysis } from './Analysis.model';
+import { Length } from 'class-validator';
+import { Arg, Args, ArgsType, Ctx, Field, ID, Mutation, Query, Resolver } from 'type-graphql';
+import { In, Repository } from 'typeorm';
 import { InjectRepository } from 'typeorm-typedi-extensions';
-import { Repository, In } from 'typeorm';
 import { Metric } from '../metrics/Metric.model';
 import { ContextType } from '../types';
-import { Length } from 'class-validator';
+import { Analysis } from './Analysis.model';
 
 @ArgsType()
 class AnalysisArgs {
-  @Field((returns) => ID)
+  @Field((returns) => [ID])
   metricIds: Metric['id'][];
 
   @Length(3, 20)
   @Field()
   name: string;
+}
+
+@ArgsType()
+class UpdateAnalysisArgs extends AnalysisArgs {
+  @Field((returns) => ID)
+  id: string;
 }
 
 @Resolver((of) => Analysis)
@@ -40,5 +46,18 @@ export class AnalysisResolver {
     const metrics = await this.metricRepository.find({ id: In(metricIds), user });
     const analysis = await this.analysisRepository.create({ name, metrics, user });
     return await this.analysisRepository.save(analysis);
+  }
+
+  @Mutation((returns) => Analysis, { nullable: false })
+  async updateAnalysis(@Ctx() { user }: ContextType, @Args() { id, name, metricIds }: UpdateAnalysisArgs) {
+    const metrics = await this.metricRepository.find({ id: In(metricIds), user });
+    return this.analysisRepository.save({ id, name, metrics });
+  }
+
+  @Mutation((returns) => Analysis, { nullable: true })
+  async deleteAnalysis(@Ctx() { user }: ContextType, @Arg('id', () => ID) id: string) {
+    const analysis = await this.analysisRepository.findOneOrFail({ id, user });
+    await this.analysisRepository.remove(analysis);
+    return null;
   }
 }

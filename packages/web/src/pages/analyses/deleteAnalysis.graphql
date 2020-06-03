@@ -1,0 +1,5 @@
+mutation DeleteAnalysis($id: ID!) {
+  deleteAnalysis(id: $id) {
+    id
+  }
+}

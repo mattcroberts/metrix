@@ -1,0 +1,9 @@
+mutation UpdateAnalysis($id: ID!, $name: String!, $metricIds: [ID!]!) {
+  updateAnalysis(name: $name, metricIds: $metricIds, id: $id) {
+    id
+    name
+    metrics {
+      id
+    }
+  }
+}
