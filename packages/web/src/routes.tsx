@@ -10,17 +10,19 @@ import { LoginPage } from './pages/login';
 import { CreateMetricPage } from './pages/metric/create';
 import { EditMetricPage } from './pages/metric/edit';
 import { SettingsPage } from './pages/settings';
+import { NotFoundPage } from './pages/NotFound';
 
 export const Routes = () => (
   <Switch>
-    <Route path="/login" component={LoginPage} />
-    <ProtectedRoute path="/metrics/new" component={CreateMetricPage} />
-    <ProtectedRoute path="/metrics/:id/edit" component={EditMetricPage} />
-    <ProtectedRoute path="/metrics/:id" component={MetricAnalysisPage} />
-    <ProtectedRoute path="/analyses/new" component={CreateAnalysisPage} />
-    <ProtectedRoute path="/analyses/:id" component={AnalysisPage} />
-    <ProtectedRoute path="/analyses" component={AnalysesListPage} />
-    <ProtectedRoute path="/settings" component={SettingsPage} />
-    <ProtectedRoute path="/" component={HomePage} />
+    <Route exact path="/login" component={LoginPage} />
+    <ProtectedRoute exact path="/metrics/new" component={CreateMetricPage} />
+    <ProtectedRoute exact path="/metrics/:id/edit" component={EditMetricPage} />
+    <ProtectedRoute exact path="/metrics/:id" component={MetricAnalysisPage} />
+    <ProtectedRoute exact path="/analyses/new" component={CreateAnalysisPage} />
+    <ProtectedRoute exact path="/analyses/:id" component={AnalysisPage} />
+    <ProtectedRoute exact path="/analyses" component={AnalysesListPage} />
+    <ProtectedRoute exact path="/settings" component={SettingsPage} />
+    <ProtectedRoute exact path="/" component={HomePage} />
+    <Route component={NotFoundPage} />
   </Switch>
 );
