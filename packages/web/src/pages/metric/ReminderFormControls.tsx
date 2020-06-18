@@ -13,7 +13,7 @@ export const MetricReminderFormControls: FC<{
   metric?: Pick<Metric, 'reminder' | 'reminderValue' | 'reminderUnit' | 'reminderHour' | 'reminderMinute'>;
 }> = ({ metric = { reminderHour: 0, reminderMinute: 0 } }) => {
   const [registerDevice] = useRegisterDeviceMutation();
-  const [notificationPermission, setNotificationPermission] = useState(Notification.permission);
+  const [notificationPermission, setNotificationPermission] = useState(window.Notification?.permission);
   const { register, unregister, watch, setValue } = useFormContext<Metric>();
   const { reminder, reminderUnit } = watch(['reminder', 'reminderUnit'], {
     reminder: metric.reminder,
@@ -30,7 +30,7 @@ export const MetricReminderFormControls: FC<{
 
   return (
     <>
-      {(notificationPermission !== 'granted' && (
+      {(notificationPermission !== 'granted' && window.Notification && (
         <Flex mt="4">
           <Button
             onClick={async () => {
