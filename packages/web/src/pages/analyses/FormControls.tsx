@@ -37,6 +37,7 @@ export const FormControls: React.FC<{ analysis?: Partial<Analysis> }> = ({ analy
                 borderRadius: 2,
                 padding: 2,
                 margin: 2,
+                fontFamily: 'body',
               }}
             >
               <Text variant="ellipsis">{metric.name}</Text>

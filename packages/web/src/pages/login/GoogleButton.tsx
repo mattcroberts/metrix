@@ -1,5 +1,6 @@
 import styled from 'styled-components';
 import React from 'react';
+import { Text } from 'rebass/styled-components';
 
 const Anchor = styled.a`
   display: inline-block;
@@ -24,15 +25,11 @@ const Icon = styled.span`
   vertical-align: middle;
 `;
 
-const ButtonText = styled.span`
-  vertical-align: middle;
-`;
-
 export const GoogleButton: React.FC<{
   href: string;
 }> = ({ href }) => (
   <Anchor href={href}>
     <Icon />
-    <ButtonText>Sign in with Google</ButtonText>
+    <Text sx={{ verticalAlign: 'middle', display: 'inline', fontFamily: 'body' }}>Sign in with Google</Text>
   </Anchor>
 );
